@@ -1,0 +1,144 @@
+{
+  "tier0_examples": [
+    {
+      "id": "t0-pune-ios",
+      "device": "mobile",
+      "os": "iOS 19",
+      "in_app_webview": false,
+      "approx_city": "Pune",
+      "local_time": "2026-10-13T10:00:00+05:30",
+      "language": "en-IN",
+      "referrer": "chatgpt.com",
+      "utm": {
+        "utm_source": "chatgpt",
+        "utm_medium": "cpc"
+      },
+      "ab_arm": "C"
+    },
+    {
+      "id": "t0-delhi-android",
+      "device": "mobile",
+      "os": "Android 16",
+      "in_app_webview": true,
+      "approx_city": "Delhi",
+      "local_time": "2026-10-13T10:00:00+05:30",
+      "language": "en-IN",
+      "referrer": "chatgpt.com",
+      "utm": {
+        "utm_source": "chatgpt",
+        "utm_medium": "cpc"
+      },
+      "ab_arm": "C"
+    }
+  ],
+  "tier1_shape": [
+    "chips_tapped",
+    "questions_asked",
+    "products_viewed",
+    "cart",
+    "constraints.budget_inr",
+    "constraints.deadline",
+    "constraints.occasion",
+    "constraints.pincode"
+  ],
+  "tier2_cookie": {
+    "cookie_id": "csm_ck_5f2a91",
+    "first_seen": "2026-09-02",
+    "last_visit": "2026-10-04",
+    "recently_viewed_skus": [
+      "ciel-hoops-40mm",
+      "ciel-huggies-20mm",
+      "sol-paperclip-chain"
+    ],
+    "wishlist_skus": [
+      "luna-coin-pendant"
+    ],
+    "category_affinity": {
+      "earrings": 0.7,
+      "necklace": 0.2,
+      "ring": 0.05,
+      "bracelet": 0.05
+    },
+    "tone_preference": "yellow gold",
+    "last_utm_source": "instagram"
+  },
+  "tier3_priya": {
+    "rzp_customer_id": "cust_SIMpriya0001",
+    "name": "Priya",
+    "phone_masked": "+91 98XXXX1234",
+    "email_masked": "p•••••@example.com",
+    "otp_for_demo": "123456",
+    "saved_addresses": [
+      {
+        "label": "Home",
+        "line1_masked": "Flat •••, •••••• Society, Kothrud",
+        "city": "Pune",
+        "pincode": "411038",
+        "default": true
+      }
+    ],
+    "saved_payment_methods": [
+      {
+        "type": "upi",
+        "display": "priya•••@okbank (simulated)"
+      },
+      {
+        "type": "card",
+        "display": "Visa ending 4417"
+      }
+    ],
+    "consent": {
+      "marketing_whatsapp": true,
+      "scope": [
+        "order_updates",
+        "personalised_recommendations"
+      ],
+      "timestamp": "2026-06-09T18:22:00+05:30",
+      "source": "login_with_razorpay"
+    },
+    "brand_order_history": [
+      {
+        "order_id": "CSM-1042",
+        "sku": "ciel-huggies-20mm",
+        "date": "2026-08-14",
+        "status": "kept"
+      },
+      {
+        "order_id": "CSM-0877",
+        "sku": "luna-coin-pendant",
+        "date": "2026-06-09",
+        "status": "kept"
+      }
+    ],
+    "preferences": {
+      "tone": "yellow gold",
+      "sizes": "small to medium (huggies, 20 to 30mm hoops)"
+    },
+    "loyalty_wallet_inr": 300,
+    "rto_risk": "low",
+    "cod_history": "prepaid only (0 COD orders)"
+  },
+  "extra": [
+    {
+      "id": "arjun",
+      "label": "Arjun, anonymous gift buyer",
+      "tier": 0,
+      "city": "Delhi",
+      "pincode": "110001",
+      "ad_group": "wedding-guest-gift",
+      "payment_preference": "UPI",
+      "notes": "Buying for a friend's wedding; no login."
+    },
+    {
+      "id": "high-rto",
+      "label": "Anonymous visitor, rural pincode",
+      "tier": 0,
+      "city": "Rural Bihar (simulated)",
+      "pincode": "845401",
+      "ad_group": "waterproof-everyday-under-5k",
+      "payment_preference": "COD",
+      "notes": "Chooses COD; triggers the prepay nudge."
+    }
+  ],
+  "tier4": "not_built"
+}

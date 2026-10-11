@@ -1,0 +1,156 @@
+{
+  "advertiser": "Cosmos",
+  "campaign_name": "Cosmos · Always-on · Managed by Engage",
+  "ad_groups": [
+    {
+      "id": "waterproof-everyday-under-5k",
+      "campaign_id": "cmp_7f3a9c21d84e",
+      "ad_group_id": "adg_2b81e6f0c4a7",
+      "ad_id": "ad_e93f1b6d20c8",
+      "name": "Waterproof everyday earrings under ₹5k",
+      "status": "active",
+      "created_by": "engage_campaign_agent",
+      "origin_proposal": null,
+      "daily_budget_inr": 4000,
+      "context_hints": [
+        "waterproof everyday earrings",
+        "under ₹5,000",
+        "low-maintenance",
+        "shower and gym safe",
+        "won't tarnish"
+      ],
+      "hero_sku": "ciel-hoops-40mm",
+      "candidate_skus": [
+        "ciel-hoops-40mm",
+        "ciel-hoops-30mm",
+        "aria-hoops-28mm",
+        "ciel-huggies-20mm",
+        "kira-mini-huggies",
+        "kira-twist-huggies",
+        "mira-teardrop-drops",
+        "sana-chain-threaders",
+        "sol-paperclip-chain",
+        "luna-coin-pendant",
+        "lia-flower-studs",
+        "luna-heart-pendant"
+      ],
+      "ad_creative": {
+        "title": "Classic gold hoops that survive the shower",
+        "body": "Waterproof, 18K gold plated hoops. Shower, gym, repeat. ₹3,299, free shipping.",
+        "image": "/images/products/ciel-hoops-40mm/front.jpg",
+        "cta": "Shop hoops"
+      },
+      "landing_url_template": "/p/{hero_sku_handle}?utm_source=chatgpt&utm_medium=cpc&campaign_id={campaign_id}&ad_group_id={ad_group_id}&ad_id={ad_id}"
+    },
+    {
+      "id": "wedding-guest-gift",
+      "campaign_id": "cmp_7f3a9c21d84e",
+      "ad_group_id": "adg_91d4c7a35e02",
+      "ad_id": "ad_4c2d8e71a9b5",
+      "name": "Wedding guest & gifting",
+      "status": "active",
+      "created_by": "engage_campaign_agent",
+      "origin_proposal": null,
+      "daily_budget_inr": 3000,
+      "context_hints": [
+        "wedding guest outfit",
+        "gift for a friend's wedding",
+        "festive",
+        "statement",
+        "gift-wrapped"
+      ],
+      "hero_sku": "ciel-hoops-40mm",
+      "candidate_skus": [
+        "ciel-hoops-40mm",
+        "noor-kundan-jhumkas",
+        "noor-pearl-jhumkas",
+        "noor-temple-jhumkas",
+        "noor-mini-jhumkas",
+        "mira-pearl-drops",
+        "maya-pearl-choker",
+        "kaya-tennis-bracelet",
+        "tara-solitaire-studs",
+        "kaya-hammered-cuff"
+      ],
+      "ad_creative": {
+        "title": "Wedding-guest gold, gift-wrapped",
+        "body": "Statement hoops and new kundan jhumkas. Free gift note, ships from Jaipur.",
+        "image": "/images/products/ciel-hoops-40mm/on_model.jpg",
+        "cta": "See the edit"
+      },
+      "landing_url_template": "/p/{hero_sku_handle}?utm_source=chatgpt&utm_medium=cpc&campaign_id={campaign_id}&ad_group_id={ad_group_id}&ad_id={ad_id}"
+    },
+    {
+      "id": "office-minimal",
+      "campaign_id": "cmp_7f3a9c21d84e",
+      "ad_group_id": "adg_5e0c2a7b19f3",
+      "ad_id": "ad_b18a6f3e0d27",
+      "name": "Office minimal",
+      "status": "active",
+      "created_by": "engage_campaign_agent",
+      "origin_proposal": null,
+      "daily_budget_inr": 2500,
+      "context_hints": [
+        "office-friendly earrings",
+        "minimal",
+        "lightweight",
+        "all-day comfort",
+        "meetings and video calls"
+      ],
+      "hero_sku": "ciel-huggies-20mm",
+      "candidate_skus": [
+        "ciel-huggies-20mm",
+        "ciel-hoops-30mm",
+        "aria-hoops-28mm",
+        "tara-solitaire-studs",
+        "elle-bezel-studs",
+        "mira-teardrop-drops",
+        "sol-layered-chain-set",
+        "sol-snake-chain",
+        "luna-coin-pendant",
+        "veda-band-ring"
+      ],
+      "ad_creative": {
+        "title": "Classic huggies · desk to dinner",
+        "body": "Featherlight gold huggies you can sleep in. ₹2,199.",
+        "image": "/images/products/ciel-huggies-20mm/front.jpg",
+        "cta": "Shop huggies"
+      },
+      "landing_url_template": "/p/{hero_sku_handle}?utm_source=chatgpt&utm_medium=cpc&campaign_id={campaign_id}&ad_group_id={ad_group_id}&ad_id={ad_id}"
+    },
+    {
+      "id": "hypoallergenic-studs",
+      "campaign_id": "cmp_7f3a9c21d84e",
+      "ad_group_id": "adg_c47f18e2d6b9",
+      "ad_id": "ad_7d05e2c9b4f1",
+      "name": "Studs for sensitive ears",
+      "status": "pending_approval",
+      "created_by": "engage_campaign_agent",
+      "origin_proposal": "prop-new-ad-group-hypoallergenic",
+      "daily_budget_inr": 1500,
+      "context_hints": [
+        "sensitive ears",
+        "nickel-free",
+        "titanium posts",
+        "everyday studs",
+        "gift for someone with allergies"
+      ],
+      "hero_sku": "tara-solitaire-studs",
+      "candidate_skus": [
+        "tara-solitaire-studs",
+        "tara-pearl-studs",
+        "tara-heart-studs",
+        "elle-bezel-studs",
+        "kira-mini-huggies",
+        "kira-twist-huggies"
+      ],
+      "ad_creative": {
+        "title": "Studs on titanium posts",
+        "body": "Everyday sparkle on titanium and surgical-steel posts. From ₹1,199.",
+        "image": "/images/products/tara-solitaire-studs/front.jpg",
+        "cta": "Shop studs"
+      },
+      "landing_url_template": "/p/{hero_sku_handle}?utm_source=chatgpt&utm_medium=cpc&campaign_id={campaign_id}&ad_group_id={ad_group_id}&ad_id={ad_id}"
+    }
+  ]
+}

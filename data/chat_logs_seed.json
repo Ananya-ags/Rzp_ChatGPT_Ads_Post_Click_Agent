@@ -1,0 +1,1504 @@
+{
+  "messages": [
+    {
+      "id": "msg_023",
+      "session_id": "s_00068",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-13T12:49:00+05:30",
+      "message": "new piercing, which studs are safe",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_106",
+      "session_id": "s_00054",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-13T15:09:00+05:30",
+      "message": "kitna lamba hai jhumka",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_100",
+      "session_id": "s_00007",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-13T19:52:00+05:30",
+      "message": "adjustable ring fits size 9?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_085",
+      "session_id": "s_00248",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-14T10:14:00+05:30",
+      "message": "do you ship outside India",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_103",
+      "session_id": "s_00271",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-14T11:46:00+05:30",
+      "message": "will the huggie fit a second piercing",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_098",
+      "session_id": "s_00262",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-14T11:49:00+05:30",
+      "message": "chain length for a high neck kurta",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_057",
+      "session_id": "s_00227",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-14T18:25:00+05:30",
+      "message": "can my kid wear them in the pool",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_113",
+      "session_id": "s_00272",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-14T20:46:00+05:30",
+      "message": "gift under 2000 for a colleague",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_091",
+      "session_id": "s_00451",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-15T19:24:00+05:30",
+      "message": "too heavy?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_064",
+      "session_id": "s_00421",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-15T19:46:00+05:30",
+      "message": "does sunscreen affect the coating",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_123",
+      "session_id": "s_00445",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-15T20:15:00+05:30",
+      "message": "bhai ki shaadi hai, matching set milega kya",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_020",
+      "session_id": "s_00614",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-16T09:19:00+05:30",
+      "message": "I react to most earrings, help",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_071",
+      "session_id": "s_00598",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-16T10:46:00+05:30",
+      "message": "express shipping?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_032",
+      "session_id": "s_00635",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-16T12:15:00+05:30",
+      "message": "sensitive ears wale ke liye kya acha hai",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_128",
+      "session_id": "s_00645",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-16T12:41:00+05:30",
+      "message": "is this real gold",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_066",
+      "session_id": "s_00624",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-16T12:48:00+05:30",
+      "message": "need by Friday",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_122",
+      "session_id": "s_00637",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-16T15:09:00+05:30",
+      "message": "something for a bridesmaid set of 4",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_120",
+      "session_id": "s_00639",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-16T16:21:00+05:30",
+      "message": "bhabhi ke liye gift chahiye",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_081",
+      "session_id": "s_00607",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-16T17:43:00+05:30",
+      "message": "can I get it in 2 days",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_042",
+      "session_id": "s_00820",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-17T11:27:00+05:30",
+      "message": "will the gold come off in water",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_058",
+      "session_id": "s_00807",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-17T16:40:00+05:30",
+      "message": "sea water ok?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_108",
+      "session_id": "s_00823",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-17T20:01:00+05:30",
+      "message": "for a petite person which hoop",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_062",
+      "session_id": "s_00830",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-17T20:04:00+05:30",
+      "message": "tarnish warranty?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_079",
+      "session_id": "s_00831",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-17T21:00:00+05:30",
+      "message": "track my order",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_145",
+      "session_id": "s_01023",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-18T18:31:00+05:30",
+      "message": "do you sell gift cards",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_056",
+      "session_id": "s_00987",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-18T19:41:00+05:30",
+      "message": "my last earrings faded in a month, will these?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_007",
+      "session_id": "s_01050",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-18T21:06:00+05:30",
+      "message": "is the post titanium or steel?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_102",
+      "session_id": "s_01022",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-18T21:50:00+05:30",
+      "message": "weight of each earring",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_148",
+      "session_id": "s_01204",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-19T11:03:00+05:30",
+      "message": "tell me a joke",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_089",
+      "session_id": "s_01199",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-19T12:36:00+05:30",
+      "message": "agar aaj order karu toh kab milega",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_047",
+      "session_id": "s_01205",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-19T19:10:00+05:30",
+      "message": "how long does the gold last",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_087",
+      "session_id": "s_01231",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-19T20:39:00+05:30",
+      "message": "will it reach in time for karva chauth",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_149",
+      "session_id": "s_01193",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-19T20:40:00+05:30",
+      "message": "koi offer hai kya",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_054",
+      "session_id": "s_01403",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-20T09:47:00+05:30",
+      "message": "rain mein kharab hoga kya",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_132",
+      "session_id": "s_01460",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-20T12:21:00+05:30",
+      "message": "can I exchange size",
+      "language": "en-IN",
+      "converted": true,
+      "unmet": false
+    },
+    {
+      "id": "msg_028",
+      "session_id": "s_01455",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-20T16:02:00+05:30",
+      "message": "safe for sensitive earlobes?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_022",
+      "session_id": "s_01409",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-20T16:48:00+05:30",
+      "message": "earrings that won't irritate piercings",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_137",
+      "session_id": "s_01399",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-20T20:25:00+05:30",
+      "message": "what's the weather",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_117",
+      "session_id": "s_01428",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-20T21:32:00+05:30",
+      "message": "can it be delivered to a different address",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_104",
+      "session_id": "s_01635",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-21T12:12:00+05:30",
+      "message": "the layered set, how long is the longest chain",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_115",
+      "session_id": "s_01633",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-21T12:22:00+05:30",
+      "message": "anniversary gift idea",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_018",
+      "session_id": "s_01640",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-21T13:02:00+05:30",
+      "message": "hypoallergenic options under 2000?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_139",
+      "session_id": "s_01848",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-22T10:31:00+05:30",
+      "message": "do you have silver tone",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_030",
+      "session_id": "s_01820",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-22T11:36:00+05:30",
+      "message": "is 316L steel ok for allergies",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_026",
+      "session_id": "s_01822",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-22T21:38:00+05:30",
+      "message": "ears swell with cheap earrings, are yours different",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_017",
+      "session_id": "s_02022",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-23T12:27:00+05:30",
+      "message": "can people with metal allergy wear this",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_034",
+      "session_id": "s_02053",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-23T13:46:00+05:30",
+      "message": "do you list post material anywhere",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_077",
+      "session_id": "s_01994",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-23T14:23:00+05:30",
+      "message": "is COD available for my pincode",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_029",
+      "session_id": "s_02035",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-23T15:22:00+05:30",
+      "message": "any certified hypoallergenic earrings",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_009",
+      "session_id": "s_02025",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-23T16:50:00+05:30",
+      "message": "something for sensitive skin pls",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_092",
+      "session_id": "s_02207",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-24T13:12:00+05:30",
+      "message": "40mm vs 30mm which is better for office",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_112",
+      "session_id": "s_02228",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-24T19:02:00+05:30",
+      "message": "can I add a note",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_119",
+      "session_id": "s_02224",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-24T21:47:00+05:30",
+      "message": "exchange if she doesn't like it?",
+      "language": "en-IN",
+      "converted": true,
+      "unmet": false
+    },
+    {
+      "id": "msg_005",
+      "session_id": "s_02236",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-24T22:46:00+05:30",
+      "message": "hypoallergenic studs?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_033",
+      "session_id": "s_02424",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-25T10:49:00+05:30",
+      "message": "which of these is best for allergic ears",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_011",
+      "session_id": "s_02388",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-25T11:24:00+05:30",
+      "message": "nickel free hoops?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_134",
+      "session_id": "s_02409",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-25T11:59:00+05:30",
+      "message": "is payment secure",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_040",
+      "session_id": "s_02615",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-26T09:58:00+05:30",
+      "message": "sweat se kaala toh nahi hoga?",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_049",
+      "session_id": "s_02675",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-26T15:03:00+05:30",
+      "message": "I wash my hands 20 times a day, ok?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_074",
+      "session_id": "s_02673",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-26T16:43:00+05:30",
+      "message": "same day delivery in Mumbai?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_138",
+      "session_id": "s_02670",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-26T17:53:00+05:30",
+      "message": "can you write my email",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_143",
+      "session_id": "s_02637",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-26T18:28:00+05:30",
+      "message": "anklets?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_060",
+      "session_id": "s_02608",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-26T21:32:00+05:30",
+      "message": "steam room ok?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_116",
+      "session_id": "s_02634",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-26T22:43:00+05:30",
+      "message": "gift for mom who likes simple gold",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_050",
+      "session_id": "s_02795",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-27T10:36:00+05:30",
+      "message": "water resistant or waterproof?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_036",
+      "session_id": "s_02794",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-27T11:25:00+05:30",
+      "message": "pool safe?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_037",
+      "session_id": "s_02803",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-27T14:43:00+05:30",
+      "message": "will it tarnish if I swim",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_111",
+      "session_id": "s_02840",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-27T15:44:00+05:30",
+      "message": "gift for my sister's wedding",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_039",
+      "session_id": "s_02985",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-28T10:39:00+05:30",
+      "message": "is it waterproof",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_048",
+      "session_id": "s_03030",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-28T12:18:00+05:30",
+      "message": "does perfume damage it",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_046",
+      "session_id": "s_03049",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-28T12:28:00+05:30",
+      "message": "can I sleep and shower in the huggies",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_031",
+      "session_id": "s_03050",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-28T14:02:00+05:30",
+      "message": "studs that don't make my ears itch",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_059",
+      "session_id": "s_02964",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-28T15:33:00+05:30",
+      "message": "is the paperclip chain waterproof too",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_065",
+      "session_id": "s_03012",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-28T20:15:00+05:30",
+      "message": "will it reach before Diwali",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_045",
+      "session_id": "s_03175",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-29T13:33:00+05:30",
+      "message": "is the PVD coating durable",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_082",
+      "session_id": "s_03220",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-09-29T21:16:00+05:30",
+      "message": "Diwali se pehle mil jayega?",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_053",
+      "session_id": "s_03417",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-30T10:39:00+05:30",
+      "message": "safe for hot yoga?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_051",
+      "session_id": "s_03419",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-30T10:49:00+05:30",
+      "message": "can I wear the chain while swimming",
+      "language": "en-IN",
+      "converted": true,
+      "unmet": false
+    },
+    {
+      "id": "msg_075",
+      "session_id": "s_03461",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-30T14:05:00+05:30",
+      "message": "when will the 30mm ship",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_019",
+      "session_id": "s_03464",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-09-30T14:21:00+05:30",
+      "message": "are the studs titanium",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_024",
+      "session_id": "s_03414",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-09-30T21:12:00+05:30",
+      "message": "does the gold plating have nickel underneath",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_095",
+      "session_id": "s_03683",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-01T10:00:00+05:30",
+      "message": "what's the inner diameter",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_069",
+      "session_id": "s_03646",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-01T11:48:00+05:30",
+      "message": "can it come by Saturday, it's a gift",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_141",
+      "session_id": "s_03674",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-01T12:44:00+05:30",
+      "message": "how to clean",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_063",
+      "session_id": "s_03612",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-01T14:30:00+05:30",
+      "message": "dishwashing with the ring on ok?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_015",
+      "session_id": "s_03606",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-01T17:07:00+05:30",
+      "message": "skin safe earrings for everyday?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_126",
+      "session_id": "s_03626",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-01T20:42:00+05:30",
+      "message": "return policy?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_096",
+      "session_id": "s_03845",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-02T09:44:00+05:30",
+      "message": "size compare with a coin?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_150",
+      "session_id": "s_03892",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-02T16:15:00+05:30",
+      "message": "can I talk to a human",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_130",
+      "session_id": "s_03847",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-02T16:28:00+05:30",
+      "message": "refund kitne din mein aata hai",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_094",
+      "session_id": "s_03859",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-02T18:05:00+05:30",
+      "message": "how far does it hang",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_144",
+      "session_id": "s_03901",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-02T20:27:00+05:30",
+      "message": "bulk order for a corporate event",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_140",
+      "session_id": "s_03846",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-02T22:25:00+05:30",
+      "message": "are you a bot",
+      "language": "en-IN",
+      "converted": true,
+      "unmet": false
+    },
+    {
+      "id": "msg_021",
+      "session_id": "s_04103",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-03T10:47:00+05:30",
+      "message": "pure titanium posts or plated?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_035",
+      "session_id": "s_04027",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-03T12:32:00+05:30",
+      "message": "can I shower with it",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_110",
+      "session_id": "s_04078",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-03T20:08:00+05:30",
+      "message": "gift wrap?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_107",
+      "session_id": "s_04059",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-03T20:19:00+05:30",
+      "message": "do they look bigger in person",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_124",
+      "session_id": "s_04069",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-03T21:27:00+05:30",
+      "message": "matching earrings and necklace for a gift",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_012",
+      "session_id": "s_04074",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-03T21:55:00+05:30",
+      "message": "my daughter has sensitive ears, any studs for her?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_142",
+      "session_id": "s_04274",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-04T09:44:00+05:30",
+      "message": "nose pins?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_101",
+      "session_id": "s_04220",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-04T14:53:00+05:30",
+      "message": "bahut bade toh nahi lagenge?",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_070",
+      "session_id": "s_04272",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-04T16:44:00+05:30",
+      "message": "kab tak aayega Delhi mein",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_076",
+      "session_id": "s_04310",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-04T18:25:00+05:30",
+      "message": "why does this one take longer",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_086",
+      "session_id": "s_04253",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-04T20:44:00+05:30",
+      "message": "weekend delivery?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_061",
+      "session_id": "s_04496",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-05T09:22:00+05:30",
+      "message": "wear 24/7?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_136",
+      "session_id": "s_04474",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-05T13:11:00+05:30",
+      "message": "men's earrings?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_078",
+      "session_id": "s_04447",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-05T17:34:00+05:30",
+      "message": "order today, reach by Thursday?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_014",
+      "session_id": "s_04497",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-05T17:54:00+05:30",
+      "message": "surgical steel posts?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_043",
+      "session_id": "s_04463",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-05T22:20:00+05:30",
+      "message": "do I need to remove before bath",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_088",
+      "session_id": "s_04716",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-06T10:45:00+05:30",
+      "message": "delivery charges for 1 item?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_001",
+      "session_id": "s_04652",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-06T11:19:00+05:30",
+      "message": "do you have anything for sensitive ears?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_099",
+      "session_id": "s_04715",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-06T14:02:00+05:30",
+      "message": "ring size chart?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_125",
+      "session_id": "s_04658",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-06T15:45:00+05:30",
+      "message": "can I return if it tarnishes",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_072",
+      "session_id": "s_04687",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-06T19:48:00+05:30",
+      "message": "need it before my sister's sangeet on 20th",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_084",
+      "session_id": "s_04697",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-06T19:48:00+05:30",
+      "message": "how long for Jaipur",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_121",
+      "session_id": "s_04695",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-06T20:51:00+05:30",
+      "message": "gift box included?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_038",
+      "session_id": "s_04838",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-07T12:02:00+05:30",
+      "message": "can I wear it to the gym",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_127",
+      "session_id": "s_04839",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-07T13:22:00+05:30",
+      "message": "what if it breaks",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_131",
+      "session_id": "s_04884",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-07T16:28:00+05:30",
+      "message": "are you a genuine brand",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_002",
+      "session_id": "s_04843",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-07T17:39:00+05:30",
+      "message": "are these nickel-free?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_109",
+      "session_id": "s_04863",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-07T18:39:00+05:30",
+      "message": "thickness of the hoop?",
+      "language": "en-IN",
+      "converted": true,
+      "unmet": false
+    },
+    {
+      "id": "msg_146",
+      "session_id": "s_04849",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-07T18:56:00+05:30",
+      "message": "student discount?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_055",
+      "session_id": "s_04911",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-07T21:32:00+05:30",
+      "message": "does it turn green",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_093",
+      "session_id": "s_05033",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-08T10:38:00+05:30",
+      "message": "will 40mm look too big on a small face",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_044",
+      "session_id": "s_05030",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-08T12:30:00+05:30",
+      "message": "shower mein pehen sakte hain?",
+      "language": "hi-Latn",
+      "converted": true,
+      "unmet": false
+    },
+    {
+      "id": "msg_105",
+      "session_id": "s_05088",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-08T13:56:00+05:30",
+      "message": "cuff fits a small wrist?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_073",
+      "session_id": "s_05039",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-08T17:54:00+05:30",
+      "message": "do you deliver to 845401",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_114",
+      "session_id": "s_05081",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-08T19:59:00+05:30",
+      "message": "will the price show on the invoice",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_004",
+      "session_id": "s_05114",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-08T21:03:00+05:30",
+      "message": "kaan mein allergy hoti hai, ye safe hai?",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_147",
+      "session_id": "s_05056",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-08T22:42:00+05:30",
+      "message": "give me 50% off",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_068",
+      "session_id": "s_05096",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-08T22:54:00+05:30",
+      "message": "how many days to Bangalore",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_016",
+      "session_id": "s_05300",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-09T09:30:00+05:30",
+      "message": "mere kaan sensitive hain, koi studs batao",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_003",
+      "session_id": "s_05261",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-09T11:19:00+05:30",
+      "message": "my ears itch with fake gold, will these be ok",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_008",
+      "session_id": "s_05229",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-09T11:32:00+05:30",
+      "message": "I'm allergic to nickel, which earrings can I wear",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_052",
+      "session_id": "s_05239",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-09T17:51:00+05:30",
+      "message": "will chlorine affect it",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_027",
+      "session_id": "s_05441",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-10T16:55:00+05:30",
+      "message": "itchy ears ka koi solution? nickel free hai kya",
+      "language": "hi-Latn",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_133",
+      "session_id": "s_05431",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-10T18:44:00+05:30",
+      "message": "who pays return shipping",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_013",
+      "session_id": "s_05485",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-10T19:46:00+05:30",
+      "message": "do these cause allergy",
+      "language": "en-IN",
+      "converted": true,
+      "unmet": true
+    },
+    {
+      "id": "msg_083",
+      "session_id": "s_05491",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-10T22:12:00+05:30",
+      "message": "need it by 16th for an interview",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_080",
+      "session_id": "s_05655",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-11T10:46:00+05:30",
+      "message": "ships from where?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_025",
+      "session_id": "s_05639",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-11T17:53:00+05:30",
+      "message": "nickel allergy friendly gift for my mom",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_097",
+      "session_id": "s_05667",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-11T17:54:00+05:30",
+      "message": "is 20mm too small",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_006",
+      "session_id": "s_05651",
+      "ad_group_id": "office-minimal",
+      "timestamp": "2026-10-11T18:33:00+05:30",
+      "message": "what are the posts made of",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_041",
+      "session_id": "s_05608",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-11T22:04:00+05:30",
+      "message": "beach trip next week, can I wear these in the sea",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_118",
+      "session_id": "s_05833",
+      "ad_group_id": "wedding-guest-gift",
+      "timestamp": "2026-10-12T09:45:00+05:30",
+      "message": "best seller for gifting?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_090",
+      "session_id": "s_05791",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-12T12:45:00+05:30",
+      "message": "how big on the ear",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_010",
+      "session_id": "s_05801",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-12T13:10:00+05:30",
+      "message": "will my ears get red with these",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_135",
+      "session_id": "s_05794",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-12T15:34:00+05:30",
+      "message": "do you have a store in Pune",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": true
+    },
+    {
+      "id": "msg_067",
+      "session_id": "s_05800",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-12T17:32:00+05:30",
+      "message": "delivery to Pune by 18th?",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    },
+    {
+      "id": "msg_129",
+      "session_id": "s_05798",
+      "ad_group_id": "waterproof-everyday-under-5k",
+      "timestamp": "2026-10-12T18:53:00+05:30",
+      "message": "warranty claim process",
+      "language": "en-IN",
+      "converted": false,
+      "unmet": false
+    }
+  ]
+}

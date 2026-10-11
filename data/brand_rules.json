@@ -1,0 +1,56 @@
+{
+  "margin_floor_band": "medium",
+  "pinned": {
+    "wedding-guest-gift": [
+      {
+        "sku": "noor-kundan-jhumkas",
+        "slot": 1
+      }
+    ]
+  },
+  "excluded_skus": [
+    {
+      "sku": "luna-heart-pendant",
+      "reason": "Near out of stock (2 left)"
+    },
+    {
+      "sku": "kaya-tennis-bracelet",
+      "reason": "Clearance; not promoted in ads"
+    }
+  ],
+  "rail_size": 5,
+  "offer_caps": {
+    "max_pct": 10,
+    "max_flat_inr": 300,
+    "applies_to": "Combined promotional discount per order. Loyalty wallet redemption is stored value and not counted."
+  },
+  "claims_policy": "Only verified attributes (metafields.jewellery, entered by the brand) are stated as claims. AI-extracted attributes are described as materials, never as benefits.",
+  "banned_phrases": [
+    "ChatGPT",
+    "guaranteed hypoallergenic",
+    "100% waterproof forever"
+  ],
+  "escalation": {
+    "text": "I'd rather not guess on that. Our care team can help on WhatsApp, Mon to Sat, 10am to 7pm.",
+    "contact": "care@cosmos.example · +91 55555 01234 (simulated)"
+  },
+  "holdout_pct": 20,
+  "arms": {
+    "A": "Standard product page (holdout)",
+    "B": "Curated rail, no agent",
+    "C": "Curated rail + agent"
+  },
+  "arm_split": {
+    "A": 0.2,
+    "B": 0.4,
+    "C": 0.4
+  },
+  "agent_enabled": true,
+  "coverage": {
+    "chatgpt_ads": "on",
+    "ai_referrals": "beta",
+    "meta_ads": "available",
+    "google_ads": "available",
+    "whole_site": "talk_to_us"
+  }
+}

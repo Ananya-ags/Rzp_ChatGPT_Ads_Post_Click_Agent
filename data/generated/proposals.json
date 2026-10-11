@@ -1,0 +1,188 @@
+{
+  "producer": {
+    "stage": "proposals",
+    "mode": "heuristic",
+    "model": null,
+    "prompt_version": "proposals-v1",
+    "note": "Rule-based fallback (no API key). Re-run `npm run pipelines` with ANTHROPIC_API_KEY for the AI version."
+  },
+  "proposals": [
+    {
+      "id": "prop-new-ad-group-hypoallergenic",
+      "type": "new_ad_group",
+      "title": "34 shoppers asked for hypoallergenic studs",
+      "summary": "Shoppers keep asking about sensitive ears and nickel, and 6 studs/huggies already mention titanium or surgical-steel posts in their descriptions, but none are tagged. Confirm the post material and launch a \"Studs for sensitive ears\" ad group.",
+      "evidence": [
+        {
+          "label": "Shoppers who asked",
+          "value": "34 (34 messages, 4 in Hinglish)"
+        },
+        {
+          "label": "Unmet by the catalogue",
+          "value": "88%"
+        },
+        {
+          "label": "Conversion when asked",
+          "value": "3%"
+        },
+        {
+          "label": "Matching SKUs (unverified)",
+          "value": "Classic Solitaire Stud Earrings, Classic Pearl Stud Earrings, Heart Stud Earrings, Mini Bezel Stud Earrings, Mini Huggie Earrings, Twisted Huggie Earrings"
+        }
+      ],
+      "examples": [
+        "new piercing, which studs are safe",
+        "will the huggie fit a second piercing",
+        "sensitive ears wale ke liye kya acha hai",
+        "is the post titanium or steel?"
+      ],
+      "confidence": 0.82,
+      "impact": "New ad group; rail built from the newly tagged studs",
+      "apply": {
+        "action": "activate_ad_group",
+        "ad_group_id": "hypoallergenic-studs",
+        "confirm_attributes": [
+          {
+            "sku": "tara-solitaire-studs",
+            "attribute": "post_material"
+          },
+          {
+            "sku": "tara-pearl-studs",
+            "attribute": "post_material"
+          },
+          {
+            "sku": "tara-heart-studs",
+            "attribute": "post_material"
+          },
+          {
+            "sku": "elle-bezel-studs",
+            "attribute": "post_material"
+          },
+          {
+            "sku": "kira-mini-huggies",
+            "attribute": "post_material"
+          },
+          {
+            "sku": "kira-twist-huggies",
+            "attribute": "post_material"
+          }
+        ],
+        "daily_budget_inr": 1500,
+        "send_to": "engage_campaign_agent"
+      }
+    },
+    {
+      "id": "prop-feed-waterproof",
+      "type": "feed_attribute",
+      "title": "Add \"waterproof\" to 18 SKUs",
+      "summary": "18 steel + PVD SKUs say \"shower-proof\" or \"pool-safe\" in their copy, but the water_resistant attribute is empty, so the agent can't claim it and the ad feed can't match waterproof queries.",
+      "evidence": [
+        {
+          "label": "SKUs with the claim only in prose",
+          "value": "18"
+        },
+        {
+          "label": "Shopper questions about water",
+          "value": "28"
+        },
+        {
+          "label": "Example phrases",
+          "value": "\"Waterproof and 18K gold plated stainless steel.\" · \"Waterproof and 18K gold plated stainless steel.\" · \"Waterproof and 18K gold plated stainless steel.\""
+        }
+      ],
+      "examples": [
+        "can my kid wear them in the pool",
+        "does sunscreen affect the coating",
+        "will the gold come off in water"
+      ],
+      "confidence": 0.74,
+      "impact": "Waterproof rail and agent answers can include these SKUs once confirmed",
+      "apply": {
+        "action": "set_feed_attribute",
+        "attribute": "water_resistant",
+        "value": true,
+        "skus": [
+          "kira-mini-huggies",
+          "kira-twist-huggies",
+          "mira-teardrop-drops",
+          "sana-chain-threaders",
+          "sol-paperclip-chain",
+          "sol-snake-chain",
+          "sol-rope-chain",
+          "sol-layered-chain-set",
+          "luna-coin-pendant",
+          "luna-evil-eye-pendant",
+          "luna-heart-pendant",
+          "veda-dome-ring",
+          "veda-band-ring",
+          "veda-twist-ring",
+          "veda-signet-ring",
+          "kaya-cuff",
+          "kaya-chain-bracelet",
+          "kaya-hammered-cuff"
+        ],
+        "requires_brand_confirmation": true
+      }
+    },
+    {
+      "id": "prop-remove-sol-layered-chain-set-office-minimal",
+      "type": "remove_from_rail",
+      "title": "Remove Layered Chain Necklace Set from the \"Office minimal\" rail",
+      "summary": "Returns are 22% from this context vs 8% overall. Top reason: \"too long\" (78%). Suggest Snake Chain Necklace instead.",
+      "evidence": [
+        {
+          "label": "Return rate, this context",
+          "value": "22% (11/50)"
+        },
+        {
+          "label": "Return rate, overall",
+          "value": "8%"
+        },
+        {
+          "label": "Top reasons",
+          "value": "Too long 78%, Tangles 22%"
+        }
+      ],
+      "examples": [
+        "Too long for my office shirts, the longest chain hangs weird",
+        "Tangles every single time I take it off",
+        "too long with collared shirts"
+      ],
+      "confidence": 0.77,
+      "impact": "Fewer returns in this context; kept revenue per click up",
+      "apply": {
+        "action": "exclude_from_rail",
+        "ad_group_id": "office-minimal",
+        "sku": "sol-layered-chain-set",
+        "replace_with": "sol-snake-chain"
+      }
+    },
+    {
+      "id": "prop-pause-wedding-guest-gift",
+      "type": "pause_context",
+      "title": "Pause the agent on \"Wedding guest & gifting\" and test a jhumka-first page",
+      "summary": "This context keeps ₹30 per click vs ₹54 across ChatGPT ads. The agent adds little here (₹34 vs ₹29 on the standard page), so spend it where it lifts kept revenue.",
+      "evidence": [
+        {
+          "label": "Kept revenue / click",
+          "value": "₹30 (avg ₹54)"
+        },
+        {
+          "label": "Agent vs standard page",
+          "value": "₹34 vs ₹29"
+        },
+        {
+          "label": "Return + RTO rate",
+          "value": "30%"
+        }
+      ],
+      "examples": [],
+      "confidence": 0.58,
+      "impact": "Agent cost saved; rail-only page for this context",
+      "apply": {
+        "action": "pause_agent_for_context",
+        "ad_group_id": "wedding-guest-gift"
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+# Cosmos · post-click agent for ChatGPT Ads (Razorpay Engage prototype)
+
+Prototype for the Razorpay × ISB AI PM Build Challenge (Track 2). Cosmos is a fictional brand; all shopper, order and ad data is simulated. See `docs/` for the product context and data spec, and `BUILD_LOG.md` for decisions.
+
+## Run
+
+```bash
+cp .env.example .env.local   # add keys you have (all optional for a local preview)
+npm install
+npm run data                 # seed → pipelines → demo cache → validate-data
+npm run dev                  # http://localhost:3000
+```
+
+- No `ANTHROPIC_API_KEY`? Pipelines run in heuristic mode, and the agent answers the guided-demo chips from cached responses (built from the real tools).
+- Product photos (two per SKU) live in `public/images/products/<handle>/` and come from the supplied Cosmos catalogue images.
+
+## Pages
+| Route | What |
+|---|---|
+| `/` | Start page + demo controls (pause agent, reset) |
+| `/chatgpt` | Mock ChatGPT with sponsored cards (conversation 3 unlocks after the proposal is approved) |
+| `/p/[handle]?ad_group_id=…` | Product page adapted to the ad (arm C: chip, rail, opener, agent). `&arm=A` gives the standard page, `&arm=B` the rail without the agent |
+| `/api/chat` | Agent (Claude Haiku 5.5 + tools, guardrails, cached fallback) |
+
+## Data
+- `scripts/seed/*`: hand-authored sources. `npm run seed` writes `/data/*.json` and `evals/`.
+- `scripts/pipelines/run.ts`: offline AI decisions. They write `/data/generated/*` (never hand-edit).
+- `scripts/validate-data.ts`: references, planted counts, planted delivery dates, tuned metrics, copy rules.

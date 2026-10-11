@@ -1,0 +1,2595 @@
+{
+  "window_days": 90,
+  "as_of": "2026-10-12",
+  "skus": [
+    {
+      "sku": "ciel-hoops-40mm",
+      "units_sold": 240,
+      "returns": 41,
+      "rto": 9,
+      "return_rate": 0.171,
+      "rto_rate": 0.038,
+      "by_ad_group": {
+        "waterproof-everyday-under-5k": {
+          "units": 140,
+          "returns": 21,
+          "return_rate": 0.15
+        },
+        "wedding-guest-gift": {
+          "units": 100,
+          "returns": 20,
+          "return_rate": 0.2
+        }
+      },
+      "by_use_context": {
+        "office": {
+          "units": 70,
+          "returns": 22,
+          "kept": 48
+        },
+        "everyday": {
+          "units": 90,
+          "returns": 9,
+          "kept": 81
+        },
+        "wedding": {
+          "units": 43,
+          "returns": 7,
+          "kept": 36
+        },
+        "gifting": {
+          "units": 28,
+          "returns": 3,
+          "kept": 25
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "ciel-hoops-40mm-r1",
+          "text": "Way bigger than the photo. Looked huge on me.",
+          "date": "2026-10-12",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "everyday"
+        },
+        {
+          "id": "ciel-hoops-40mm-r2",
+          "text": "Too big for office, my manager literally commented lol",
+          "date": "2026-10-11",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "office"
+        },
+        {
+          "id": "ciel-hoops-40mm-r3",
+          "text": "looked bigger than expected, wanted something subtle for work",
+          "date": "2026-10-10",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "office"
+        },
+        {
+          "id": "ciel-hoops-40mm-r4",
+          "text": "Size was much larger than I imagined. Returning for a smaller one",
+          "date": "2026-10-09",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "office"
+        },
+        {
+          "id": "ciel-hoops-40mm-r5",
+          "text": "Beautiful but too big for daily office wear",
+          "date": "2026-10-08",
+          "ad_group_id": null,
+          "use_context": "office"
+        },
+        {
+          "id": "ciel-hoops-40mm-r6",
+          "text": "Bahut bade the, office ke liye nahi chalenge",
+          "date": "2026-10-07",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "office"
+        },
+        {
+          "id": "ciel-hoops-40mm-r7",
+          "text": "hoops were too large for my face, felt like statement earrings",
+          "date": "2026-10-06",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "everyday"
+        },
+        {
+          "id": "ciel-hoops-40mm-r8",
+          "text": "40mm is BIG. Should have checked the size properly",
+          "date": "2026-10-05",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "office"
+        },
+        {
+          "id": "ciel-hoops-40mm-r9",
+          "text": "Looked huge on me, I'm petite",
+          "date": "2026-10-04",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "everyday"
+        },
+        {
+          "id": "ciel-hoops-40mm-r10",
+          "text": "Too large and they kept getting caught in my hair",
+          "date": "2026-10-03",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "office"
+        },
+        {
+          "id": "ciel-hoops-40mm-r11",
+          "text": "way bigger than the photo on the model",
+          "date": "2026-10-02",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "wedding"
+        },
+        {
+          "id": "ciel-hoops-40mm-r12",
+          "text": "Size dikhne mein chhota tha photo mein, actual mein bada hai",
+          "date": "2026-10-01",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "everyday"
+        },
+        {
+          "id": "ciel-hoops-40mm-r13",
+          "text": "Too big for meetings and video calls",
+          "date": "2026-09-30",
+          "ad_group_id": null,
+          "use_context": "office"
+        },
+        {
+          "id": "ciel-hoops-40mm-r14",
+          "text": "Larger than expected, exchanging for the 30mm",
+          "date": "2026-09-29",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "office"
+        },
+        {
+          "id": "ciel-hoops-40mm-r15",
+          "text": "Gift not liked by my friend",
+          "date": "2026-09-28",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "gifting"
+        },
+        {
+          "id": "ciel-hoops-40mm-r16",
+          "text": "She already had similar hoops",
+          "date": "2026-09-27",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "gifting"
+        },
+        {
+          "id": "ciel-hoops-40mm-r17",
+          "text": "gift ki thi, pasand nahi aaye",
+          "date": "2026-09-26",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "gifting"
+        },
+        {
+          "id": "ciel-hoops-40mm-r18",
+          "text": "Changed my mind",
+          "date": "2026-09-25",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": null
+        },
+        {
+          "id": "ciel-hoops-40mm-r19",
+          "text": "Ordered by mistake, wanted the huggies",
+          "date": "2026-09-24",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "ciel-hoops-40mm-r20",
+          "text": "Latch felt a bit stiff to close",
+          "date": "2026-09-23",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "everyday"
+        }
+      ]
+    },
+    {
+      "sku": "ciel-hoops-30mm",
+      "units_sold": 150,
+      "returns": 6,
+      "rto": 2,
+      "return_rate": 0.04,
+      "rto_rate": 0.013,
+      "by_ad_group": {
+        "waterproof-everyday-under-5k": {
+          "units": 60,
+          "returns": 3,
+          "return_rate": 0.05
+        },
+        "office-minimal": {
+          "units": 70,
+          "returns": 2,
+          "return_rate": 0.029
+        }
+      },
+      "by_use_context": {
+        "office": {
+          "units": 88,
+          "returns": 3,
+          "kept": 85
+        },
+        "everyday": {
+          "units": 45,
+          "returns": 2,
+          "kept": 43
+        },
+        "gifting": {
+          "units": 15,
+          "returns": 1,
+          "kept": 14
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "ciel-hoops-30mm-r1",
+          "text": "Wanted something bigger for weekends",
+          "date": "2026-09-22",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "everyday"
+        },
+        {
+          "id": "ciel-hoops-30mm-r2",
+          "text": "Took longer to arrive than I needed",
+          "date": "2026-09-21",
+          "ad_group_id": "office-minimal",
+          "use_context": "office"
+        },
+        {
+          "id": "ciel-hoops-30mm-r3",
+          "text": "Changed mind",
+          "date": "2026-09-20",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "ciel-hoops-30mm-r4",
+          "text": "Colour slightly more yellow than my other jewellery",
+          "date": "2026-09-19",
+          "ad_group_id": "office-minimal",
+          "use_context": "office"
+        }
+      ]
+    },
+    {
+      "sku": "ciel-huggies-20mm",
+      "units_sold": 46,
+      "returns": 3,
+      "rto": 1,
+      "return_rate": 0.065,
+      "rto_rate": 0.022,
+      "by_ad_group": {
+        "waterproof-everyday-under-5k": {
+          "units": 14,
+          "returns": 1,
+          "return_rate": 0.071
+        },
+        "office-minimal": {
+          "units": 14,
+          "returns": 1,
+          "return_rate": 0.071
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 15,
+          "returns": 1,
+          "kept": 14
+        },
+        "office": {
+          "units": 15,
+          "returns": 1,
+          "kept": 14
+        },
+        "gifting": {
+          "units": 15,
+          "returns": 1,
+          "kept": 14
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "ciel-huggies-20mm-r1",
+          "text": "Too heavy for long wear",
+          "date": "2026-09-18",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "ciel-huggies-20mm-r2",
+          "text": "Didn't suit me",
+          "date": "2026-09-17",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "ciel-huggies-20mm-r3",
+          "text": "Delivered late for the function",
+          "date": "2026-09-16",
+          "ad_group_id": null,
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "aria-hoops-28mm",
+      "units_sold": 121,
+      "returns": 7,
+      "rto": 4,
+      "return_rate": 0.058,
+      "rto_rate": 0.033,
+      "by_ad_group": {
+        "waterproof-everyday-under-5k": {
+          "units": 36,
+          "returns": 2,
+          "return_rate": 0.056
+        },
+        "office-minimal": {
+          "units": 36,
+          "returns": 2,
+          "return_rate": 0.056
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 39,
+          "returns": 2,
+          "kept": 37
+        },
+        "office": {
+          "units": 39,
+          "returns": 2,
+          "kept": 37
+        },
+        "gifting": {
+          "units": 39,
+          "returns": 3,
+          "kept": 36
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "aria-hoops-28mm-r1",
+          "text": "Color thoda alag tha photo se",
+          "date": "2026-09-15",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "aria-hoops-28mm-r2",
+          "text": "Back kept falling off",
+          "date": "2026-09-14",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "aria-hoops-28mm-r3",
+          "text": "Too heavy for long wear",
+          "date": "2026-09-13",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "everyday"
+        },
+        {
+          "id": "aria-hoops-28mm-r4",
+          "text": "Ordered two by mistake",
+          "date": "2026-09-12",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "aria-hoops-28mm-r5",
+          "text": "Smaller than I expected",
+          "date": "2026-09-11",
+          "ad_group_id": null,
+          "use_context": "office"
+        },
+        {
+          "id": "aria-hoops-28mm-r6",
+          "text": "Colour a bit more yellow than the photo",
+          "date": "2026-09-10",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "aria-hoops-28mm-r7",
+          "text": "Delivered late for the function",
+          "date": "2026-09-09",
+          "ad_group_id": null,
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "noor-kundan-jhumkas",
+      "units_sold": 93,
+      "returns": 9,
+      "rto": 2,
+      "return_rate": 0.097,
+      "rto_rate": 0.022,
+      "by_ad_group": {
+        "wedding-guest-gift": {
+          "units": 28,
+          "returns": 3,
+          "return_rate": 0.107
+        }
+      },
+      "by_use_context": {
+        "festive": {
+          "units": 30,
+          "returns": 3,
+          "kept": 27
+        },
+        "wedding": {
+          "units": 30,
+          "returns": 3,
+          "kept": 27
+        },
+        "gifting": {
+          "units": 31,
+          "returns": 3,
+          "kept": 28
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "noor-kundan-jhumkas-r1",
+          "text": "Back kept falling off",
+          "date": "2026-09-08",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "noor-kundan-jhumkas-r2",
+          "text": "Delivered late for the function",
+          "date": "2026-09-07",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "gifting"
+        },
+        {
+          "id": "noor-kundan-jhumkas-r3",
+          "text": "Didn't suit me",
+          "date": "2026-09-06",
+          "ad_group_id": null,
+          "use_context": "wedding"
+        },
+        {
+          "id": "noor-kundan-jhumkas-r4",
+          "text": "Ordered two by mistake",
+          "date": "2026-09-05",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "noor-kundan-jhumkas-r5",
+          "text": "Too heavy for long wear",
+          "date": "2026-09-04",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "noor-kundan-jhumkas-r6",
+          "text": "Changed my mind",
+          "date": "2026-09-03",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "festive"
+        },
+        {
+          "id": "noor-kundan-jhumkas-r7",
+          "text": "Colour a bit more yellow than the photo",
+          "date": "2026-09-02",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "noor-kundan-jhumkas-r8",
+          "text": "Smaller than I expected",
+          "date": "2026-09-01",
+          "ad_group_id": null,
+          "use_context": "wedding"
+        }
+      ]
+    },
+    {
+      "sku": "noor-pearl-jhumkas",
+      "units_sold": 97,
+      "returns": 4,
+      "rto": 1,
+      "return_rate": 0.041,
+      "rto_rate": 0.01,
+      "by_ad_group": {
+        "wedding-guest-gift": {
+          "units": 29,
+          "returns": 1,
+          "return_rate": 0.034
+        }
+      },
+      "by_use_context": {
+        "festive": {
+          "units": 32,
+          "returns": 1,
+          "kept": 31
+        },
+        "wedding": {
+          "units": 32,
+          "returns": 1,
+          "kept": 31
+        },
+        "gifting": {
+          "units": 32,
+          "returns": 2,
+          "kept": 30
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "noor-pearl-jhumkas-r1",
+          "text": "Smaller than I expected",
+          "date": "2026-08-31",
+          "ad_group_id": null,
+          "use_context": "festive"
+        },
+        {
+          "id": "noor-pearl-jhumkas-r2",
+          "text": "Too heavy for long wear",
+          "date": "2026-08-30",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": null
+        },
+        {
+          "id": "noor-pearl-jhumkas-r3",
+          "text": "Colour a bit more yellow than the photo",
+          "date": "2026-08-29",
+          "ad_group_id": null,
+          "use_context": "wedding"
+        },
+        {
+          "id": "noor-pearl-jhumkas-r4",
+          "text": "Gift not liked",
+          "date": "2026-08-28",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "festive"
+        }
+      ]
+    },
+    {
+      "sku": "noor-mini-jhumkas",
+      "units_sold": 94,
+      "returns": 8,
+      "rto": 2,
+      "return_rate": 0.085,
+      "rto_rate": 0.021,
+      "by_ad_group": {
+        "wedding-guest-gift": {
+          "units": 28,
+          "returns": 2,
+          "return_rate": 0.071
+        }
+      },
+      "by_use_context": {
+        "festive": {
+          "units": 31,
+          "returns": 3,
+          "kept": 28
+        },
+        "office": {
+          "units": 31,
+          "returns": 3,
+          "kept": 28
+        },
+        "gifting": {
+          "units": 30,
+          "returns": 2,
+          "kept": 28
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "noor-mini-jhumkas-r1",
+          "text": "Smaller than I expected",
+          "date": "2026-08-27",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "noor-mini-jhumkas-r2",
+          "text": "Colour a bit more yellow than the photo",
+          "date": "2026-08-26",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "noor-mini-jhumkas-r3",
+          "text": "Color thoda alag tha photo se",
+          "date": "2026-08-25",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": null
+        },
+        {
+          "id": "noor-mini-jhumkas-r4",
+          "text": "Delivered late for the function",
+          "date": "2026-08-24",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "gifting"
+        },
+        {
+          "id": "noor-mini-jhumkas-r5",
+          "text": "Too heavy for long wear",
+          "date": "2026-08-23",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "gifting"
+        },
+        {
+          "id": "noor-mini-jhumkas-r6",
+          "text": "Back kept falling off",
+          "date": "2026-08-22",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "noor-mini-jhumkas-r7",
+          "text": "Ordered two by mistake",
+          "date": "2026-08-21",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        }
+      ]
+    },
+    {
+      "sku": "noor-temple-jhumkas",
+      "units_sold": 119,
+      "returns": 14,
+      "rto": 2,
+      "return_rate": 0.118,
+      "rto_rate": 0.017,
+      "by_ad_group": {
+        "wedding-guest-gift": {
+          "units": 36,
+          "returns": 4,
+          "return_rate": 0.111
+        }
+      },
+      "by_use_context": {
+        "festive": {
+          "units": 59,
+          "returns": 7,
+          "kept": 52
+        },
+        "wedding": {
+          "units": 58,
+          "returns": 7,
+          "kept": 51
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "noor-temple-jhumkas-r1",
+          "text": "Smaller than I expected",
+          "date": "2026-08-20",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": null
+        },
+        {
+          "id": "noor-temple-jhumkas-r2",
+          "text": "Changed my mind",
+          "date": "2026-08-19",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "noor-temple-jhumkas-r3",
+          "text": "Color thoda alag tha photo se",
+          "date": "2026-08-18",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "wedding"
+        },
+        {
+          "id": "noor-temple-jhumkas-r4",
+          "text": "Ordered two by mistake",
+          "date": "2026-08-17",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": null
+        },
+        {
+          "id": "noor-temple-jhumkas-r5",
+          "text": "Too heavy for long wear",
+          "date": "2026-08-16",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "noor-temple-jhumkas-r6",
+          "text": "Gift not liked",
+          "date": "2026-08-15",
+          "ad_group_id": null,
+          "use_context": "wedding"
+        },
+        {
+          "id": "noor-temple-jhumkas-r7",
+          "text": "Didn't suit me",
+          "date": "2026-08-14",
+          "ad_group_id": null,
+          "use_context": "wedding"
+        },
+        {
+          "id": "noor-temple-jhumkas-r8",
+          "text": "Delivered late for the function",
+          "date": "2026-08-13",
+          "ad_group_id": null,
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "tara-solitaire-studs",
+      "units_sold": 81,
+      "returns": 4,
+      "rto": 3,
+      "return_rate": 0.049,
+      "rto_rate": 0.037,
+      "by_ad_group": {
+        "wedding-guest-gift": {
+          "units": 24,
+          "returns": 1,
+          "return_rate": 0.042
+        },
+        "office-minimal": {
+          "units": 24,
+          "returns": 1,
+          "return_rate": 0.042
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 26,
+          "returns": 1,
+          "kept": 25
+        },
+        "office": {
+          "units": 26,
+          "returns": 1,
+          "kept": 25
+        },
+        "gifting": {
+          "units": 26,
+          "returns": 2,
+          "kept": 24
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "tara-solitaire-studs-r1",
+          "text": "Didn't suit me",
+          "date": "2026-08-12",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "gifting"
+        },
+        {
+          "id": "tara-solitaire-studs-r2",
+          "text": "Gift not liked",
+          "date": "2026-08-11",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "tara-solitaire-studs-r3",
+          "text": "Colour a bit more yellow than the photo",
+          "date": "2026-08-10",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": null
+        },
+        {
+          "id": "tara-solitaire-studs-r4",
+          "text": "Smaller than I expected",
+          "date": "2026-08-09",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "office"
+        }
+      ]
+    },
+    {
+      "sku": "tara-pearl-studs",
+      "units_sold": 137,
+      "returns": 6,
+      "rto": 4,
+      "return_rate": 0.044,
+      "rto_rate": 0.029,
+      "by_ad_group": {},
+      "by_use_context": {
+        "everyday": {
+          "units": 44,
+          "returns": 2,
+          "kept": 42
+        },
+        "office": {
+          "units": 44,
+          "returns": 2,
+          "kept": 42
+        },
+        "gifting": {
+          "units": 45,
+          "returns": 2,
+          "kept": 43
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "tara-pearl-studs-r1",
+          "text": "Delivered late for the function",
+          "date": "2026-08-08",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "tara-pearl-studs-r2",
+          "text": "Color thoda alag tha photo se",
+          "date": "2026-08-07",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "tara-pearl-studs-r3",
+          "text": "Too heavy for long wear",
+          "date": "2026-08-06",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "tara-pearl-studs-r4",
+          "text": "Ordered two by mistake",
+          "date": "2026-08-05",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "tara-pearl-studs-r5",
+          "text": "Didn't suit me",
+          "date": "2026-08-04",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "tara-pearl-studs-r6",
+          "text": "Changed my mind",
+          "date": "2026-08-03",
+          "ad_group_id": null,
+          "use_context": "office"
+        }
+      ]
+    },
+    {
+      "sku": "tara-heart-studs",
+      "units_sold": 188,
+      "returns": 10,
+      "rto": 2,
+      "return_rate": 0.053,
+      "rto_rate": 0.011,
+      "by_ad_group": {},
+      "by_use_context": {
+        "everyday": {
+          "units": 93,
+          "returns": 5,
+          "kept": 88
+        },
+        "gifting": {
+          "units": 93,
+          "returns": 5,
+          "kept": 88
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "tara-heart-studs-r1",
+          "text": "Gift not liked",
+          "date": "2026-08-02",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "tara-heart-studs-r2",
+          "text": "Back kept falling off",
+          "date": "2026-08-01",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "tara-heart-studs-r3",
+          "text": "Colour a bit more yellow than the photo",
+          "date": "2026-07-31",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "tara-heart-studs-r4",
+          "text": "Too heavy for long wear",
+          "date": "2026-07-30",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "tara-heart-studs-r5",
+          "text": "Color thoda alag tha photo se",
+          "date": "2026-07-29",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "tara-heart-studs-r6",
+          "text": "Smaller than I expected",
+          "date": "2026-07-28",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "tara-heart-studs-r7",
+          "text": "Didn't suit me",
+          "date": "2026-07-27",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "tara-heart-studs-r8",
+          "text": "Changed my mind",
+          "date": "2026-07-26",
+          "ad_group_id": null,
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "elle-bezel-studs",
+      "units_sold": 125,
+      "returns": 13,
+      "rto": 1,
+      "return_rate": 0.104,
+      "rto_rate": 0.008,
+      "by_ad_group": {
+        "office-minimal": {
+          "units": 38,
+          "returns": 4,
+          "return_rate": 0.105
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 62,
+          "returns": 7,
+          "kept": 55
+        },
+        "office": {
+          "units": 62,
+          "returns": 6,
+          "kept": 56
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "elle-bezel-studs-r1",
+          "text": "Smaller than I expected",
+          "date": "2026-07-25",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "elle-bezel-studs-r2",
+          "text": "Gift not liked",
+          "date": "2026-07-24",
+          "ad_group_id": "office-minimal",
+          "use_context": "everyday"
+        },
+        {
+          "id": "elle-bezel-studs-r3",
+          "text": "Colour a bit more yellow than the photo",
+          "date": "2026-07-23",
+          "ad_group_id": "office-minimal",
+          "use_context": "everyday"
+        },
+        {
+          "id": "elle-bezel-studs-r4",
+          "text": "Ordered two by mistake",
+          "date": "2026-07-22",
+          "ad_group_id": "office-minimal",
+          "use_context": null
+        },
+        {
+          "id": "elle-bezel-studs-r5",
+          "text": "Didn't suit me",
+          "date": "2026-07-21",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "elle-bezel-studs-r6",
+          "text": "Back kept falling off",
+          "date": "2026-07-20",
+          "ad_group_id": "office-minimal",
+          "use_context": null
+        },
+        {
+          "id": "elle-bezel-studs-r7",
+          "text": "Delivered late for the function",
+          "date": "2026-07-19",
+          "ad_group_id": "office-minimal",
+          "use_context": "everyday"
+        },
+        {
+          "id": "elle-bezel-studs-r8",
+          "text": "Too heavy for long wear",
+          "date": "2026-07-18",
+          "ad_group_id": "office-minimal",
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "kira-mini-huggies",
+      "units_sold": 160,
+      "returns": 13,
+      "rto": 6,
+      "return_rate": 0.081,
+      "rto_rate": 0.038,
+      "by_ad_group": {
+        "waterproof-everyday-under-5k": {
+          "units": 48,
+          "returns": 4,
+          "return_rate": 0.083
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 77,
+          "returns": 7,
+          "kept": 70
+        },
+        "office": {
+          "units": 77,
+          "returns": 6,
+          "kept": 71
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "kira-mini-huggies-r1",
+          "text": "Too heavy for long wear",
+          "date": "2026-07-17",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "kira-mini-huggies-r2",
+          "text": "Ordered two by mistake",
+          "date": "2026-07-16",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": null
+        },
+        {
+          "id": "kira-mini-huggies-r3",
+          "text": "Changed my mind",
+          "date": "2026-07-15",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": null
+        },
+        {
+          "id": "kira-mini-huggies-r4",
+          "text": "Gift not liked",
+          "date": "2026-10-12",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "kira-mini-huggies-r5",
+          "text": "Smaller than I expected",
+          "date": "2026-10-11",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "office"
+        }
+      ]
+    },
+    {
+      "sku": "kira-twist-huggies",
+      "units_sold": 152,
+      "returns": 5,
+      "rto": 5,
+      "return_rate": 0.033,
+      "rto_rate": 0.033,
+      "by_ad_group": {
+        "waterproof-everyday-under-5k": {
+          "units": 46,
+          "returns": 1,
+          "return_rate": 0.022
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 74,
+          "returns": 3,
+          "kept": 71
+        },
+        "gifting": {
+          "units": 73,
+          "returns": 2,
+          "kept": 71
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "kira-twist-huggies-r1",
+          "text": "Colour a bit more yellow than the photo",
+          "date": "2026-10-10",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "kira-twist-huggies-r2",
+          "text": "Color thoda alag tha photo se",
+          "date": "2026-10-09",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "kira-twist-huggies-r3",
+          "text": "Didn't suit me",
+          "date": "2026-10-08",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "kira-twist-huggies-r4",
+          "text": "Changed my mind",
+          "date": "2026-10-07",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": null
+        },
+        {
+          "id": "kira-twist-huggies-r5",
+          "text": "Gift not liked",
+          "date": "2026-10-06",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        }
+      ]
+    },
+    {
+      "sku": "mira-pearl-drops",
+      "units_sold": 159,
+      "returns": 17,
+      "rto": 2,
+      "return_rate": 0.107,
+      "rto_rate": 0.013,
+      "by_ad_group": {
+        "wedding-guest-gift": {
+          "units": 48,
+          "returns": 5,
+          "return_rate": 0.104
+        }
+      },
+      "by_use_context": {
+        "office": {
+          "units": 39,
+          "returns": 4,
+          "kept": 35
+        },
+        "festive": {
+          "units": 39,
+          "returns": 4,
+          "kept": 35
+        },
+        "wedding": {
+          "units": 39,
+          "returns": 4,
+          "kept": 35
+        },
+        "gifting": {
+          "units": 40,
+          "returns": 5,
+          "kept": 35
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "mira-pearl-drops-r1",
+          "text": "Back kept falling off",
+          "date": "2026-10-05",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "office"
+        },
+        {
+          "id": "mira-pearl-drops-r2",
+          "text": "Delivered late for the function",
+          "date": "2026-10-04",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "mira-pearl-drops-r3",
+          "text": "Didn't suit me",
+          "date": "2026-10-03",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "mira-pearl-drops-r4",
+          "text": "Too heavy for long wear",
+          "date": "2026-10-02",
+          "ad_group_id": null,
+          "use_context": "wedding"
+        },
+        {
+          "id": "mira-pearl-drops-r5",
+          "text": "Gift not liked",
+          "date": "2026-10-01",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "wedding"
+        },
+        {
+          "id": "mira-pearl-drops-r6",
+          "text": "Smaller than I expected",
+          "date": "2026-09-30",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "office"
+        },
+        {
+          "id": "mira-pearl-drops-r7",
+          "text": "Ordered two by mistake",
+          "date": "2026-09-29",
+          "ad_group_id": null,
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "mira-teardrop-drops",
+      "units_sold": 177,
+      "returns": 9,
+      "rto": 3,
+      "return_rate": 0.051,
+      "rto_rate": 0.017,
+      "by_ad_group": {
+        "waterproof-everyday-under-5k": {
+          "units": 53,
+          "returns": 3,
+          "return_rate": 0.057
+        },
+        "office-minimal": {
+          "units": 53,
+          "returns": 3,
+          "return_rate": 0.057
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 58,
+          "returns": 3,
+          "kept": 55
+        },
+        "office": {
+          "units": 58,
+          "returns": 3,
+          "kept": 55
+        },
+        "gifting": {
+          "units": 58,
+          "returns": 3,
+          "kept": 55
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "mira-teardrop-drops-r1",
+          "text": "Back kept falling off",
+          "date": "2026-09-28",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "mira-teardrop-drops-r2",
+          "text": "Color thoda alag tha photo se",
+          "date": "2026-09-27",
+          "ad_group_id": null,
+          "use_context": "office"
+        },
+        {
+          "id": "mira-teardrop-drops-r3",
+          "text": "Didn't suit me",
+          "date": "2026-09-26",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "gifting"
+        },
+        {
+          "id": "mira-teardrop-drops-r4",
+          "text": "Too heavy for long wear",
+          "date": "2026-09-25",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "gifting"
+        },
+        {
+          "id": "mira-teardrop-drops-r5",
+          "text": "Colour a bit more yellow than the photo",
+          "date": "2026-09-24",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "everyday"
+        },
+        {
+          "id": "mira-teardrop-drops-r6",
+          "text": "Ordered two by mistake",
+          "date": "2026-09-23",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "mira-teardrop-drops-r7",
+          "text": "Gift not liked",
+          "date": "2026-09-22",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "gifting"
+        },
+        {
+          "id": "mira-teardrop-drops-r8",
+          "text": "Changed my mind",
+          "date": "2026-09-21",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "everyday"
+        }
+      ]
+    },
+    {
+      "sku": "sana-chain-threaders",
+      "units_sold": 98,
+      "returns": 7,
+      "rto": 2,
+      "return_rate": 0.071,
+      "rto_rate": 0.02,
+      "by_ad_group": {
+        "waterproof-everyday-under-5k": {
+          "units": 29,
+          "returns": 2,
+          "return_rate": 0.069
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 48,
+          "returns": 4,
+          "kept": 44
+        },
+        "festive": {
+          "units": 48,
+          "returns": 3,
+          "kept": 45
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "sana-chain-threaders-r1",
+          "text": "Too heavy for long wear",
+          "date": "2026-09-20",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "sana-chain-threaders-r2",
+          "text": "Smaller than I expected",
+          "date": "2026-09-19",
+          "ad_group_id": null,
+          "use_context": "festive"
+        },
+        {
+          "id": "sana-chain-threaders-r3",
+          "text": "Gift not liked",
+          "date": "2026-09-18",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "everyday"
+        },
+        {
+          "id": "sana-chain-threaders-r4",
+          "text": "Colour a bit more yellow than the photo",
+          "date": "2026-09-17",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": null
+        },
+        {
+          "id": "sana-chain-threaders-r5",
+          "text": "Delivered late for the function",
+          "date": "2026-09-16",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "everyday"
+        },
+        {
+          "id": "sana-chain-threaders-r6",
+          "text": "Didn't suit me",
+          "date": "2026-09-15",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "sana-chain-threaders-r7",
+          "text": "Back kept falling off",
+          "date": "2026-09-14",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "lia-flower-studs",
+      "units_sold": 183,
+      "returns": 18,
+      "rto": 3,
+      "return_rate": 0.098,
+      "rto_rate": 0.016,
+      "by_ad_group": {
+        "waterproof-everyday-under-5k": {
+          "units": 55,
+          "returns": 6,
+          "return_rate": 0.109
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 90,
+          "returns": 9,
+          "kept": 81
+        },
+        "gifting": {
+          "units": 90,
+          "returns": 9,
+          "kept": 81
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "lia-flower-studs-r1",
+          "text": "Colour a bit more yellow than the photo",
+          "date": "2026-09-13",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "lia-flower-studs-r2",
+          "text": "Delivered late for the function",
+          "date": "2026-09-12",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "lia-flower-studs-r3",
+          "text": "Back kept falling off",
+          "date": "2026-09-11",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "lia-flower-studs-r4",
+          "text": "Didn't suit me",
+          "date": "2026-09-10",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "lia-flower-studs-r5",
+          "text": "Ordered two by mistake",
+          "date": "2026-09-09",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "everyday"
+        },
+        {
+          "id": "lia-flower-studs-r6",
+          "text": "Changed my mind",
+          "date": "2026-09-08",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": null
+        },
+        {
+          "id": "lia-flower-studs-r7",
+          "text": "Too heavy for long wear",
+          "date": "2026-09-07",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "gifting"
+        }
+      ]
+    },
+    {
+      "sku": "sol-paperclip-chain",
+      "units_sold": 152,
+      "returns": 17,
+      "rto": 3,
+      "return_rate": 0.112,
+      "rto_rate": 0.02,
+      "by_ad_group": {
+        "waterproof-everyday-under-5k": {
+          "units": 46,
+          "returns": 5,
+          "return_rate": 0.109
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 75,
+          "returns": 9,
+          "kept": 66
+        },
+        "office": {
+          "units": 74,
+          "returns": 8,
+          "kept": 66
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "sol-paperclip-chain-r1",
+          "text": "Chain shorter than I thought",
+          "date": "2026-09-06",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "everyday"
+        },
+        {
+          "id": "sol-paperclip-chain-r2",
+          "text": "Didn't go with my outfit",
+          "date": "2026-09-05",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": null
+        },
+        {
+          "id": "sol-paperclip-chain-r3",
+          "text": "Pendant smaller than expected",
+          "date": "2026-09-04",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "sol-paperclip-chain-r4",
+          "text": "Gift not liked",
+          "date": "2026-09-03",
+          "ad_group_id": null,
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "sol-snake-chain",
+      "units_sold": 78,
+      "returns": 4,
+      "rto": 1,
+      "return_rate": 0.051,
+      "rto_rate": 0.013,
+      "by_ad_group": {
+        "office-minimal": {
+          "units": 23,
+          "returns": 1,
+          "return_rate": 0.043
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 26,
+          "returns": 1,
+          "kept": 25
+        },
+        "office": {
+          "units": 26,
+          "returns": 1,
+          "kept": 25
+        },
+        "festive": {
+          "units": 25,
+          "returns": 2,
+          "kept": 23
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "sol-snake-chain-r1",
+          "text": "Didn't go with my outfit",
+          "date": "2026-09-02",
+          "ad_group_id": null,
+          "use_context": "office"
+        },
+        {
+          "id": "sol-snake-chain-r2",
+          "text": "Changed my mind",
+          "date": "2026-09-01",
+          "ad_group_id": "office-minimal",
+          "use_context": "office"
+        },
+        {
+          "id": "sol-snake-chain-r3",
+          "text": "Gift not liked",
+          "date": "2026-08-31",
+          "ad_group_id": "office-minimal",
+          "use_context": null
+        },
+        {
+          "id": "sol-snake-chain-r4",
+          "text": "Pendant smaller than expected",
+          "date": "2026-08-30",
+          "ad_group_id": null,
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "sol-rope-chain",
+      "units_sold": 124,
+      "returns": 8,
+      "rto": 3,
+      "return_rate": 0.065,
+      "rto_rate": 0.024,
+      "by_ad_group": {},
+      "by_use_context": {
+        "everyday": {
+          "units": 121,
+          "returns": 8,
+          "kept": 113
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "sol-rope-chain-r1",
+          "text": "Didn't go with my outfit",
+          "date": "2026-08-29",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "sol-rope-chain-r2",
+          "text": "Pendant smaller than expected",
+          "date": "2026-08-28",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "sol-rope-chain-r3",
+          "text": "Chain thoda patla laga",
+          "date": "2026-08-27",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "sol-rope-chain-r4",
+          "text": "Gift not liked",
+          "date": "2026-08-26",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "sol-rope-chain-r5",
+          "text": "Changed my mind",
+          "date": "2026-08-25",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "sol-rope-chain-r6",
+          "text": "Clasp is fiddly",
+          "date": "2026-08-24",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "sol-rope-chain-r7",
+          "text": "Chain shorter than I thought",
+          "date": "2026-08-23",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        }
+      ]
+    },
+    {
+      "sku": "sol-layered-chain-set",
+      "units_sold": 250,
+      "returns": 20,
+      "rto": 5,
+      "return_rate": 0.08,
+      "rto_rate": 0.02,
+      "by_ad_group": {
+        "office-minimal": {
+          "units": 50,
+          "returns": 11,
+          "return_rate": 0.22
+        }
+      },
+      "by_use_context": {
+        "office": {
+          "units": 50,
+          "returns": 11,
+          "kept": 39
+        },
+        "everyday": {
+          "units": 125,
+          "returns": 6,
+          "kept": 119
+        },
+        "festive": {
+          "units": 70,
+          "returns": 3,
+          "kept": 67
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "sol-layered-chain-set-r1",
+          "text": "Too long for my office shirts, the longest chain hangs weird",
+          "date": "2026-08-22",
+          "ad_group_id": "office-minimal",
+          "use_context": "office"
+        },
+        {
+          "id": "sol-layered-chain-set-r2",
+          "text": "Tangles every single time I take it off",
+          "date": "2026-08-21",
+          "ad_group_id": "office-minimal",
+          "use_context": "office"
+        },
+        {
+          "id": "sol-layered-chain-set-r3",
+          "text": "too long with collared shirts",
+          "date": "2026-08-20",
+          "ad_group_id": "office-minimal",
+          "use_context": "office"
+        },
+        {
+          "id": "sol-layered-chain-set-r4",
+          "text": "The 50cm one is too long, wanted it shorter",
+          "date": "2026-08-19",
+          "ad_group_id": "office-minimal",
+          "use_context": "office"
+        },
+        {
+          "id": "sol-layered-chain-set-r5",
+          "text": "Chains got tangled in the box itself",
+          "date": "2026-08-18",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "sol-layered-chain-set-r6",
+          "text": "Too long for formal wear",
+          "date": "2026-08-17",
+          "ad_group_id": "office-minimal",
+          "use_context": "office"
+        },
+        {
+          "id": "sol-layered-chain-set-r7",
+          "text": "bahut lamba hai, office mein awkward lagta hai",
+          "date": "2026-08-16",
+          "ad_group_id": "office-minimal",
+          "use_context": "office"
+        },
+        {
+          "id": "sol-layered-chain-set-r8",
+          "text": "Tangled within a day of wearing",
+          "date": "2026-08-15",
+          "ad_group_id": "office-minimal",
+          "use_context": "office"
+        },
+        {
+          "id": "sol-layered-chain-set-r9",
+          "text": "Too long and kept catching on my laptop bag strap",
+          "date": "2026-08-14",
+          "ad_group_id": "office-minimal",
+          "use_context": "office"
+        },
+        {
+          "id": "sol-layered-chain-set-r10",
+          "text": "Wanted a single chain instead",
+          "date": "2026-08-13",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "sol-layered-chain-set-r11",
+          "text": "Looked too much for work",
+          "date": "2026-08-12",
+          "ad_group_id": "office-minimal",
+          "use_context": "office"
+        },
+        {
+          "id": "sol-layered-chain-set-r12",
+          "text": "Clasp hard to open alone",
+          "date": "2026-08-11",
+          "ad_group_id": null,
+          "use_context": "festive"
+        }
+      ]
+    },
+    {
+      "sku": "luna-coin-pendant",
+      "units_sold": 104,
+      "returns": 5,
+      "rto": 2,
+      "return_rate": 0.048,
+      "rto_rate": 0.019,
+      "by_ad_group": {
+        "waterproof-everyday-under-5k": {
+          "units": 31,
+          "returns": 2,
+          "return_rate": 0.065
+        },
+        "office-minimal": {
+          "units": 31,
+          "returns": 2,
+          "return_rate": 0.065
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 34,
+          "returns": 2,
+          "kept": 32
+        },
+        "office": {
+          "units": 34,
+          "returns": 2,
+          "kept": 32
+        },
+        "gifting": {
+          "units": 34,
+          "returns": 1,
+          "kept": 33
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "luna-coin-pendant-r1",
+          "text": "Pendant smaller than expected",
+          "date": "2026-08-10",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "luna-coin-pendant-r2",
+          "text": "Gift not liked",
+          "date": "2026-08-09",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": null
+        },
+        {
+          "id": "luna-coin-pendant-r3",
+          "text": "Chain shorter than I thought",
+          "date": "2026-08-08",
+          "ad_group_id": null,
+          "use_context": "office"
+        },
+        {
+          "id": "luna-coin-pendant-r4",
+          "text": "Chain thoda patla laga",
+          "date": "2026-08-07",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "luna-coin-pendant-r5",
+          "text": "Didn't go with my outfit",
+          "date": "2026-08-06",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "luna-evil-eye-pendant",
+      "units_sold": 134,
+      "returns": 16,
+      "rto": 3,
+      "return_rate": 0.119,
+      "rto_rate": 0.022,
+      "by_ad_group": {},
+      "by_use_context": {
+        "everyday": {
+          "units": 66,
+          "returns": 8,
+          "kept": 58
+        },
+        "gifting": {
+          "units": 65,
+          "returns": 8,
+          "kept": 57
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "luna-evil-eye-pendant-r1",
+          "text": "Gift not liked",
+          "date": "2026-08-05",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "luna-evil-eye-pendant-r2",
+          "text": "Chain shorter than I thought",
+          "date": "2026-08-04",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "luna-evil-eye-pendant-r3",
+          "text": "Didn't go with my outfit",
+          "date": "2026-08-03",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "luna-evil-eye-pendant-r4",
+          "text": "Changed my mind",
+          "date": "2026-08-02",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "luna-evil-eye-pendant-r5",
+          "text": "Pendant smaller than expected",
+          "date": "2026-08-01",
+          "ad_group_id": null,
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "luna-heart-pendant",
+      "units_sold": 50,
+      "returns": 4,
+      "rto": 1,
+      "return_rate": 0.08,
+      "rto_rate": 0.02,
+      "by_ad_group": {
+        "waterproof-everyday-under-5k": {
+          "units": 15,
+          "returns": 1,
+          "return_rate": 0.067
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 25,
+          "returns": 2,
+          "kept": 23
+        },
+        "gifting": {
+          "units": 24,
+          "returns": 2,
+          "kept": 22
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "luna-heart-pendant-r1",
+          "text": "Changed my mind",
+          "date": "2026-07-31",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "luna-heart-pendant-r2",
+          "text": "Clasp is fiddly",
+          "date": "2026-07-30",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": "everyday"
+        },
+        {
+          "id": "luna-heart-pendant-r3",
+          "text": "Pendant smaller than expected",
+          "date": "2026-07-29",
+          "ad_group_id": "waterproof-everyday-under-5k",
+          "use_context": null
+        },
+        {
+          "id": "luna-heart-pendant-r4",
+          "text": "Didn't go with my outfit",
+          "date": "2026-07-28",
+          "ad_group_id": null,
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "maya-pearl-choker",
+      "units_sold": 126,
+      "returns": 12,
+      "rto": 2,
+      "return_rate": 0.095,
+      "rto_rate": 0.016,
+      "by_ad_group": {
+        "wedding-guest-gift": {
+          "units": 38,
+          "returns": 4,
+          "return_rate": 0.105
+        }
+      },
+      "by_use_context": {
+        "festive": {
+          "units": 41,
+          "returns": 4,
+          "kept": 37
+        },
+        "wedding": {
+          "units": 41,
+          "returns": 4,
+          "kept": 37
+        },
+        "gifting": {
+          "units": 42,
+          "returns": 4,
+          "kept": 38
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "maya-pearl-choker-r1",
+          "text": "Chain shorter than I thought",
+          "date": "2026-07-27",
+          "ad_group_id": null,
+          "use_context": "festive"
+        },
+        {
+          "id": "maya-pearl-choker-r2",
+          "text": "Changed my mind",
+          "date": "2026-07-26",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": null
+        },
+        {
+          "id": "maya-pearl-choker-r3",
+          "text": "Pendant smaller than expected",
+          "date": "2026-07-25",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": null
+        },
+        {
+          "id": "maya-pearl-choker-r4",
+          "text": "Didn't go with my outfit",
+          "date": "2026-07-24",
+          "ad_group_id": null,
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "veda-dome-ring",
+      "units_sold": 115,
+      "returns": 9,
+      "rto": 1,
+      "return_rate": 0.078,
+      "rto_rate": 0.009,
+      "by_ad_group": {},
+      "by_use_context": {
+        "everyday": {
+          "units": 57,
+          "returns": 5,
+          "kept": 52
+        },
+        "festive": {
+          "units": 57,
+          "returns": 4,
+          "kept": 53
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "veda-dome-ring-r1",
+          "text": "Changed my mind",
+          "date": "2026-07-23",
+          "ad_group_id": null,
+          "use_context": "festive"
+        },
+        {
+          "id": "veda-dome-ring-r2",
+          "text": "Too tight",
+          "date": "2026-07-22",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "veda-dome-ring-r3",
+          "text": "Too loose even after adjusting",
+          "date": "2026-07-21",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "veda-dome-ring-r4",
+          "text": "Looked smaller on hand",
+          "date": "2026-07-20",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "veda-dome-ring-r5",
+          "text": "Size didn't fit",
+          "date": "2026-07-19",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "veda-dome-ring-r6",
+          "text": "Size chart confusing tha",
+          "date": "2026-07-18",
+          "ad_group_id": null,
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "veda-band-ring",
+      "units_sold": 133,
+      "returns": 7,
+      "rto": 4,
+      "return_rate": 0.053,
+      "rto_rate": 0.03,
+      "by_ad_group": {
+        "office-minimal": {
+          "units": 40,
+          "returns": 2,
+          "return_rate": 0.05
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 65,
+          "returns": 4,
+          "kept": 61
+        },
+        "office": {
+          "units": 64,
+          "returns": 3,
+          "kept": 61
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "veda-band-ring-r1",
+          "text": "Too tight",
+          "date": "2026-07-17",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "veda-band-ring-r2",
+          "text": "Changed my mind",
+          "date": "2026-07-16",
+          "ad_group_id": "office-minimal",
+          "use_context": null
+        },
+        {
+          "id": "veda-band-ring-r3",
+          "text": "Looked smaller on hand",
+          "date": "2026-07-15",
+          "ad_group_id": "office-minimal",
+          "use_context": null
+        },
+        {
+          "id": "veda-band-ring-r4",
+          "text": "Size didn't fit",
+          "date": "2026-10-12",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        }
+      ]
+    },
+    {
+      "sku": "veda-cz-solitaire-ring",
+      "units_sold": 125,
+      "returns": 11,
+      "rto": 2,
+      "return_rate": 0.088,
+      "rto_rate": 0.016,
+      "by_ad_group": {},
+      "by_use_context": {
+        "gifting": {
+          "units": 62,
+          "returns": 6,
+          "kept": 56
+        },
+        "festive": {
+          "units": 61,
+          "returns": 5,
+          "kept": 56
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "veda-cz-solitaire-ring-r1",
+          "text": "Changed my mind",
+          "date": "2026-10-11",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "veda-cz-solitaire-ring-r2",
+          "text": "Looked smaller on hand",
+          "date": "2026-10-10",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "veda-cz-solitaire-ring-r3",
+          "text": "Too tight",
+          "date": "2026-10-09",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "veda-cz-solitaire-ring-r4",
+          "text": "Size didn't fit",
+          "date": "2026-10-08",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "veda-cz-solitaire-ring-r5",
+          "text": "Size chart confusing tha",
+          "date": "2026-10-07",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "veda-cz-solitaire-ring-r6",
+          "text": "Too loose even after adjusting",
+          "date": "2026-10-06",
+          "ad_group_id": null,
+          "use_context": null
+        }
+      ]
+    },
+    {
+      "sku": "veda-twist-ring",
+      "units_sold": 135,
+      "returns": 10,
+      "rto": 3,
+      "return_rate": 0.074,
+      "rto_rate": 0.022,
+      "by_ad_group": {},
+      "by_use_context": {
+        "everyday": {
+          "units": 132,
+          "returns": 10,
+          "kept": 122
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "veda-twist-ring-r1",
+          "text": "Size chart confusing tha",
+          "date": "2026-10-05",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "veda-twist-ring-r2",
+          "text": "Changed my mind",
+          "date": "2026-10-04",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "veda-twist-ring-r3",
+          "text": "Too loose even after adjusting",
+          "date": "2026-10-03",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "veda-twist-ring-r4",
+          "text": "Size didn't fit",
+          "date": "2026-10-02",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "veda-twist-ring-r5",
+          "text": "Too tight",
+          "date": "2026-10-01",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "veda-twist-ring-r6",
+          "text": "Looked smaller on hand",
+          "date": "2026-09-30",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        }
+      ]
+    },
+    {
+      "sku": "veda-signet-ring",
+      "units_sold": 107,
+      "returns": 12,
+      "rto": 3,
+      "return_rate": 0.112,
+      "rto_rate": 0.028,
+      "by_ad_group": {},
+      "by_use_context": {
+        "everyday": {
+          "units": 104,
+          "returns": 12,
+          "kept": 92
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "veda-signet-ring-r1",
+          "text": "Size didn't fit",
+          "date": "2026-09-29",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "veda-signet-ring-r2",
+          "text": "Too loose even after adjusting",
+          "date": "2026-09-28",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "veda-signet-ring-r3",
+          "text": "Changed my mind",
+          "date": "2026-09-27",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "veda-signet-ring-r4",
+          "text": "Size chart confusing tha",
+          "date": "2026-09-26",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        }
+      ]
+    },
+    {
+      "sku": "kaya-cuff",
+      "units_sold": 166,
+      "returns": 9,
+      "rto": 4,
+      "return_rate": 0.054,
+      "rto_rate": 0.024,
+      "by_ad_group": {},
+      "by_use_context": {
+        "everyday": {
+          "units": 81,
+          "returns": 5,
+          "kept": 76
+        },
+        "office": {
+          "units": 81,
+          "returns": 4,
+          "kept": 77
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "kaya-cuff-r1",
+          "text": "Gift not liked",
+          "date": "2026-09-25",
+          "ad_group_id": null,
+          "use_context": "office"
+        },
+        {
+          "id": "kaya-cuff-r2",
+          "text": "Clasp difficult",
+          "date": "2026-09-24",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "kaya-cuff-r3",
+          "text": "Too loose on my wrist",
+          "date": "2026-09-23",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "kaya-cuff-r4",
+          "text": "Too tight",
+          "date": "2026-09-22",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "kaya-cuff-r5",
+          "text": "Changed my mind",
+          "date": "2026-09-21",
+          "ad_group_id": null,
+          "use_context": "office"
+        }
+      ]
+    },
+    {
+      "sku": "kaya-chain-bracelet",
+      "units_sold": 88,
+      "returns": 5,
+      "rto": 3,
+      "return_rate": 0.057,
+      "rto_rate": 0.034,
+      "by_ad_group": {},
+      "by_use_context": {
+        "everyday": {
+          "units": 43,
+          "returns": 3,
+          "kept": 40
+        },
+        "gifting": {
+          "units": 42,
+          "returns": 2,
+          "kept": 40
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "kaya-chain-bracelet-r1",
+          "text": "Clasp difficult",
+          "date": "2026-09-20",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "kaya-chain-bracelet-r2",
+          "text": "Changed my mind",
+          "date": "2026-09-19",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        },
+        {
+          "id": "kaya-chain-bracelet-r3",
+          "text": "Too tight",
+          "date": "2026-09-18",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "kaya-chain-bracelet-r4",
+          "text": "Gift not liked",
+          "date": "2026-09-17",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "kaya-chain-bracelet-r5",
+          "text": "Too loose on my wrist",
+          "date": "2026-09-16",
+          "ad_group_id": null,
+          "use_context": "everyday"
+        }
+      ]
+    },
+    {
+      "sku": "kaya-tennis-bracelet",
+      "units_sold": 188,
+      "returns": 20,
+      "rto": 3,
+      "return_rate": 0.106,
+      "rto_rate": 0.016,
+      "by_ad_group": {
+        "wedding-guest-gift": {
+          "units": 56,
+          "returns": 5,
+          "return_rate": 0.089
+        }
+      },
+      "by_use_context": {
+        "festive": {
+          "units": 62,
+          "returns": 7,
+          "kept": 55
+        },
+        "wedding": {
+          "units": 62,
+          "returns": 7,
+          "kept": 55
+        },
+        "gifting": {
+          "units": 61,
+          "returns": 6,
+          "kept": 55
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "kaya-tennis-bracelet-r1",
+          "text": "Too tight",
+          "date": "2026-09-15",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": "wedding"
+        },
+        {
+          "id": "kaya-tennis-bracelet-r2",
+          "text": "Gift not liked",
+          "date": "2026-09-14",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "kaya-tennis-bracelet-r3",
+          "text": "Changed my mind",
+          "date": "2026-09-13",
+          "ad_group_id": null,
+          "use_context": "festive"
+        },
+        {
+          "id": "kaya-tennis-bracelet-r4",
+          "text": "Too loose on my wrist",
+          "date": "2026-09-12",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "kaya-tennis-bracelet-r5",
+          "text": "Clasp difficult",
+          "date": "2026-09-11",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        }
+      ]
+    },
+    {
+      "sku": "kaya-hammered-cuff",
+      "units_sold": 172,
+      "returns": 21,
+      "rto": 3,
+      "return_rate": 0.122,
+      "rto_rate": 0.017,
+      "by_ad_group": {
+        "wedding-guest-gift": {
+          "units": 52,
+          "returns": 7,
+          "return_rate": 0.135
+        }
+      },
+      "by_use_context": {
+        "everyday": {
+          "units": 56,
+          "returns": 7,
+          "kept": 49
+        },
+        "festive": {
+          "units": 56,
+          "returns": 7,
+          "kept": 49
+        },
+        "gifting": {
+          "units": 57,
+          "returns": 7,
+          "kept": 50
+        }
+      },
+      "reasons_raw": [
+        {
+          "id": "kaya-hammered-cuff-r1",
+          "text": "Too tight",
+          "date": "2026-09-10",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": null
+        },
+        {
+          "id": "kaya-hammered-cuff-r2",
+          "text": "Gift not liked",
+          "date": "2026-09-09",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": null
+        },
+        {
+          "id": "kaya-hammered-cuff-r3",
+          "text": "Changed my mind",
+          "date": "2026-09-08",
+          "ad_group_id": null,
+          "use_context": "gifting"
+        },
+        {
+          "id": "kaya-hammered-cuff-r4",
+          "text": "Clasp difficult",
+          "date": "2026-09-07",
+          "ad_group_id": null,
+          "use_context": null
+        },
+        {
+          "id": "kaya-hammered-cuff-r5",
+          "text": "Too loose on my wrist",
+          "date": "2026-09-06",
+          "ad_group_id": "wedding-guest-gift",
+          "use_context": null
+        }
+      ]
+    }
+  ]
+}

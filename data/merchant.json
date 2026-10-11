@@ -1,0 +1,10 @@
+{
+  "merchant_name": "Cosmos",
+  "user": "Growth lead",
+  "engage_plan": "ChatGPT Ads (managed)",
+  "notification_prefs": {
+    "proposals": "instant",
+    "weekly_digest": true,
+    "channel": "email + dashboard (simulated)"
+  }
+}

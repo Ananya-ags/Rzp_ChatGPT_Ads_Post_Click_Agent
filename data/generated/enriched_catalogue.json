@@ -1,0 +1,516 @@
+{
+  "producer": {
+    "stage": "enrichment",
+    "mode": "heuristic",
+    "model": null,
+    "prompt_version": "enrich-v1",
+    "note": "Rule-based fallback (no API key). Re-run `npm run pipelines` with ANTHROPIC_API_KEY for the AI version. Image enrichment pending: product photos not yet sourced."
+  },
+  "skus": {
+    "ciel-hoops-40mm": {
+      "attributes": []
+    },
+    "ciel-hoops-30mm": {
+      "attributes": []
+    },
+    "ciel-huggies-20mm": {
+      "attributes": []
+    },
+    "aria-hoops-28mm": {
+      "attributes": []
+    },
+    "noor-kundan-jhumkas": {
+      "attributes": []
+    },
+    "noor-pearl-jhumkas": {
+      "attributes": []
+    },
+    "noor-mini-jhumkas": {
+      "attributes": []
+    },
+    "noor-temple-jhumkas": {
+      "attributes": []
+    },
+    "tara-solitaire-studs": {
+      "attributes": [
+        {
+          "attribute": "post_material",
+          "value": "titanium",
+          "source": {
+            "type": "text",
+            "phrase": "Crafted on surgical-grade titanium posts so even sensitive lobes can wear them all day."
+          },
+          "confidence": 0.85,
+          "verified": false,
+          "vague": false
+        },
+        {
+          "attribute": "nickel_free",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Crafted on surgical-grade titanium posts so even sensitive lobes can wear them all day."
+          },
+          "confidence": 0.45,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "tara-pearl-studs": {
+      "attributes": [
+        {
+          "attribute": "post_material",
+          "value": "titanium",
+          "source": {
+            "type": "text",
+            "phrase": "18K gold plated studs with a 7mm shell pearl, crafted on surgical-grade titanium posts."
+          },
+          "confidence": 0.85,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "tara-heart-studs": {
+      "attributes": [
+        {
+          "attribute": "post_material",
+          "value": "titanium",
+          "source": {
+            "type": "text",
+            "phrase": "18K gold plated little hearts, 8mm, on titanium posts that are kind to sensitive ears."
+          },
+          "confidence": 0.85,
+          "verified": false,
+          "vague": false
+        },
+        {
+          "attribute": "nickel_free",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "18K gold plated little hearts, 8mm, on titanium posts that are kind to sensitive ears."
+          },
+          "confidence": 0.45,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "elle-bezel-studs": {
+      "attributes": [
+        {
+          "attribute": "post_material",
+          "value": "surgical steel",
+          "source": {
+            "type": "text",
+            "phrase": "Set on surgical-steel posts, friendly for sensitive ears."
+          },
+          "confidence": 0.85,
+          "verified": false,
+          "vague": false
+        },
+        {
+          "attribute": "nickel_free",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Set on surgical-steel posts, friendly for sensitive ears."
+          },
+          "confidence": 0.45,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "kira-mini-huggies": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        },
+        {
+          "attribute": "post_material",
+          "value": "titanium",
+          "source": {
+            "type": "text",
+            "phrase": "12mm huggies crafted on surgical-grade titanium posts."
+          },
+          "confidence": 0.85,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "kira-twist-huggies": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        },
+        {
+          "attribute": "post_material",
+          "value": "titanium",
+          "source": {
+            "type": "text",
+            "phrase": "A twisted rope texture on a 14mm huggie, set on titanium posts."
+          },
+          "confidence": 0.85,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "mira-pearl-drops": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": "partial (vague wording)",
+          "source": {
+            "type": "text",
+            "phrase": "Water friendly-ish for a quick wash, but treat her gently."
+          },
+          "confidence": 0.3,
+          "verified": false,
+          "vague": true
+        }
+      ]
+    },
+    "mira-teardrop-drops": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "sana-chain-threaders": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        },
+        {
+          "attribute": "sweat_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Swim, sweat, repeat."
+          },
+          "confidence": 0.6,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "lia-flower-studs": {
+      "attributes": [
+        {
+          "attribute": "plating",
+          "value": "unspecified gold tone (vague wording)",
+          "source": {
+            "type": "text",
+            "phrase": "Cute little flowers, 10mm, with a gold-toned finish."
+          },
+          "confidence": 0.3,
+          "verified": false,
+          "vague": true
+        }
+      ]
+    },
+    "sol-paperclip-chain": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "sol-snake-chain": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "sol-rope-chain": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "sol-layered-chain-set": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "luna-coin-pendant": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "luna-evil-eye-pendant": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "luna-heart-pendant": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "maya-pearl-choker": {
+      "attributes": [
+        {
+          "attribute": "nickel_free",
+          "value": "unclear (vague wording)",
+          "source": {
+            "type": "text",
+            "phrase": "Skin-safe for most, and pretty much made for lehengas and sarees."
+          },
+          "confidence": 0.25,
+          "verified": false,
+          "vague": true
+        }
+      ]
+    },
+    "veda-dome-ring": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "veda-band-ring": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        },
+        {
+          "attribute": "sweat_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "A 3mm everyday band that doesn't mind the pool, the kitchen or the gym."
+          },
+          "confidence": 0.6,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "veda-cz-solitaire-ring": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": "partial (vague wording)",
+          "source": {
+            "type": "text",
+            "phrase": "Water friendly for handwashing."
+          },
+          "confidence": 0.3,
+          "verified": false,
+          "vague": true
+        },
+        {
+          "attribute": "plating",
+          "value": "unspecified gold tone (vague wording)",
+          "source": {
+            "type": "text",
+            "phrase": "A 6mm American diamond solitaire on a slim gold-toned band."
+          },
+          "confidence": 0.3,
+          "verified": false,
+          "vague": true
+        }
+      ]
+    },
+    "veda-twist-ring": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "veda-signet-ring": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "kaya-cuff": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "kaya-chain-bracelet": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    },
+    "kaya-tennis-bracelet": {
+      "attributes": []
+    },
+    "kaya-hammered-cuff": {
+      "attributes": [
+        {
+          "attribute": "water_resistant",
+          "value": true,
+          "source": {
+            "type": "text",
+            "phrase": "Waterproof and 18K gold plated stainless steel."
+          },
+          "confidence": 0.8,
+          "verified": false,
+          "vague": false
+        }
+      ]
+    }
+  }
+}

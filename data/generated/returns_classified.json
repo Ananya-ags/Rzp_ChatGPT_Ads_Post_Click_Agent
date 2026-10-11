@@ -1,0 +1,2599 @@
+{
+  "producer": {
+    "stage": "return-reasons",
+    "mode": "heuristic",
+    "model": null,
+    "prompt_version": "returns-v1",
+    "note": "Rule-based fallback (no API key). Re-run `npm run pipelines` with ANTHROPIC_API_KEY for the AI version."
+  },
+  "skus": {
+    "ciel-hoops-40mm": {
+      "contexts": {
+        "all": {
+          "n_reasons": 20,
+          "themes": [
+            {
+              "theme": "size_bigger",
+              "label": "Looked bigger than expected",
+              "count": 12,
+              "share": 0.6
+            },
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 2,
+              "share": 0.1
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 2,
+              "share": 0.1
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 2,
+              "share": 0.1
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.05
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.05
+            }
+          ],
+          "top_theme": "size_bigger",
+          "typical_quote": "Larger than expected, exchanging for the 30mm",
+          "better_fit_sku": "ciel-hoops-30mm",
+          "better_fit_reason": "Same hoop style, 30mm instead of 40mm; lower returns in this context"
+        },
+        "everyday": {
+          "n_reasons": 5,
+          "themes": [
+            {
+              "theme": "size_bigger",
+              "label": "Looked bigger than expected",
+              "count": 3,
+              "share": 0.6
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.2
+            }
+          ],
+          "top_theme": "size_bigger",
+          "typical_quote": "Way bigger than the photo. Looked huge on me.",
+          "better_fit_sku": "ciel-hoops-30mm",
+          "better_fit_reason": "Same hoop style, 30mm instead of 40mm; lower returns in this context"
+        },
+        "office": {
+          "n_reasons": 9,
+          "themes": [
+            {
+              "theme": "size_bigger",
+              "label": "Looked bigger than expected",
+              "count": 8,
+              "share": 0.89
+            },
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 0.11
+            }
+          ],
+          "top_theme": "size_bigger",
+          "typical_quote": "Too large and they kept getting caught in my hair",
+          "better_fit_sku": "ciel-hoops-30mm",
+          "better_fit_reason": "Same hoop style, 30mm instead of 40mm; lower returns in this context"
+        },
+        "wedding": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "size_bigger",
+              "label": "Looked bigger than expected",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "size_bigger",
+          "typical_quote": "way bigger than the photo on the model",
+          "better_fit_sku": "ciel-hoops-30mm",
+          "better_fit_reason": "Same hoop style, 30mm instead of 40mm; lower returns in this context"
+        },
+        "gifting": {
+          "n_reasons": 3,
+          "themes": [
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 2,
+              "share": 0.67
+            },
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 0.33
+            }
+          ],
+          "top_theme": "gift_not_liked",
+          "typical_quote": "gift ki thi, pasand nahi aaye",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "ciel-hoops-30mm": {
+      "contexts": {
+        "all": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "size_smaller",
+          "typical_quote": "Wanted something bigger for weekends",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "size_smaller",
+          "typical_quote": "Wanted something bigger for weekends",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "office": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "late_delivery",
+          "typical_quote": "Took longer to arrive than I needed",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "ciel-huggies-20mm": {
+      "contexts": {
+        "all": {
+          "n_reasons": 3,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.33
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Too heavy for long wear",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Too heavy for long wear",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Didn't suit me",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "aria-hoops-28mm": {
+      "contexts": {
+        "all": {
+          "n_reasons": 7,
+          "themes": [
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 2,
+              "share": 0.29
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 2,
+              "share": 0.29
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.14
+            }
+          ],
+          "top_theme": "colour",
+          "typical_quote": "Colour a bit more yellow than the photo",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "colour",
+          "typical_quote": "Color thoda alag tha photo se",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Too heavy for long wear",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "office": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "size_smaller",
+          "typical_quote": "Smaller than I expected",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "noor-kundan-jhumkas": {
+      "contexts": {
+        "all": {
+          "n_reasons": 8,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 3,
+              "share": 0.38
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 2,
+              "share": 0.25
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.13
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.13
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.13
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Changed my mind",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 2,
+              "share": 0.5
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Too heavy for long wear",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "wedding": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Didn't suit me",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "festive": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Changed my mind",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "noor-pearl-jhumkas": {
+      "contexts": {
+        "all": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "size_smaller",
+          "typical_quote": "Smaller than I expected",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "festive": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "size_smaller",
+          "typical_quote": "Smaller than I expected",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "wedding": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "colour",
+          "typical_quote": "Colour a bit more yellow than the photo",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "noor-mini-jhumkas": {
+      "contexts": {
+        "all": {
+          "n_reasons": 7,
+          "themes": [
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 2,
+              "share": 0.29
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 2,
+              "share": 0.29
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.14
+            }
+          ],
+          "top_theme": "colour",
+          "typical_quote": "Colour a bit more yellow than the photo",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 3,
+          "themes": [
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.33
+            }
+          ],
+          "top_theme": "late_delivery",
+          "typical_quote": "Delivered late for the function",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "noor-temple-jhumkas": {
+      "contexts": {
+        "all": {
+          "n_reasons": 8,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 3,
+              "share": 0.38
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.13
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.13
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.13
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.13
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.13
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Changed my mind",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "wedding": {
+          "n_reasons": 3,
+          "themes": [
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.33
+            }
+          ],
+          "top_theme": "colour",
+          "typical_quote": "Color thoda alag tha photo se",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "tara-solitaire-studs": {
+      "contexts": {
+        "all": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Didn't suit me",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Didn't suit me",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "office": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "size_smaller",
+          "typical_quote": "Smaller than I expected",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "tara-pearl-studs": {
+      "contexts": {
+        "all": {
+          "n_reasons": 6,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 3,
+              "share": 0.5
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.17
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.17
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.17
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Changed my mind",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "late_delivery",
+          "typical_quote": "Delivered late for the function",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 3,
+          "themes": [
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.33
+            }
+          ],
+          "top_theme": "colour",
+          "typical_quote": "Color thoda alag tha photo se",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "office": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Changed my mind",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "tara-heart-studs": {
+      "contexts": {
+        "all": {
+          "n_reasons": 8,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 2,
+              "share": 0.25
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 2,
+              "share": 0.25
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 2,
+              "share": 0.25
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.13
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.13
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Too heavy for long wear",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 3,
+          "themes": [
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.33
+            }
+          ],
+          "top_theme": "gift_not_liked",
+          "typical_quote": "Gift not liked",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 2,
+              "share": 0.5
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Too heavy for long wear",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "elle-bezel-studs": {
+      "contexts": {
+        "all": {
+          "n_reasons": 8,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 2,
+              "share": 0.25
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 2,
+              "share": 0.25
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.13
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.13
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.13
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.13
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Ordered two by mistake",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "gift_not_liked",
+          "typical_quote": "Gift not liked",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "kira-mini-huggies": {
+      "contexts": {
+        "all": {
+          "n_reasons": 5,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 2,
+              "share": 0.4
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.2
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Ordered two by mistake",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Too heavy for long wear",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "office": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "size_smaller",
+          "typical_quote": "Smaller than I expected",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "kira-twist-huggies": {
+      "contexts": {
+        "all": {
+          "n_reasons": 5,
+          "themes": [
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 2,
+              "share": 0.4
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 2,
+              "share": 0.4
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.2
+            }
+          ],
+          "top_theme": "colour",
+          "typical_quote": "Colour a bit more yellow than the photo",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "colour",
+          "typical_quote": "Colour a bit more yellow than the photo",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "colour",
+          "typical_quote": "Color thoda alag tha photo se",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "mira-pearl-drops": {
+      "contexts": {
+        "all": {
+          "n_reasons": 7,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 2,
+              "share": 0.29
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 2,
+              "share": 0.29
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.14
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Too heavy for long wear",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "office": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Back kept falling off",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "wedding": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Too heavy for long wear",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "mira-teardrop-drops": {
+      "contexts": {
+        "all": {
+          "n_reasons": 8,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 3,
+              "share": 0.38
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 2,
+              "share": 0.25
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 2,
+              "share": 0.25
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.13
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Changed my mind",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "office": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "colour",
+          "typical_quote": "Color thoda alag tha photo se",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 3,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.33
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Didn't suit me",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "colour",
+          "typical_quote": "Colour a bit more yellow than the photo",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "sana-chain-threaders": {
+      "contexts": {
+        "all": {
+          "n_reasons": 7,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 2,
+              "share": 0.29
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.14
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Too heavy for long wear",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 3,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.33
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Too heavy for long wear",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "festive": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "size_smaller",
+          "typical_quote": "Smaller than I expected",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "lia-flower-studs": {
+      "contexts": {
+        "all": {
+          "n_reasons": 7,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 3,
+              "share": 0.43
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 2,
+              "share": 0.29
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "late_delivery",
+              "label": "Arrived too late",
+              "count": 1,
+              "share": 0.14
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Changed my mind",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 2,
+              "share": 0.5
+            },
+            {
+              "theme": "colour",
+              "label": "Colour different from photo",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Too heavy for long wear",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Ordered two by mistake",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "sol-paperclip-chain": {
+      "contexts": {
+        "all": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "other",
+          "typical_quote": "Chain shorter than I thought",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "other",
+          "typical_quote": "Chain shorter than I thought",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "sol-snake-chain": {
+      "contexts": {
+        "all": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Didn't go with my outfit",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "office": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Didn't go with my outfit",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "sol-rope-chain": {
+      "contexts": {
+        "all": {
+          "n_reasons": 7,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 2,
+              "share": 0.29
+            },
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 0.14
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Chain thoda patla laga",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "size_smaller",
+          "typical_quote": "Pendant smaller than expected",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "sol-layered-chain-set": {
+      "contexts": {
+        "all": {
+          "n_reasons": 12,
+          "themes": [
+            {
+              "theme": "too_long",
+              "label": "Too long",
+              "count": 7,
+              "share": 0.58
+            },
+            {
+              "theme": "tangles",
+              "label": "Tangles",
+              "count": 3,
+              "share": 0.25
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.08
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.08
+            }
+          ],
+          "top_theme": "too_long",
+          "typical_quote": "The 50cm one is too long, wanted it shorter",
+          "better_fit_sku": "luna-coin-pendant",
+          "better_fit_reason": "Single 45cm chain sits higher than the 50cm layer"
+        },
+        "office": {
+          "n_reasons": 9,
+          "themes": [
+            {
+              "theme": "too_long",
+              "label": "Too long",
+              "count": 7,
+              "share": 0.78
+            },
+            {
+              "theme": "tangles",
+              "label": "Tangles",
+              "count": 2,
+              "share": 0.22
+            }
+          ],
+          "top_theme": "too_long",
+          "typical_quote": "The 50cm one is too long, wanted it shorter",
+          "better_fit_sku": "sol-snake-chain",
+          "better_fit_reason": "Single 42cm chain sits higher than the 50cm layer"
+        },
+        "everyday": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "tangles",
+              "label": "Tangles",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "tangles",
+          "typical_quote": "Chains got tangled in the box itself",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "festive": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Clasp hard to open alone",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "luna-coin-pendant": {
+      "contexts": {
+        "all": {
+          "n_reasons": 5,
+          "themes": [
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 0.2
+            }
+          ],
+          "top_theme": "size_smaller",
+          "typical_quote": "Pendant smaller than expected",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "size_smaller",
+          "typical_quote": "Pendant smaller than expected",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "office": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "other",
+          "typical_quote": "Chain shorter than I thought",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "luna-evil-eye-pendant": {
+      "contexts": {
+        "all": {
+          "n_reasons": 5,
+          "themes": [
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.2
+            }
+          ],
+          "top_theme": "gift_not_liked",
+          "typical_quote": "Gift not liked",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 3,
+          "themes": [
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 0.33
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.33
+            }
+          ],
+          "top_theme": "gift_not_liked",
+          "typical_quote": "Gift not liked",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "luna-heart-pendant": {
+      "contexts": {
+        "all": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Changed my mind",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "quality",
+          "typical_quote": "Clasp is fiddly",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "maya-pearl-choker": {
+      "contexts": {
+        "all": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "other",
+          "typical_quote": "Chain shorter than I thought",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "festive": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "other",
+          "typical_quote": "Chain shorter than I thought",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "veda-dome-ring": {
+      "contexts": {
+        "all": {
+          "n_reasons": 6,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 4,
+              "share": 0.67
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.17
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.17
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Size chart confusing tha",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "festive": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Changed my mind",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "veda-band-ring": {
+      "contexts": {
+        "all": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 2,
+              "share": 0.5
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Size didn't fit",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Size didn't fit",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "veda-cz-solitaire-ring": {
+      "contexts": {
+        "all": {
+          "n_reasons": 6,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 4,
+              "share": 0.67
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.17
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.17
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Size chart confusing tha",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 2,
+              "share": 0.5
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Size chart confusing tha",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "veda-twist-ring": {
+      "contexts": {
+        "all": {
+          "n_reasons": 6,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 4,
+              "share": 0.67
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.17
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.17
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Size chart confusing tha",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Size didn't fit",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "veda-signet-ring": {
+      "contexts": {
+        "all": {
+          "n_reasons": 4,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 3,
+              "share": 0.75
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.25
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Size chart confusing tha",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Changed my mind",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "kaya-cuff": {
+      "contexts": {
+        "all": {
+          "n_reasons": 5,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 2,
+              "share": 0.4
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.2
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Too loose on my wrist",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "office": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "gift_not_liked",
+          "typical_quote": "Gift not liked",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 2,
+              "share": 1
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Too loose on my wrist",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "kaya-chain-bracelet": {
+      "contexts": {
+        "all": {
+          "n_reasons": 5,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 2,
+              "share": 0.4
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.2
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Too loose on my wrist",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "everyday": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Changed my mind",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "gift_not_liked",
+          "typical_quote": "Gift not liked",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "kaya-tennis-bracelet": {
+      "contexts": {
+        "all": {
+          "n_reasons": 5,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 2,
+              "share": 0.4
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.2
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Too loose on my wrist",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "wedding": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Too tight",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "festive": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Changed my mind",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 2,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 1,
+              "share": 0.5
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.5
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Too loose on my wrist",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    },
+    "kaya-hammered-cuff": {
+      "contexts": {
+        "all": {
+          "n_reasons": 5,
+          "themes": [
+            {
+              "theme": "fit",
+              "label": "Didn't fit",
+              "count": 2,
+              "share": 0.4
+            },
+            {
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.2
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.2
+            }
+          ],
+          "top_theme": "fit",
+          "typical_quote": "Too loose on my wrist",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        },
+        "gifting": {
+          "n_reasons": 1,
+          "themes": [
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 1
+            }
+          ],
+          "top_theme": "changed_mind",
+          "typical_quote": "Changed my mind",
+          "better_fit_sku": null,
+          "better_fit_reason": null
+        }
+      }
+    }
+  }
+}

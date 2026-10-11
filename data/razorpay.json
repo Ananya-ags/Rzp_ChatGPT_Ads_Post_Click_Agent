@@ -1,0 +1,42 @@
+{
+  "mode": "test",
+  "env_keys": [
+    "RAZORPAY_KEY_ID",
+    "RAZORPAY_KEY_SECRET",
+    "NEXT_PUBLIC_RAZORPAY_KEY_ID"
+  ],
+  "order_route": "/api/checkout/order",
+  "checkout_prefill_from": "shoppers.tier3_priya (only after simulated Login With Razorpay)",
+  "magic_checkout_simulated": {
+    "login_with_razorpay": {
+      "otp_length": 6,
+      "consent_text": "Share your saved address, order history with Cosmos and loyalty balance with this store. You can withdraw consent anytime. (Simulated)",
+      "offered_at": [
+        "delivery_date_question",
+        "past_purchase_request",
+        "add_to_cart"
+      ],
+      "max_per_session": 1
+    },
+    "rto_risk": {
+      "source": "logistics.json#rto_risk",
+      "prepay_nudge_threshold": "high"
+    },
+    "cod_eligibility": {
+      "max_cart_inr": 5000,
+      "blocked_risk": []
+    },
+    "buyer_protection_badge": "Razorpay Buyer Protection (simulated): full refund if your order doesn't arrive.",
+    "trusted_business_badge": "Trusted Business (simulated): verified by Razorpay.",
+    "affordability": {
+      "emi_min_inr": 3000,
+      "pay_later_min_inr": 3000,
+      "copy": "EMI and Pay Later available on orders above ₹3,000 (display only)."
+    }
+  },
+  "kept_revenue": {
+    "predicted_return_source": "returns.json (per SKU × ad group; falls back to SKU-level rate)",
+    "return_window_days": 15,
+    "true_up": "Predicted returns are replaced by actuals once the 15-day window closes after delivery."
+  }
+}

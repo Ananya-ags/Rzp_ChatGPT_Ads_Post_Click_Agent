@@ -1,0 +1,66 @@
+{
+  "name": "Cosmos",
+  "tagline": "Gold that keeps up.",
+  "positioning": "modern anti-tarnish demi-fine jewellery for everyday wear",
+  "voice": {
+    "tone": "Warm, concise, no hype. Talks like a knowledgeable friend at the counter, not a salesperson.",
+    "do": [
+      "Lead with the answer",
+      "Use exact numbers from tools",
+      "Say 'I'm not sure' and offer support when unsure",
+      "Describe unverified features as materials, not benefits"
+    ],
+    "dont": [
+      "Exclamation-mark stacks",
+      "Superlatives like 'best ever'",
+      "Pressure tactics or fake scarcity",
+      "Medical claims about skin"
+    ],
+    "examples": [
+      "The 30mm sits about 32mm on the ear, which most people find easier for long office days.",
+      "That one arrives Fri, 16 Oct in Pune if you order before 2pm today.",
+      "I'm not certain about that. Want me to connect you with our care team on WhatsApp?"
+    ]
+  },
+  "palette": {
+    "ivory": "#FBF7F2",
+    "sand": "#F1E8DD",
+    "ink": "#1F1A17",
+    "muted": "#6F655C",
+    "gold": "#B8893B",
+    "gold_deep": "#8C6524",
+    "blush": "#E9D8CF",
+    "success": "#2F7D5B",
+    "danger": "#B4483A"
+  },
+  "fonts": {
+    "display": "Fraunces",
+    "body": "Inter"
+  },
+  "logo": {
+    "wordmark": "COSMOS",
+    "file": "/brand/cosmos-logo-v3.png"
+  },
+  "policies": {
+    "return_window_days": 15,
+    "exchange_allowed": true,
+    "anti_tarnish_warranty_months": 12,
+    "free_shipping_threshold_inr": 1499,
+    "shipping_fee_inr": 79,
+    "cod_allowed": true,
+    "cod_fee_inr": 49,
+    "gift_wrap_inr": 99,
+    "gift_note": true,
+    "care_guide": "Steel pieces: rinse, pat dry, done. Brass and silver pieces: keep dry, skip perfume on the metal, wipe after wear and store in the pouch."
+  },
+  "support": {
+    "email": "care@cosmos.example",
+    "whatsapp": "+91 55555 01234 (simulated)",
+    "hours": "Mon to Sat, 10am to 7pm IST"
+  },
+  "warehouse": {
+    "city": "Jaipur",
+    "pincode": "302013",
+    "dispatch_cutoff_ist": "14:00"
+  }
+}

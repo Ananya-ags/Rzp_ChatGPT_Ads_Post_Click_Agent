@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --ivory: #fbf7f2;
+  --sand: #f1e8dd;
+  --ink: #1f1a17;
+  --muted: #6f655c;
+  --line: #e4d9cc;
+  --gold: #b8893b;
+  --gold-deep: #8c6524;
+  --blush: #e9d8cf;
+  --success: #2f7d5b;
+  --danger: #b4483a;
+}
+
+@theme inline {
+  --color-ivory: var(--ivory);
+  --color-sand: var(--sand);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-gold: var(--gold);
+  --color-gold-deep: var(--gold-deep);
+  --color-blush: var(--blush);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-fraunces);
+}
+
+html,
+body {
+  background: var(--ivory);
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* vaul overlay/content inside the desktop phone frame */
+[data-vaul-drawer] {
+  touch-action: none;
+}

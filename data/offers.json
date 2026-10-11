@@ -1,0 +1,81 @@
+{
+  "engine": "Razorpay Offers Engine (simulated)",
+  "offers": [
+    {
+      "id": "prepaid_bonus",
+      "type": "flat",
+      "label": "₹100 off on prepaid orders over ₹1,999",
+      "value": 100,
+      "eligibility": {
+        "min_cart_inr": 1999,
+        "first_order_only": false,
+        "channels": [
+          "all"
+        ],
+        "prepaid_only": true,
+        "requires": null
+      },
+      "cap_inr": 100,
+      "valid_till": "2026-10-31",
+      "cofunded": false,
+      "stackable": true
+    },
+    {
+      "id": "first_order",
+      "type": "percent",
+      "label": "10% off your first order (up to ₹300)",
+      "value": 10,
+      "eligibility": {
+        "min_cart_inr": 0,
+        "first_order_only": true,
+        "channels": [
+          "all"
+        ],
+        "prepaid_only": false,
+        "requires": null
+      },
+      "cap_inr": 300,
+      "valid_till": "2026-10-31",
+      "cofunded": false,
+      "stackable": false
+    },
+    {
+      "id": "bank_offer",
+      "type": "flat",
+      "label": "₹200 off with select bank cards over ₹2,499",
+      "value": 200,
+      "eligibility": {
+        "min_cart_inr": 2499,
+        "first_order_only": false,
+        "channels": [
+          "all"
+        ],
+        "prepaid_only": true,
+        "requires": "Select bank credit cards (simulated issuer)"
+      },
+      "cap_inr": 200,
+      "valid_till": "2026-10-31",
+      "cofunded": true,
+      "stackable": true
+    },
+    {
+      "id": "loyalty",
+      "type": "wallet",
+      "label": "Use your Engage Loyalty Wallet (up to 20% of cart)",
+      "value": 20,
+      "eligibility": {
+        "min_cart_inr": 0,
+        "first_order_only": false,
+        "channels": [
+          "all"
+        ],
+        "prepaid_only": false,
+        "requires": "Login With Razorpay"
+      },
+      "cap_inr": null,
+      "valid_till": "2026-12-31",
+      "cofunded": false,
+      "stackable": true
+    }
+  ]
+}

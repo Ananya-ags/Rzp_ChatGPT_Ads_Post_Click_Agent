@@ -1,0 +1,133 @@
+# Build log
+
+Running log of which AI tool did what, key prompts, rejected AI output and decisions. Newest at the bottom.
+
+## 11 Oct 2026 · Steps 1–5 (Claude Code, model: Claude Opus 5.5)
+
+**Tooling.** Claude Code (Opus 5.5) wrote the scaffold, seed sources, generators, validator, pipelines, agent and UI from `docs/PRODUCT_CONTEXT.md` and `docs/step1-build-brief-data-spec.md`. Next.js 16.4 (App Router, Turbopack), Tailwind 4, Vercel AI SDK 7 + `@ai-sdk/anthropic` 4, `vaul`, `zod` 4. Node 24 LTS was installed into `~/.local` because the machine had none.
+
+**Key prompt (user):** "Read CLAUDE.md and everything in docs/ … plan for scaffolding, every seed data file in Part B with all planted facts exactly as specified, and a validate-data script." The plan was approved with two changes: the brand is **Cosmos**, and real photos instead of AI images.
+
+### Decisions made by the user
+- Brand name **Cosmos**.
+  - Flagged: an Indian lab-grown jewellery brand "Cosmos Diamonds" and a "COSMOS" wholesale steel-hoop line exist.
+  - The name lives in `scripts/seed/static.ts` (`BRAND_NAME`) plus product `vendor`, so it can be renamed in one pass.
+- No AI-generated product images; use real photos from websites.
+
+### Decisions made by Claude Code (approved implicitly via plan)
+1. **Ad group IDs.** A readable slug is the internal `id` used across files. Opaque, OpenAI-style `campaign_id` / `ad_group_id` / `ad_id` values go in URLs, and the page maps one to the other. The ID format is invented.
+2. **Hypoallergenic ad group.** It lives in `ad_groups.json` with `status: "pending_approval"`. The UI treats it as absent until the proposal is approved.
+3. **Waterproof claims.** Ciel 40/30/20 and Aria 28 have verified `water_resistant: true`; the hero of the waterproof ad must be honestly waterproof. The 18 prose-only SKUs are other products.
+4. **Offer caps.** 10% / ₹300 caps the combined promotional discount per order. The loyalty wallet is stored value and not capped.
+5. **Order count.** The orders count is ~200, not ~400. ~400 orders from ~6,000 sessions implies 6.7% conversion, while ₹61 kept per click at a ~₹2.5k order value implies ~3%. The per-click targets are shown on screen, so they win. `validate-data` warns about this.
+6. **Holdout split.** ChatGPT-ads traffic is A 20% / B 40% / C 40%. Other channels are arm A.
+7. **Delivery dates.** Calendar days (couriers run Sundays): 18 Oct 2026 is a Sunday and the planted 30mm date requires it. Dussehra (~20 Oct) is deliberately left out of `holidays[]`.
+8. **"Most keepers chose the 30mm".** This needed data the brief didn't have. Added `returns.json → by_use_context` (office kept: 30mm 85 vs 40mm 48 → 64%).
+9. **Hand-authored data.** It is authored as compact TypeScript in `scripts/seed/` and expanded by `npm run seed` into the `/data` JSON. This is deterministic, and fields like `price_band` can't drift from the price.
+10. **Answer key.** `evals/planted_facts.json` holds the planted sets, chat themes and return-reason labels. `validate-data` uses it; pipelines and the agent never read it.
+11. **Tuning the generator.**
+    - **Return allocation.** Return outcomes are allocated per arm, not per ad group, because arm A has only ~11 orders and one return moves the rate ~9pp.
+    - **Calibration.** Open-window predicted probabilities are scaled by at most ×0.6–1.6 to land the 14% / 9% targets.
+12. **Pipelines without an API key.** No `ANTHROPIC_API_KEY` was available, so every pipeline has a rule-based fallback. Each output's `producer.mode` says `"heuristic"` or `"llm"`. Re-run `npm run pipelines` with a key for the AI version.
+13. **Rail ranking.** Ranking uses gross sales in context, not kept revenue. That's why the layered set lands on the office rail and the "remove from rail" proposal catches it, which is the learning loop. One complementary non-earring slot per rail.
+14. **Models.**
+    - Agent: `claude-haiku-5-5` at effort `low`.
+    - Pipelines: `claude-opus-5-5` at effort `medium`.
+    - The AI SDK provider auto-switches structured output to `output_config.format`, because Opus 5.5 rejects forced tool use.
+    - The bake-off (PRODUCT_CONTEXT §8) is still to do once a key exists.
+
+### Rejected AI / tool output
+- **Openverse / Wikimedia images.** Openly licensed, but rejected: game renders, museum pieces and watermarked shots.
+  - Replaced by `npm run fetch-images` (Pexels API, free licence, photographer and page URL recorded in the manifest).
+  - Until a `PEXELS_API_KEY` is added, products show placeholder art drawn from verified mm data.
+  - The on-ear "scale" image is always drawn in code from mm values, so size comparisons are exact.
+- **Copying product photos from other brands' online stores.** The user asked for this; Claude Code declined. Those photos are the brands' copyrighted work, and CLAUDE.md rule 1 / the brief call for fictional assets. It offered free-licence stock instead.
+- **`vaul` snapPoints.** These compute offsets from `window.innerHeight`, which mis-positions the sheet inside the 844px desktop phone frame. Replaced with half/full heights driven by our own state (pill → half → full; input focus → full). vaul still handles open, close and drag-to-dismiss.
+- **`create-next-app` defaults `cacheComponents` / `partialPrefetching`.** Turned off: every page reads `searchParams` and the data is static JSON, so the previous caching model is simpler for this prototype.
+
+### Verified
+- `npm run validate-data`: 69 passed, 0 errors. Two warnings: order count, and placeholder images.
+- `next build` and `eslint` are clean.
+- Headless-Chrome checks:
+  - Waterproof vs wedding pages show different chip, rail and opener for the same SKU.
+  - Control page (`arm=A`) has no chip, rail or agent.
+  - Chat chip "Will these work for office?" streams the cached answer, fit-check card and alternatives.
+  - "give me 50% off" is capped. The injection attempt is flagged by the input guardrail.
+
+## 11 Oct 2026 · Scale drawing removed (user decision)
+- The user found the code-drawn "drawn to scale" ear image confusing, so it was removed from the product gallery and the chat fit-check card.
+- Size answers still come from verified mm data in tool results ("40mm, ~42mm on the ear" vs "30mm, ~32mm").
+- The manifest keeps a `scale` slot per SKU as a placeholder, in case a real on-ear photo is sourced later.
+
+## 11 Oct 2026 · Brand logo, real catalogue images, plain product names, clickable SKUs (user request)
+
+**Logo.** `~/Desktop/Cosmos-Full-Catalogue-Images/brand-logo.png` is resized to 900px and kept on its original black background, per the user. It appears in the normal ivory header on product pages and on the start page; only the logo image itself is black (user: black background in the logo only, not the whole bar). The old SVG wordmark was removed.
+
+**Images.**
+- 70 images (2 per SKU: product shot, then on model) were installed from the user's folder. Mapping follows its `image-manifest.json`, and all 70 sha256 hashes were verified before copying.
+- Converted from ~2MB PNGs to 800px JPEGs (4.4 MB total) for mobile.
+- The images are AI-generated prototype photography supplied by the user. Model proportions are approximate; size answers still come from verified mm data.
+- The `scale` image role was removed from the catalogue, manifest and schema.
+- The Pexels fetcher (`npm run fetch-images`) was deleted.
+
+**Names.**
+- Product titles and collections were renamed to plain descriptive names after the images were attached: e.g. Ciel 40mm Hoops → Large Classic Hoop Earrings, Aria 28mm → Everyday Tube Hoop Earrings, Tara Solitaire → Classic Solitaire Stud Earrings.
+- Prose, ad creatives, evals, pipeline reasons and cached demo answers were updated to match.
+- **Decision:** studs say "Solitaire" rather than "Diamond", because the stones are CZ (claims policy).
+- **Decision:** URL handles and variant SKU codes (e.g. `ciel-hoops-40mm`) were kept as stable internal IDs. Images, planted facts, ad groups and evals all key on them.
+
+**Clickable SKUs.**
+- Every product card (rail, "More", recently viewed, chat cards) and every product mention in chat cards (delivery, fit-check) links to `/p/<handle>`, carrying the ad context (`?ad_group=…&arm=…`).
+- The product page resets scroll and gallery position on navigation.
+- Non-hero pages show a neutral assistant opener, since the ad-group opener describes the hero.
+- Logo follow-up (user: too small in the desktop frame, too large on the mobile start page): trimmed the supplied PNG's empty black padding to a slim black border so the lettering fills the badge. Sized at 32px tall in the product header and 40px (48px on desktop) on the start page.
+- Logo follow-up 2 (user: still too small on desktop, too large on mobile): the logo size is now responsive. Product header is 24px tall on phones and 44px in the desktop phone frame; start page is 32px on phones and 64px on desktop. Renamed the file to `cosmos-logo-v2.png` so browsers can't show a cached old version.
+- Desktop phone frame widened from 390px to 430px (large-phone size); height is up to 932px and fits the window. Mobile header logo increased from 24px to 28px tall; start page logo on phones from 32px to 36px.
+- Removed the "Welcome back · recently viewed" row and its "Returning visitor" demo toggle (user request). Tier-2 cookie data stays in `shoppers.json`; the UI no longer uses it.
+
+## 12 Oct 2026 · Transparent logo, updated necklace photos (user request)
+- **Logo:** the user now wants no black background. Built `cosmos-logo-v3.png` from the supplied `brand-logo.png`: black keyed to transparent with edges un-premultiplied so the gold stays clean, then cropped to the lettering. Sized so the lettering matches the earlier badge: product header 24px tall on phones and 30px in the desktop frame; start page 28px on phones and 44px on desktop. Removed v2.
+- **Necklaces:** re-checked all 8 necklace SKUs against the updated `image-manifest.json` (all 16 sha256 hashes match). The changed files were the on-model shots for `sol-paperclip-chain` (Paperclip Chain Necklace) and `sol-rope-chain` (Rope Chain Necklace). All 8 necklaces were reinstalled as 800px JPEGs.
+
+## 12 Oct 2026 · Simpler similar-product cards, quantity stepper on every Add (user request)
+- **Product-page rails** ("Picked for…" and "More …") show only image, name, price and Add. The one-line rail reasons and the "New" pinned label are hidden from shoppers. They stay in `data/generated/rails.json` for the AI console (step 6).
+- **One shared `CartButton`** is used for every Add button: rail cards, chat product cards, the fit-check card and the sticky bar. Once the item is in the bag it becomes a "− qty +" stepper, max 10; "−" at 1 removes the item. The sticky bar shows "− 1 in bag +".
+- **New helper:** `setQty()` in `src/lib/state.ts`.
+- **Decision:** chat product cards keep their one-line tool facts ("Arrives Fri, 16 Oct", "28mm"). Those are the agent's answer (the delivery-rescue beat), not catalogue descriptions.
+
+## 12 Oct 2026 · Stock counts and a 100-unit bag limit (user request)
+- **Stock.** Every SKU already had a stock count (`variants[].inventory_quantity`, previously 0–150). It is now 100 units per SKU (per ring size for sized rings). Three planted facts from the brief are kept: Medium Classic Hoops are made to order (0 on hand, still orderable), Heart Pendant Necklace has 2 left (the "near out of stock" brand rule), and Tennis Bracelet has 18 (clearance, "last few pieces"). Orders, sessions and all tuned metrics are unchanged; `orders_sessions.json` is byte-identical.
+- **Bag limit.** A SKU can't exceed its orderable stock: min(stock, 100), and 100 for made-to-order. At the limit "+" is disabled and the button shows "Out of stock" (the sticky bar shows "100 · Out of stock"). A SKU with 0 ready stock shows a disabled "Out of stock" button. The limit is enforced in `addToCart` / `setQty`, not only in the UI.
+- **Validator.** New checks: every variant has a stock count, and no ready-stock SKU is at 0 units. Result: 71 passed, 0 errors.
+- **To do in step 7:** the checkout server route must re-check these limits against `products.json`, since localStorage can be edited.
+- Bag limit changed from 100 to **15 units per SKU** (user request; `MAX_PER_SKU` in `src/lib/view.ts`). Stock levels are unchanged (100 per SKU plus the three planted exceptions). The limit is now min(stock, 15), so the Heart Pendant still stops at 2.
+- Limit messages are now split by cause (user request). At the per-order cap with stock still available, the button shows **"Max 15 per order"** in muted text. When stock is what runs out (e.g. Heart Pendant at 2), it shows **"Out of stock"** in red. Each card carries `limitReason` (`src/lib/view.ts`).
+
+## 12 Oct 2026 · "Product details" panel (user request)
+- The "Verified details" grid is now a collapsible **Product details** section, closed by default, with a chevron that rotates when open. It uses native `<details>/<summary>`, so it is keyboard accessible and needs no JS.
+- The wording is plainer. Finish (18K gold plated / Gold vermeil (gold on silver) / Gold-toned) comes first, then the anti-tarnish warranty. Metal reads "Stainless steel" (not 316L), "Sterling silver" or "Brass", and PVD and micron values are dropped. The other fields are relabelled ("About 42mm long", "6.4g (pair)").
+- It still shows only brand-verified fields (water resistance only where verified). The underlying data is unchanged.
+
+## 12 Oct 2026 · Plain-language descriptions, review link (user request)
+- **Descriptions.** All 35 `body_html` descriptions were rewritten in plain language (no 316L, PVD or microns), with filler such as "layer-proof, life-proof" removed. The bold **Waterproof** / **18K gold plated** (or **Gold vermeil**) lead-in comes first.
+- **Planted facts in the copy are preserved:**
+  - the 18 "waterproof only in prose" SKUs still say waterproof while their attribute is empty;
+  - the 6 studs keep their titanium / surgical-steel post wording;
+  - the 4 vague SKUs keep "gold-toned", "water friendly" and "skin-safe for most";
+  - non-waterproof pieces gained no water claims.
+- **Validation.** `validate-data` passes: 71 checks, 0 errors.
+- **Pipeline fix.** The heuristic enrichment now quotes the whole sentence that carries a claim as its source phrase, instead of a fixed character window that cut words mid-way in proposal evidence.
+- **Review link.** The "★ 4.4 · 212 reviews" line is now a button that smooth-scrolls to the Reviews section (`#reviews`). It works on phones and inside the desktop phone frame.
+- Desktop phone frame widened from 430px to 470px (`md:` only; phones are unchanged and full-width).
+- Mock ChatGPT ad for the waterproof ad group: "18k gold PVD on 316L steel…" became "Waterproof, 18K gold plated hoops. Shower, gym, repeat. ₹3,299, free shipping." (user request: no technical jargon in ad copy).
+- **Badges.** A product-promise icon row sits between Description and Reviews (`TrustBadges`): Anti-tarnish (with warranty months), 18K gold plated / Gold vermeil (with base metal), Lead-free, and Free shipping ("On this item", or "Over ₹1,499" under the threshold). Each badge renders only when it is verified for that SKU.
+- **Decision.** The requested "Skin safe" badge was swapped for the verified "Lead-free". `nickel_free` is unverified for every SKU, and a skin-safe claim would break CLAUDE.md rule 5 and undercut the hypoallergenic proposal. It can switch to "Skin safe" once the brand confirms nickel-free on specific SKUs.
+- Removed the "Lead-free" badge from all SKUs (user: confusing). The row is now Anti-tarnish, 18K gold plated / Gold vermeil, and Free shipping, with columns that size to the badge count. The user will show a "Skin safe" badge later in the demo, added when the merchant approves the hypoallergenic proposal.
+- Gold-plating badge icon changed from a diamond to an original line drawing of three stacked gold bars with a sparkle (user asked for something in the spirit of common D2C "gold plated" icons; nothing copied).
+
+## 12 Oct 2026 · Product page re-order and the "Ask Cosmos AI" card (user request)
+- **Order.** Delivery date → similar products (rail) → "✦ Ask Cosmos AI" card → Product details → Description → badges → Reviews.
+- **Card copy.** The card header is "✦ Ask Cosmos AI". Its text is "Any questions about the {product name}?" on every product page; the earlier per-ad-group opener sentences and the "I can check size, delivery…" line are gone.
+- **Note on the storyboard.** The ad context still differs per ad via the chip, the rail and the suggested prompts. The per-context opener text is still generated in `openers.json`, but it is no longer shown.
+- **Fourth prompt tile, "Show me other products".** It is also available in the chat sheet. With an API key the agent answers via `search_catalog` (similar_to the page product). Without one, the offline fallback runs the real `search_catalog` (3 similar pieces) and returns product cards.
+- Prompt tile "Need it by a date" renamed to "When will it be delivered?" (opener chips in the pipeline). The offline fallback answers it with `check_delivery` for the page product to the approx-city pincode (Pune 411038) and asks for the pincode for an exact date.

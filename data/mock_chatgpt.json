@@ -1,0 +1,106 @@
+{
+  "conversations": [
+    {
+      "id": "conv-waterproof",
+      "title": "Waterproof office earrings",
+      "ad_group": "waterproof-everyday-under-5k",
+      "requires_approval_of": null,
+      "turns": [
+        {
+          "role": "user",
+          "text": "I want gold earrings I never have to take off. Shower, gym, office. Under ₹5k."
+        },
+        {
+          "role": "assistant",
+          "text": "Look for 316L stainless steel or titanium with a PVD gold coating. PVD bonds much harder than regular plating, so it holds up to water and sweat. Hoops and huggies are the easiest shapes to sleep and shower in."
+        },
+        {
+          "role": "user",
+          "text": "What size hoop works for both office and weekends?"
+        },
+        {
+          "role": "assistant",
+          "text": "Most people find 20 to 30mm hoops versatile enough for work. 40mm and above reads more as a statement. If you're unsure, check how far the hoop drops below the lobe."
+        }
+      ],
+      "sponsored_card": {
+        "label": "Sponsored",
+        "advertiser": "Cosmos",
+        "title": "Classic gold hoops that survive the shower",
+        "body": "Waterproof, 18K gold plated hoops. Shower, gym, repeat. ₹3,299, free shipping.",
+        "image": "/images/products/ciel-hoops-40mm/front.jpg",
+        "cta": "Shop hoops",
+        "click_url": "/p/ciel-hoops-40mm?utm_source=chatgpt&utm_medium=cpc&campaign_id=cmp_7f3a9c21d84e&ad_group_id=adg_2b81e6f0c4a7&ad_id=ad_e93f1b6d20c8&oppref=opp_8Hc2kQ1vZx9T",
+        "oppref": "opp_8Hc2kQ1vZx9T"
+      }
+    },
+    {
+      "id": "conv-wedding",
+      "title": "Wedding guest gift",
+      "ad_group": "wedding-guest-gift",
+      "requires_approval_of": null,
+      "turns": [
+        {
+          "role": "user",
+          "text": "My college friend's wedding is in Jaipur next month. Gift ideas around ₹3–4k? She likes gold jewellery."
+        },
+        {
+          "role": "assistant",
+          "text": "Jewellery is a lovely wedding-guest gift. Statement hoops or jhumkas work well across sangeet and reception looks. Pick something versatile she can re-wear, and check the return or exchange policy in case of duplicates."
+        },
+        {
+          "role": "user",
+          "text": "Something that'll look good in photos but she can also wear later?"
+        },
+        {
+          "role": "assistant",
+          "text": "Polished gold hoops photograph well and stay wearable after the wedding. Kundan or pearl jhumkas are more festive. A gift note and wrap make it feel special."
+        }
+      ],
+      "sponsored_card": {
+        "label": "Sponsored",
+        "advertiser": "Cosmos",
+        "title": "Wedding-guest gold, gift-wrapped",
+        "body": "Statement hoops and new kundan jhumkas. Free gift note, ships from Jaipur.",
+        "image": "/images/products/ciel-hoops-40mm/on_model.jpg",
+        "cta": "See the edit",
+        "click_url": "/p/ciel-hoops-40mm?utm_source=chatgpt&utm_medium=cpc&campaign_id=cmp_7f3a9c21d84e&ad_group_id=adg_91d4c7a35e02&ad_id=ad_4c2d8e71a9b5&oppref=opp_3Wm7pR5dLa2N",
+        "oppref": "opp_3Wm7pR5dLa2N"
+      }
+    },
+    {
+      "id": "conv-sensitive",
+      "title": "Earrings for sensitive ears",
+      "ad_group": "hypoallergenic-studs",
+      "requires_approval_of": "hypoallergenic-studs",
+      "turns": [
+        {
+          "role": "user",
+          "text": "My ears itch with most fashion earrings. What should I look for in studs?"
+        },
+        {
+          "role": "assistant",
+          "text": "Itching is often a reaction to nickel. Look for posts in implant-grade titanium, niobium or solid gold, and avoid unspecified 'gold-toned' metals. Ask the brand what the post is made of, not just the front."
+        },
+        {
+          "role": "user",
+          "text": "Any everyday gold studs like that?"
+        },
+        {
+          "role": "assistant",
+          "text": "Simple studs with titanium posts are a good start. Check that the brand states the post material clearly."
+        }
+      ],
+      "sponsored_card": {
+        "label": "Sponsored",
+        "advertiser": "Cosmos",
+        "title": "Studs on titanium posts",
+        "body": "Everyday sparkle on titanium and surgical-steel posts. From ₹1,199.",
+        "image": "/images/products/tara-solitaire-studs/front.jpg",
+        "cta": "Shop studs",
+        "click_url": "/p/tara-solitaire-studs?utm_source=chatgpt&utm_medium=cpc&campaign_id=cmp_7f3a9c21d84e&ad_group_id=adg_c47f18e2d6b9&ad_id=ad_7d05e2c9b4f1&oppref=opp_9Ks4tY8bQe6V",
+        "oppref": "opp_9Ks4tY8bQe6V"
+      }
+    }
+  ]
+}

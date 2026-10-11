@@ -1,0 +1,151 @@
+{
+  "warehouses": [
+    {
+      "id": "jaipur-1",
+      "city": "Jaipur",
+      "pincode": "302013",
+      "cutoff_ist": "14:00"
+    }
+  ],
+  "zones": [
+    {
+      "prefix": "411",
+      "city": "Pune",
+      "zone": "west-metro",
+      "transit_days": 3
+    },
+    {
+      "prefix": "400",
+      "city": "Mumbai",
+      "zone": "west-metro",
+      "transit_days": 2
+    },
+    {
+      "prefix": "560",
+      "city": "Bengaluru",
+      "zone": "south-metro",
+      "transit_days": 3
+    },
+    {
+      "prefix": "110",
+      "city": "Delhi",
+      "zone": "north-metro",
+      "transit_days": 2
+    },
+    {
+      "prefix": "302",
+      "city": "Jaipur",
+      "zone": "local",
+      "transit_days": 1
+    },
+    {
+      "prefix": "845",
+      "city": "Rural Bihar (simulated)",
+      "zone": "rural-east",
+      "transit_days": 6
+    },
+    {
+      "prefix": "1",
+      "city": "North India",
+      "zone": "north",
+      "transit_days": 3
+    },
+    {
+      "prefix": "2",
+      "city": "North India",
+      "zone": "north",
+      "transit_days": 3
+    },
+    {
+      "prefix": "3",
+      "city": "West India",
+      "zone": "west",
+      "transit_days": 2
+    },
+    {
+      "prefix": "4",
+      "city": "West India",
+      "zone": "west",
+      "transit_days": 3
+    },
+    {
+      "prefix": "5",
+      "city": "South India",
+      "zone": "south",
+      "transit_days": 4
+    },
+    {
+      "prefix": "6",
+      "city": "South India",
+      "zone": "south",
+      "transit_days": 4
+    },
+    {
+      "prefix": "7",
+      "city": "East and North-East India",
+      "zone": "east",
+      "transit_days": 5
+    },
+    {
+      "prefix": "8",
+      "city": "East India",
+      "zone": "east",
+      "transit_days": 5
+    }
+  ],
+  "default_transit_days": 5,
+  "day_counting": "calendar",
+  "holidays": [
+    {
+      "date": "2026-11-08",
+      "name": "Diwali break (warehouse closed)"
+    },
+    {
+      "date": "2026-11-09",
+      "name": "Diwali break (warehouse closed)"
+    },
+    {
+      "date": "2026-12-25",
+      "name": "Christmas (warehouse closed)"
+    }
+  ],
+  "rto_risk": [
+    {
+      "pincode": "411038",
+      "risk": "low",
+      "score": 0.06,
+      "prepay_nudge_text": null
+    },
+    {
+      "pincode": "400050",
+      "risk": "low",
+      "score": 0.08,
+      "prepay_nudge_text": null
+    },
+    {
+      "pincode": "560034",
+      "risk": "low",
+      "score": 0.07,
+      "prepay_nudge_text": null
+    },
+    {
+      "pincode": "110001",
+      "risk": "medium",
+      "score": 0.24,
+      "prepay_nudge_text": null
+    },
+    {
+      "pincode": "845401",
+      "risk": "high",
+      "score": 0.61,
+      "prepay_nudge_text": "Pay online to skip the ₹49 COD fee. Prepaid orders over ₹1,999 also get ₹100 off."
+    }
+  ],
+  "demo_pincodes": [
+    "411038",
+    "400050",
+    "560034",
+    "110001",
+    "845401"
+  ]
+}

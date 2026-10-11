@@ -1,0 +1,319 @@
+{
+  "producer": {
+    "stage": "enrichment",
+    "mode": "heuristic",
+    "model": null,
+    "prompt_version": "enrich-v1",
+    "note": "Rule-based fallback (no API key). Re-run `npm run pipelines` with ANTHROPIC_API_KEY for the AI version."
+  },
+  "items": [
+    {
+      "id": "atc-tara-solitaire-studs-post_material",
+      "sku": "tara-solitaire-studs",
+      "title": "Classic Solitaire Stud Earrings",
+      "attribute": "post_material",
+      "proposed_value": "titanium",
+      "source_phrase": "Crafted on surgical-grade titanium posts so even sensitive lobes can wear them all day.",
+      "confidence": 0.85,
+      "unlocks": [
+        "prop-new-ad-group-hypoallergenic"
+      ]
+    },
+    {
+      "id": "atc-tara-pearl-studs-post_material",
+      "sku": "tara-pearl-studs",
+      "title": "Classic Pearl Stud Earrings",
+      "attribute": "post_material",
+      "proposed_value": "titanium",
+      "source_phrase": "18K gold plated studs with a 7mm shell pearl, crafted on surgical-grade titanium posts.",
+      "confidence": 0.85,
+      "unlocks": [
+        "prop-new-ad-group-hypoallergenic"
+      ]
+    },
+    {
+      "id": "atc-tara-heart-studs-post_material",
+      "sku": "tara-heart-studs",
+      "title": "Heart Stud Earrings",
+      "attribute": "post_material",
+      "proposed_value": "titanium",
+      "source_phrase": "18K gold plated little hearts, 8mm, on titanium posts that are kind to sensitive ears.",
+      "confidence": 0.85,
+      "unlocks": [
+        "prop-new-ad-group-hypoallergenic"
+      ]
+    },
+    {
+      "id": "atc-elle-bezel-studs-post_material",
+      "sku": "elle-bezel-studs",
+      "title": "Mini Bezel Stud Earrings",
+      "attribute": "post_material",
+      "proposed_value": "surgical steel",
+      "source_phrase": "Set on surgical-steel posts, friendly for sensitive ears.",
+      "confidence": 0.85,
+      "unlocks": [
+        "prop-new-ad-group-hypoallergenic"
+      ]
+    },
+    {
+      "id": "atc-kira-mini-huggies-water_resistant",
+      "sku": "kira-mini-huggies",
+      "title": "Mini Huggie Earrings",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-kira-mini-huggies-post_material",
+      "sku": "kira-mini-huggies",
+      "title": "Mini Huggie Earrings",
+      "attribute": "post_material",
+      "proposed_value": "titanium",
+      "source_phrase": "12mm huggies crafted on surgical-grade titanium posts.",
+      "confidence": 0.85,
+      "unlocks": [
+        "prop-new-ad-group-hypoallergenic"
+      ]
+    },
+    {
+      "id": "atc-kira-twist-huggies-water_resistant",
+      "sku": "kira-twist-huggies",
+      "title": "Twisted Huggie Earrings",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-kira-twist-huggies-post_material",
+      "sku": "kira-twist-huggies",
+      "title": "Twisted Huggie Earrings",
+      "attribute": "post_material",
+      "proposed_value": "titanium",
+      "source_phrase": "A twisted rope texture on a 14mm huggie, set on titanium posts.",
+      "confidence": 0.85,
+      "unlocks": [
+        "prop-new-ad-group-hypoallergenic"
+      ]
+    },
+    {
+      "id": "atc-mira-teardrop-drops-water_resistant",
+      "sku": "mira-teardrop-drops",
+      "title": "Teardrop Earrings",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-sana-chain-threaders-water_resistant",
+      "sku": "sana-chain-threaders",
+      "title": "Chain Threader Earrings",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-sana-chain-threaders-sweat_resistant",
+      "sku": "sana-chain-threaders",
+      "title": "Chain Threader Earrings",
+      "attribute": "sweat_resistant",
+      "proposed_value": true,
+      "source_phrase": "Swim, sweat, repeat.",
+      "confidence": 0.6,
+      "unlocks": []
+    },
+    {
+      "id": "atc-sol-paperclip-chain-water_resistant",
+      "sku": "sol-paperclip-chain",
+      "title": "Paperclip Chain Necklace",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-sol-snake-chain-water_resistant",
+      "sku": "sol-snake-chain",
+      "title": "Snake Chain Necklace",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-sol-rope-chain-water_resistant",
+      "sku": "sol-rope-chain",
+      "title": "Rope Chain Necklace",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-sol-layered-chain-set-water_resistant",
+      "sku": "sol-layered-chain-set",
+      "title": "Layered Chain Necklace Set",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-luna-coin-pendant-water_resistant",
+      "sku": "luna-coin-pendant",
+      "title": "Sun Coin Pendant Necklace",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-luna-evil-eye-pendant-water_resistant",
+      "sku": "luna-evil-eye-pendant",
+      "title": "Evil Eye Pendant Necklace",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-luna-heart-pendant-water_resistant",
+      "sku": "luna-heart-pendant",
+      "title": "Heart Pendant Necklace",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-veda-dome-ring-water_resistant",
+      "sku": "veda-dome-ring",
+      "title": "Dome Ring",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-veda-band-ring-water_resistant",
+      "sku": "veda-band-ring",
+      "title": "Classic Band Ring",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-veda-band-ring-sweat_resistant",
+      "sku": "veda-band-ring",
+      "title": "Classic Band Ring",
+      "attribute": "sweat_resistant",
+      "proposed_value": true,
+      "source_phrase": "A 3mm everyday band that doesn't mind the pool, the kitchen or the gym.",
+      "confidence": 0.6,
+      "unlocks": []
+    },
+    {
+      "id": "atc-veda-twist-ring-water_resistant",
+      "sku": "veda-twist-ring",
+      "title": "Twist Ring",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-veda-signet-ring-water_resistant",
+      "sku": "veda-signet-ring",
+      "title": "Signet Ring",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-kaya-cuff-water_resistant",
+      "sku": "kaya-cuff",
+      "title": "Open Cuff Bracelet",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-kaya-chain-bracelet-water_resistant",
+      "sku": "kaya-chain-bracelet",
+      "title": "Chain Bracelet",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    },
+    {
+      "id": "atc-kaya-hammered-cuff-water_resistant",
+      "sku": "kaya-hammered-cuff",
+      "title": "Hammered Cuff Bracelet",
+      "attribute": "water_resistant",
+      "proposed_value": true,
+      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
+      "confidence": 0.8,
+      "unlocks": [
+        "prop-feed-waterproof"
+      ]
+    }
+  ]
+}

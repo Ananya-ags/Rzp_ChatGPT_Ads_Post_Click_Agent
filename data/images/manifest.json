@@ -1,0 +1,859 @@
+{
+  "style_note": "Two images per SKU: product shot first, then on model. Installed from ~/Desktop/Cosmos-Full-Catalogue-Images (sha256-verified against its image-manifest.json), resized to 800px JPEG for mobile. Model proportions are approximate; size answers come from verified mm data.",
+  "products": {
+    "ciel-hoops-40mm": {
+      "front": {
+        "file": "/images/products/ciel-hoops-40mm/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/ciel-hoops-40mm/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "ciel-hoops-30mm": {
+      "front": {
+        "file": "/images/products/ciel-hoops-30mm/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/ciel-hoops-30mm/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "ciel-huggies-20mm": {
+      "front": {
+        "file": "/images/products/ciel-huggies-20mm/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/ciel-huggies-20mm/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "aria-hoops-28mm": {
+      "front": {
+        "file": "/images/products/aria-hoops-28mm/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/aria-hoops-28mm/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "noor-kundan-jhumkas": {
+      "front": {
+        "file": "/images/products/noor-kundan-jhumkas/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/noor-kundan-jhumkas/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "noor-pearl-jhumkas": {
+      "front": {
+        "file": "/images/products/noor-pearl-jhumkas/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/noor-pearl-jhumkas/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "noor-mini-jhumkas": {
+      "front": {
+        "file": "/images/products/noor-mini-jhumkas/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/noor-mini-jhumkas/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "noor-temple-jhumkas": {
+      "front": {
+        "file": "/images/products/noor-temple-jhumkas/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/noor-temple-jhumkas/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "tara-solitaire-studs": {
+      "front": {
+        "file": "/images/products/tara-solitaire-studs/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/tara-solitaire-studs/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "tara-pearl-studs": {
+      "front": {
+        "file": "/images/products/tara-pearl-studs/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/tara-pearl-studs/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "tara-heart-studs": {
+      "front": {
+        "file": "/images/products/tara-heart-studs/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/tara-heart-studs/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "elle-bezel-studs": {
+      "front": {
+        "file": "/images/products/elle-bezel-studs/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/elle-bezel-studs/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "kira-mini-huggies": {
+      "front": {
+        "file": "/images/products/kira-mini-huggies/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/kira-mini-huggies/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "kira-twist-huggies": {
+      "front": {
+        "file": "/images/products/kira-twist-huggies/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/kira-twist-huggies/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "mira-pearl-drops": {
+      "front": {
+        "file": "/images/products/mira-pearl-drops/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/mira-pearl-drops/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "mira-teardrop-drops": {
+      "front": {
+        "file": "/images/products/mira-teardrop-drops/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/mira-teardrop-drops/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "sana-chain-threaders": {
+      "front": {
+        "file": "/images/products/sana-chain-threaders/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/sana-chain-threaders/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "lia-flower-studs": {
+      "front": {
+        "file": "/images/products/lia-flower-studs/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/lia-flower-studs/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "sol-paperclip-chain": {
+      "front": {
+        "file": "/images/products/sol-paperclip-chain/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/sol-paperclip-chain/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "sol-snake-chain": {
+      "front": {
+        "file": "/images/products/sol-snake-chain/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/sol-snake-chain/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "sol-rope-chain": {
+      "front": {
+        "file": "/images/products/sol-rope-chain/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/sol-rope-chain/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "sol-layered-chain-set": {
+      "front": {
+        "file": "/images/products/sol-layered-chain-set/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/sol-layered-chain-set/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "luna-coin-pendant": {
+      "front": {
+        "file": "/images/products/luna-coin-pendant/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/luna-coin-pendant/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "luna-evil-eye-pendant": {
+      "front": {
+        "file": "/images/products/luna-evil-eye-pendant/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/luna-evil-eye-pendant/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "luna-heart-pendant": {
+      "front": {
+        "file": "/images/products/luna-heart-pendant/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/luna-heart-pendant/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "maya-pearl-choker": {
+      "front": {
+        "file": "/images/products/maya-pearl-choker/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/maya-pearl-choker/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "veda-dome-ring": {
+      "front": {
+        "file": "/images/products/veda-dome-ring/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/veda-dome-ring/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "veda-band-ring": {
+      "front": {
+        "file": "/images/products/veda-band-ring/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/veda-band-ring/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "veda-cz-solitaire-ring": {
+      "front": {
+        "file": "/images/products/veda-cz-solitaire-ring/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/veda-cz-solitaire-ring/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "veda-twist-ring": {
+      "front": {
+        "file": "/images/products/veda-twist-ring/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/veda-twist-ring/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "veda-signet-ring": {
+      "front": {
+        "file": "/images/products/veda-signet-ring/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/veda-signet-ring/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "kaya-cuff": {
+      "front": {
+        "file": "/images/products/kaya-cuff/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/kaya-cuff/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "kaya-chain-bracelet": {
+      "front": {
+        "file": "/images/products/kaya-chain-bracelet/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/kaya-chain-bracelet/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "kaya-tennis-bracelet": {
+      "front": {
+        "file": "/images/products/kaya-tennis-bracelet/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/kaya-tennis-bracelet/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    },
+    "kaya-hammered-cuff": {
+      "front": {
+        "file": "/images/products/kaya-hammered-cuff/front.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      },
+      "on_model": {
+        "file": "/images/products/kaya-hammered-cuff/on_model.jpg",
+        "kind": "photo",
+        "query": null,
+        "source": {
+          "provider": "cosmos-catalogue",
+          "page_url": null,
+          "photographer": null,
+          "license": "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)"
+        }
+      }
+    }
+  },
+  "lifestyle": {
+    "office": {
+      "file": "/images/lifestyle/office.jpg",
+      "kind": "placeholder",
+      "query": "woman office gold earrings",
+      "source": null
+    },
+    "wedding": {
+      "file": "/images/lifestyle/wedding.jpg",
+      "kind": "placeholder",
+      "query": "indian wedding guest jewellery",
+      "source": null
+    }
+  }
+}
