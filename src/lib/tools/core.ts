@@ -35,6 +35,19 @@ const price = (p: Product) => Number(p.variants[0].price);
 const stock = (p: Product) => p.variants.reduce((s, v) => s + v.inventory_quantity, 0);
 export const findProduct = (db: Db, sku: string) => db.products.find((p) => p.handle === sku) ?? null;
 
+/**
+ * The one size a shopper is told, in cm, computed here so the agent never converts units:
+ * earrings by diameter ("3cm across") or length ("4.8cm long"); chains by length; rings by size.
+ */
+export function sizeText(j: Product["metafields"]["jewellery"]): string | null {
+  if (j.category === "earrings") return j.outer_diameter_cm ? `${j.outer_diameter_cm}cm across` : j.drop_length_cm ? `${j.drop_length_cm}cm long` : null;
+  if (j.subtype === "pendant" && j.outer_diameter_cm && j.chain_length_cm) return `${j.outer_diameter_cm}cm pendant on a ${j.chain_length_cm}cm chain${j.extender_cm ? ` (+ ${j.extender_cm}cm extender)` : ""}`;
+  if (j.chain_length_cm) return `${j.chain_length_cm}cm${j.extender_cm ? ` + ${j.extender_cm}cm extender` : ""}`;
+  if (j.ring_size) return `ring sizes ${j.ring_size}`;
+  if (j.adjustable) return j.width_cm ? `adjustable, ${j.width_cm}cm wide` : "adjustable";
+  return j.outer_diameter_cm ? `${j.outer_diameter_cm}cm across` : null;
+}
+
 /** Verified facts only (brand-entered metafields). Null = unknown, never a claim. */
 export function verifiedFacts(p: Product) {
   const j = p.metafields.jewellery;
@@ -46,8 +59,8 @@ export function verifiedFacts(p: Product) {
     category: j.category,
     subtype: j.subtype,
     collection: j.collection,
-    outer_diameter_mm: j.outer_diameter_mm,
-    drop_length_mm: j.drop_length_mm,
+    outer_diameter_cm: j.outer_diameter_cm,
+    drop_length_cm: j.drop_length_cm,
     chain_length_cm: j.chain_length_cm,
     weight_g: j.weight_g,
     base_metal: j.base_metal,
@@ -63,7 +76,7 @@ export function verifiedFacts(p: Product) {
     in_stock: stock(p) > 0,
     rating: j.rating,
     review_count: j.review_count,
-    size_label: p.variants[0].option1,
+    size: sizeText(j), // quote this to shoppers (cm); the *_cm fields are for filters
   };
 }
 
@@ -75,8 +88,8 @@ export type SearchFilters = {
   max_price_inr?: number;
   occasion?: string;
   water_resistant?: boolean;
-  max_outer_diameter_mm?: number;
-  min_outer_diameter_mm?: number;
+  max_outer_diameter_cm?: number;
+  min_outer_diameter_cm?: number;
   similar_to?: string;
   deliver_to_pincode?: string;
   deliver_by?: string; // YYYY-MM-DD
@@ -98,8 +111,8 @@ export function searchCatalog(db: Db, query: string, f: SearchFilters = {}) {
       if (f.max_price_inr && price(p) > f.max_price_inr) return false;
       if (f.occasion && !j.occasions.includes(f.occasion as never)) return false;
       if (f.water_resistant !== undefined && j.water_resistant !== f.water_resistant) return false; // verified only
-      if (f.max_outer_diameter_mm && (j.outer_diameter_mm ?? Infinity) > f.max_outer_diameter_mm) return false;
-      if (f.min_outer_diameter_mm && (j.outer_diameter_mm ?? 0) < f.min_outer_diameter_mm) return false;
+      if (f.max_outer_diameter_cm && (j.outer_diameter_cm ?? Infinity) > f.max_outer_diameter_cm) return false;
+      if (f.min_outer_diameter_cm && (j.outer_diameter_cm ?? 0) < f.min_outer_diameter_cm) return false;
       return true;
     })
     .map((p) => {
@@ -110,7 +123,7 @@ export function searchCatalog(db: Db, query: string, f: SearchFilters = {}) {
         const rj = ref.metafields.jewellery;
         if (rj.subtype === j.subtype) score += 4;
         if (rj.category === j.category) score += 2;
-        if (rj.outer_diameter_mm && j.outer_diameter_mm) score -= Math.abs(rj.outer_diameter_mm - j.outer_diameter_mm) / 5;
+        if (rj.outer_diameter_cm && j.outer_diameter_cm) score -= Math.abs(rj.outer_diameter_cm - j.outer_diameter_cm) / 0.5;
         if (p.handle === ref.handle) score -= 100;
       }
       const delivery = f.deliver_to_pincode ? estimateDelivery(p, f.deliver_to_pincode, db.logistics, db.now, f.deliver_by ?? null) : null;
@@ -241,7 +254,7 @@ export function getReturnInsight(db: Db, sku: string, context: string) {
     typical_quote: cls?.typical_quote ?? null,
     better_fit: relevant && cls?.better_fit_sku ? { sku: cls.better_fit_sku, title: findProduct(db, cls.better_fit_sku)?.title ?? cls.better_fit_sku, reason: cls.better_fit_reason } : null,
     keepers: keeper,
-    size_note: p.metafields.jewellery.outer_diameter_mm ? { outer_diameter_mm: p.metafields.jewellery.outer_diameter_mm } : p.metafields.jewellery.drop_length_mm ? { drop_length_mm: p.metafields.jewellery.drop_length_mm } : null,
+    size_note: p.metafields.jewellery.outer_diameter_cm ? { outer_diameter_cm: p.metafields.jewellery.outer_diameter_cm, size: sizeText(p.metafields.jewellery) } : p.metafields.jewellery.drop_length_cm ? { drop_length_cm: p.metafields.jewellery.drop_length_cm, size: sizeText(p.metafields.jewellery) } : null,
   };
 }
 

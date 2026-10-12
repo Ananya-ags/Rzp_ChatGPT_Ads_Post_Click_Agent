@@ -62,8 +62,8 @@ export default async function Page({ params, searchParams }: Props) {
     j.water_resistant === true ? { label: "Water", value: "Water-resistant" } : null,
     // one size per earring (sizing.earrings): diameter for hoops, huggies and studs; length for drops and danglers
     j.category === "earrings"
-      ? j.outer_diameter_mm ? { label: "Diameter", value: `${j.outer_diameter_mm}mm` } : j.drop_length_mm ? { label: "Length", value: `${j.drop_length_mm}mm` } : null
-      : j.outer_diameter_mm ? { label: "Size", value: `${j.outer_diameter_mm}mm` } : null,
+      ? j.outer_diameter_cm ? { label: "Diameter", value: `${j.outer_diameter_cm}cm` } : j.drop_length_cm ? { label: "Length", value: `${j.drop_length_cm}cm` } : null
+      : j.outer_diameter_cm ? { label: "Size", value: `${j.outer_diameter_cm}cm` } : null,
     j.chain_length_cm ? { label: "Length", value: `${j.chain_length_cm}cm${j.extender_cm ? ` + ${j.extender_cm}cm extender` : ""}` } : null,
     j.ring_size ? { label: "Ring sizes", value: j.ring_size } : j.adjustable ? { label: "Fit", value: "Adjustable" } : null,
     j.closure ? { label: "Closure", value: cap(j.closure) } : null,

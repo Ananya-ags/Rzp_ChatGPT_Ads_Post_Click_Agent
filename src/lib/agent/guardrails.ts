@@ -33,6 +33,10 @@ export function outputChecks(reply: string, sources: string, rules: BrandRules, 
   });
   checks.push({ name: "claim check (numbers grounded)", pass: ungrounded.length === 0, detail: ungrounded.length ? `ungrounded: ${ungrounded.join(", ")}` : `${tokens.length} numbers grounded in tool results` });
 
+  // shoppers get sizes in cm only (the agent quotes the code-computed "size" field)
+  const mm = reply.match(/\b\d+(\.\d+)?\s?mm\b/gi) ?? [];
+  checks.push({ name: "sizes in cm", pass: mm.length === 0, detail: mm.length ? `mm used: ${mm.join(", ")}` : "no mm sizes" });
+
   const banned = rules.banned_phrases.filter((b) => reply.toLowerCase().includes(b.toLowerCase()));
   checks.push({ name: "banned phrases", pass: banned.length === 0, detail: banned.length ? banned.join(", ") : "none" });
 

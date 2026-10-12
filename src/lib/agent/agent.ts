@@ -30,8 +30,8 @@ export function buildTools(db: core.Db, ctx: ChatContext) {
         max_price_inr: z.number().optional(),
         occasion: z.enum(["everyday", "office", "festive", "wedding guest", "gifting"]).optional(),
         water_resistant: z.boolean().optional().describe("Only true if the shopper needs verified water resistance"),
-        max_outer_diameter_mm: z.number().optional(),
-        min_outer_diameter_mm: z.number().optional(),
+        max_outer_diameter_cm: z.number().optional().describe("Earring diameter limit in cm, e.g. 3"),
+        min_outer_diameter_cm: z.number().optional().describe("Earring diameter minimum in cm"),
         similar_to: z.string().optional().describe("SKU handle to find similar items to"),
         deliver_to_pincode: z.string().optional(),
         deliver_by: z.string().optional().describe("YYYY-MM-DD deadline; only items arriving by then are returned"),
@@ -90,7 +90,7 @@ Rules (non-negotiable):
 8. Off-topic requests: one friendly line, then steer back to jewellery.
 9. Sensitive ears, itching, allergies or nickel: state the verified metal (each earring is one metal throughout). Stainless steel contains some nickel (nickel_free false), so never call a piece hypoallergenic or nickel-free. For a known allergy, suggest checking with a doctor and call handoff.
 
-Style: lead with the answer, 1–3 short sentences (max ~60 words). Tool results render as cards, so don't repeat every card detail. Reply in the shopper's language; for Hinglish reply in natural Hinglish. Use the shopper's pincode when known for delivery questions; otherwise ask for it.
+Style: keep it simple. Answer first, in 1–2 short sentences (about 35 words at most), using everyday words and no jargon. Give sizes in cm, exactly as a product's "size" field says (e.g. "3cm across", "4.8cm long"); never use mm. Tool results render as cards, so don't repeat card details. Reply in the shopper's language; for Hinglish reply in natural Hinglish. Use the shopper's pincode when known for delivery questions; otherwise ask for it.
 Policies: ${policies.return_window_days}-day returns, exchange allowed, ${policies.anti_tarnish_warranty_months}-month anti-tarnish warranty on steel pieces, free shipping over ₹${policies.free_shipping_threshold_inr} (else ₹${policies.shipping_fee_inr}), COD fee ₹${policies.cod_fee_inr}, gift wrap ₹${policies.gift_wrap_inr} with a free note. Support: ${db.brand.support.email}, ${db.brand.support.hours}.`;
 
   const context = `Today is ${formatDay("2026-10-13")} 2026, 10:00 IST (demo clock); warehouse in Jaipur ships same day before 14:00.

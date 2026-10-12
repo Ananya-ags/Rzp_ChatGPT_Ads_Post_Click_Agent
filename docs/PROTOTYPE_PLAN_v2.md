@@ -9,6 +9,7 @@ Companion doc: `docs/POLICY_KB_DRAFT.md` (the ground-truth content for Q2).
 > - **The approve → new ad → new page loop now uses the stainless steel earrings.** The AI groups 28 sensitive-ears questions and matches them to the 8 earrings that are stainless steel all the way through, and proposes an "All-steel gold earrings" ad that states the metal only. Steel contains some nickel, so nothing is ever called hypoallergenic or nickel-free.
 > - Approve → the ad appears in mock ChatGPT → its page shows a steel-earrings rail, and the agent answers "Is it nickel-free?" with an honest no plus the care team.
 > - **Sizing (13 Oct):** each earring has one size: diameter for hoops, huggies and studs, length for drops and jhumkas. There's no "on the ear" measurement anywhere (copy, data, rail reasons, product page).
+> - **Units (13 Oct):** every size is in cm, in the data, copy, product page and chat ("3cm across"); the agent quotes a size string computed in code.
 > - Sections 0, 1.1, 1.2, 1.3, 2.2, 2.4, 6.3, 6.6, 7, 10 and 13 below are updated to match.
 
 ---
@@ -82,7 +83,7 @@ Every step writes a **decision entry**: `{step, sku, action, source: AI | rule |
 
 **In the browser:** when the chat extracts constraints (tool `update_preferences`), the page fetches `/api/rail` with them, and the rail updates with the label "Updated from your chat".
 
-**Shown to the shopper:** a reason under each rail item, for example "Verified water-resistant · 28mm diameter".
+**Shown to the shopper:** a reason under each rail item, for example "Verified water-resistant · 2.8cm diameter".
 **Shown in the console:** the decision log with AI / rule / cookie / login / session badges.
 
 ---
@@ -296,12 +297,12 @@ Yes, if we define it honestly:
 | 4 | Discovery | "Show me something for a wedding under ₹3k" | `search_catalog` (constraints + visual tags) | Up to 3 product cards + "See more" |
 | 5 | Visual discovery | "Flower-shaped earrings" / "square" / "spiral" | `search_catalog` (visual tags) | Cards, or an honest "none" + closest |
 | 6 | More like this | "Show me other products" | `search_catalog(similar_to)` | Cards |
-| 7 | Compare (P2) | "30mm or 28mm?" | `compare_products` | Two-column card |
+| 7 | Compare (P2) | "3cm or 2.8cm?" | `compare_products` | Two-column card |
 | 8 | Offers / payment / COD / EMI | "Any offers?" "COD?" | `get_offer` | Offer card |
 | 9 | Policies | Returns, exchange, refunds, shipping, warranty, care, real gold, international, engraving | `lookup_policy` | Text with the policy cited (console) |
 | 10 | Skin / sensitivity | "I have sensitive ears" / "Is it nickel-free?" | `lookup_policy(materials.skin)` + `search_catalog` (stainless steel earrings) | Text + cards: states the metal ("stainless steel all the way through"); steel contains some nickel, so never hypoallergenic or nickel-free; known allergy → doctor + care team |
 | 11 | Gifting | "Gift for my sister, ₹2k" | `search_catalog` + `lookup_policy(gifting)` | Cards + gift wrap info |
-| 12 | Add to bag (action) | "Add the 30mm to my bag" | `add_to_bag` | Toast + bag count |
+| 12 | Add to bag (action) | "Add the 3cm to my bag" | `add_to_bag` | Toast + bag count |
 | 13 | Set preferences (action) | "Under ₹2k, for office" | `update_preferences` | Page rail re-ranks |
 | 14 | Logged-in personal | "What goes with my coin pendant?" | `search_catalog` (owned excluded) | Cards: "Goes with your Sun Coin Pendant" |
 | 15 | Login nudge | At value moments | `suggest_login` | Login card (once) |
@@ -461,7 +462,7 @@ flowchart TD
 | # | Eval | What it measures | How | Data | Pass bar |
 |---|---|---|---|---|---|
 | 1 | Tool selection and sequence | Right tools, arguments and order | Rule on trace | 10 cases | ≥90% |
-| 2 | Number grounding | No invented ₹, dates or mm | Automated checker | All cases | 100% |
+| 2 | Number grounding | No invented ₹, dates or sizes (sizes in cm only) | Automated checker | All cases | 100% |
 | 3 | Policy faithfulness | Policy answers match the KB | Judge given the cited section + key-fact match | 10 questions | ≥90% |
 | 4 | Claim safety | No unverified "hypoallergenic", "waterproof", "real gold", medical claims, in both before- and after-approval states | Lexicon + verified flags | 8 cases | 100% |
 | 5 | Discovery quality | Right SKUs for constraint and visual queries; no invented products; honest "none" | Precision@3 vs expected set; existence check | 8 queries (incl. flower, heart, twisted, square, spiral) | P@3 ≥0.8; 0 invented |
@@ -499,7 +500,7 @@ flowchart TD
 | G8 | Offer cap | Tool | The agent can't create or raise discounts | `getOffer` clamps (exists) |
 | G9 | Action permissions | Tool | Shopper-side tools: read + reversible actions only (`add_to_bag`, `update_preferences`). No payments, no order changes. Merchant changes only through approved proposals. | Explicit allow-list per surface; nothing else registered |
 | G10 | Step and time budget | Runtime | Max 5 tool steps, 20s timeout → fallback | `stopWhen: isStepCount(5)` (exists) + `AbortSignal.timeout` |
-| G11 | Number/date grounding | Output | Every ₹, date or mm must appear in tool outputs or page facts; if not, the bubble is replaced with a safe template built from the tool facts | `outputChecks()` (exists) + a new `data-correction` part the UI uses to swap the text |
+| G11 | Number/date grounding | Output | Every ₹, date or size must appear in tool outputs or page facts; if not, the bubble is replaced with a safe template built from the tool facts | `outputChecks()` (exists) + a new `data-correction` part the UI uses to swap the text |
 | G12 | Regulated-claims checker | Output | "Hypoallergenic", "nickel-free", "waterproof", "real/solid gold", "hallmark", "BIS", "certified", cure/medical words allowed only when backed by verified flags or policy text | Extend the lexicon in `outputChecks()`; check against verified overrides (after approvals) |
 | G13 | Product-existence check | Output | Any product name in the reply must match a catalogue title | Fuzzy title match against the catalogue |
 | G14 | Banned phrases | Output | "ChatGPT", competitor names, pressure tactics | `banned_phrases` (exists, extend) |
@@ -607,7 +608,7 @@ Also one auto-handled log line (the out-of-stock removal).
    - **Assertions:**
      - exclusions, stock and margin floor respected
      - owned items absent
-     - earrings ≤30mm for her size preference
+     - earrings ≤3cm for her size preference
      - pins in their slot
      - boost gate works
      - rail size respected

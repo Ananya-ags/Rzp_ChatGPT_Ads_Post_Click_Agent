@@ -380,3 +380,34 @@ Running log of which AI tool did what, key prompts, rejected AI output and decis
   - Validator: new checks that every earring has exactly one size and that no copy says "on the ear"; the hero check is now 40mm diameter with no length. 76 passed, 0 errors.
 - **Docs:** the data spec and prototype plan have sizing notes and updated rows. Two stale Elle / "6 SKUs" lines in the plan are marked superseded.
 - **Verified:** `next build` and `eslint` are clean; click-through 39/39; loop 16/16. Only the doc notes and the validator guard mention "on the ear".
+
+## 13 Oct 2026: All sizes in cm; simpler chat replies (user request)
+- **User:** "in the user chatbot the replies have to be simpler, and say 3cm instead of 30 mm", then "sizes for all SKUs apart from earrings also … in cm and not in mm in the data and in the chatbot".
+- **User decision:** asked whether earrings should also switch in the data, copy and page; the answer was **cm everywhere**.
+- **Data** (seed → regenerated, never hand-edited):
+  - Every size field was renamed and divided by 10: `outer_diameter_mm` → `outer_diameter_cm`, and likewise `inner_diameter`, `drop_length`, `width` and `thickness`. Examples: hero hoop 4, jhumka 4.8, pendant coin 1.5.
+  - Variant size labels: "4cm", "4.8cm long", "0.7cm".
+  - All product copy: "Size: 4cm diameter", "0.25cm American diamonds".
+  - Persona size preference: 2–3cm.
+  - Shopper messages and 2 return reasons: "4cm is BIG", "exchanging for the 3cm".
+  - Mock ChatGPT advice: "2 to 3cm hoops".
+- **Kept:** product handles such as `ciel-hoops-40mm` keep their names. They're IDs used in URLs and ad click links.
+- **Code (computes; the AI only quotes):**
+  - New `sizeText()` in `tools/core.ts` gives every product a `size` string in cm: "3cm across", "4.8cm long", "1.5cm pendant on a 45cm chain", "ring sizes 6, 7, 8". It replaces `size_label` (which was "30mm") in the agent's verified facts.
+  - Chat product cards show that string.
+  - Filters are now `max_outer_diameter_cm`; the similarity score, art scaling and the office threshold were rescaled.
+  - Product page: "Diameter: 3cm" / "Length: 4.8cm" / "Size: 1.5cm".
+- **Simpler chat:**
+  - The prompt style is now 1–2 short sentences (~35 words), everyday words, sizes exactly as the `size` field, never mm.
+  - Offline and cached answers were shortened. Examples:
+    - "No. They're stainless steel, which has a little nickel, so we don't call them hypoallergenic…"
+    - "It arrives Wed, 21 Oct in Pune if you order before 2pm today. Share your pincode for an exact date."
+    - "Honest answer: the 4cm hoops are big for office. 8 of 9 people who returned them from work said they looked bigger than expected. 64% of office keepers picked the Medium Classic Hoop Earrings instead, which are 3cm across."
+- **Guardrail:** a new output check, "sizes in cm", flags any reply that quotes mm.
+- **Story intact:** return prevention is still 8 of 9 and 64%; delivery rescue is still 21 Oct ✗ → 16 Oct ✓. Orders are byte-identical; only the 2 return-reason texts changed.
+- **Evals:** expected strings are now "3cm" / "4cm"; `fmt-03` is "Compare the 4cm and 3cm hoops"; demo narrations use cm.
+- **Docs:** all 4 docs now use cm sizes, including the KB `sizing.earrings` examples, the hoops-by-look list and the ring chart (1.65 / 1.73 / 1.82cm). Each has a dated units note.
+- **Verified:**
+  - Validator 76 passed, 0 errors; `tsc`, `eslint` and `next build` are clean.
+  - Click-through 42/42 (new: Diameter row reads 3cm; chat cards show "2.8cm across"; no mm anywhere).
+  - Loop 17/17 (new: chat never shows mm). Both pass on dev and production.

@@ -50,9 +50,9 @@
             }
           ],
           "top_theme": "size_bigger",
-          "typical_quote": "Larger than expected, exchanging for the 30mm",
+          "typical_quote": "Way bigger than the photo. Looked huge on me.",
           "better_fit_sku": "ciel-hoops-30mm",
-          "better_fit_reason": "Same hoop style, 30mm instead of 40mm; lower returns in this context"
+          "better_fit_reason": "Same hoop style, 3cm instead of 4cm; lower returns in this context"
         },
         "everyday": {
           "n_reasons": 5,
@@ -79,7 +79,7 @@
           "top_theme": "size_bigger",
           "typical_quote": "Way bigger than the photo. Looked huge on me.",
           "better_fit_sku": "ciel-hoops-30mm",
-          "better_fit_reason": "Same hoop style, 30mm instead of 40mm; lower returns in this context"
+          "better_fit_reason": "Same hoop style, 3cm instead of 4cm; lower returns in this context"
         },
         "office": {
           "n_reasons": 9,
@@ -100,7 +100,7 @@
           "top_theme": "size_bigger",
           "typical_quote": "Too large and they kept getting caught in my hair",
           "better_fit_sku": "ciel-hoops-30mm",
-          "better_fit_reason": "Same hoop style, 30mm instead of 40mm; lower returns in this context"
+          "better_fit_reason": "Same hoop style, 3cm instead of 4cm; lower returns in this context"
         },
         "wedding": {
           "n_reasons": 1,
@@ -115,7 +115,7 @@
           "top_theme": "size_bigger",
           "typical_quote": "way bigger than the photo on the model",
           "better_fit_sku": "ciel-hoops-30mm",
-          "better_fit_reason": "Same hoop style, 30mm instead of 40mm; lower returns in this context"
+          "better_fit_reason": "Same hoop style, 3cm instead of 4cm; lower returns in this context"
         },
         "gifting": {
           "n_reasons": 3,

@@ -1,6 +1,6 @@
 /**
  * Placeholder product art drawn from verified data when a SKU has no photo.
- * Hoops are drawn at their true relative diameter, so a 40mm and a 30mm look different.
+ * Hoops are drawn at their true relative diameter, so a 4cm and a 3cm look different. Sizes are in cm.
  */
 type Props = { subtype: string; outer?: number | null; drop?: number | null; stone?: string; finish?: string; className?: string; label?: string };
 
@@ -29,7 +29,7 @@ export default function ProductArt({ subtype, outer, drop, stone, finish, classN
   switch (subtype) {
     case "hoop":
     case "huggie": {
-      const r = Math.max(14, Math.min(70, ((outer ?? 20) / 40) * 62));
+      const r = Math.max(14, Math.min(70, ((outer ?? 2) / 4) * 62));
       body = (
         <g>
           <circle cx={78} cy={100} r={r} fill="none" stroke="url(#g)" strokeWidth={subtype === "huggie" ? 9 : sw} />
@@ -52,7 +52,7 @@ export default function ProductArt({ subtype, outer, drop, stone, finish, classN
       break;
     case "drop":
     case "jhumka": {
-      const len = Math.max(40, Math.min(110, (drop ?? 35) * 1.6));
+      const len = Math.max(40, Math.min(110, (drop ?? 3.5) * 16));
       body = (
         <g>
           {[72, 128].map((x) => (

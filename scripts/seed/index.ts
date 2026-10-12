@@ -49,7 +49,7 @@ write("data/demo_script.json", {
 const SUPPLIED = "Cosmos catalogue images (AI-generated prototype photography, supplied by the user; see BUILD_LOG)";
 const photo = (file: string) => ({ file, kind: "photo", query: null, source: { provider: "cosmos-catalogue", page_url: null, photographer: null, license: SUPPLIED } });
 write("data/images/manifest.json", {
-  style_note: "Two images per SKU: product shot first, then on model. Installed from ~/Desktop/Cosmos-Full-Catalogue-Images (sha256-verified against its image-manifest.json), resized to 800px JPEG for mobile. Model proportions are approximate; size answers come from verified mm data.",
+  style_note: "Two images per SKU: product shot first, then on model. Installed from ~/Desktop/Cosmos-Full-Catalogue-Images (sha256-verified against its image-manifest.json), resized to 800px JPEG for mobile. Model proportions are approximate; size answers come from verified cm data.",
   products: Object.fromEntries(products.map((p) => [p.handle, { front: photo(`/images/products/${p.handle}/front.jpg`), on_model: photo(`/images/products/${p.handle}/on_model.jpg`) }])),
   lifestyle: {
     office: { file: "/images/lifestyle/office.jpg", kind: "placeholder", query: "woman office gold earrings", source: null },

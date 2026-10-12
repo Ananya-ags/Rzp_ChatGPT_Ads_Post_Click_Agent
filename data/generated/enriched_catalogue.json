@@ -136,7 +136,7 @@
           "value": "unspecified gold tone (vague wording)",
           "source": {
             "type": "text",
-            "phrase": "Cute little flowers, 10mm, with a gold-toned finish."
+            "phrase": "Cute little flowers, 1cm, with a gold-toned finish."
           },
           "confidence": 0.3,
           "verified": false,
@@ -297,7 +297,7 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "A 3mm everyday band that doesn't mind the pool, the kitchen or the gym."
+            "phrase": "A 0.3cm everyday band that doesn't mind the pool, the kitchen or the gym."
           },
           "confidence": 0.6,
           "verified": false,
@@ -323,7 +323,7 @@
           "value": "unspecified gold tone (vague wording)",
           "source": {
             "type": "text",
-            "phrase": "A 6mm American diamond solitaire on a slim gold-toned band."
+            "phrase": "A 0.6cm American diamond solitaire on a slim gold-toned band."
           },
           "confidence": 0.3,
           "verified": false,

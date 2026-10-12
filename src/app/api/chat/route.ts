@@ -79,13 +79,13 @@ export async function POST(req: Request) {
 
 /** Welcome chips on the store home / category chat: answered by the real tools and store policy (no LLM). */
 const STORE_CHIPS: Record<string, (db: ReturnType<typeof getDb>) => { text: string; cards: never[]; trace: { tool: string; args: Record<string, unknown> }[] }> = {
-  "find a gift": () => ({ text: "Here are a few pieces the brand lists for gifting. Gift wrap and a handwritten note are available at checkout.", cards: [], trace: [{ tool: "search_catalog", args: { query: "gift", occasion: "gifting", limit: 3 } }] }),
-  "waterproof pieces": () => ({ text: "These pieces are verified water-resistant, so you can wear them in the shower and at the gym.", cards: [], trace: [{ tool: "search_catalog", args: { query: "everyday", water_resistant: true, limit: 3 } }] }),
-  "under 2000": () => ({ text: "A few favourites at or under ₹2,000. Tap any piece to see the details.", cards: [], trace: [{ tool: "search_catalog", args: { query: "", max_price_inr: 2000, limit: 3 } }] }),
+  "find a gift": () => ({ text: "Here are some gift picks. Gift wrap and a note are available.", cards: [], trace: [{ tool: "search_catalog", args: { query: "gift", occasion: "gifting", limit: 3 } }] }),
+  "waterproof pieces": () => ({ text: "These are verified water-resistant: fine in the shower and at the gym.", cards: [], trace: [{ tool: "search_catalog", args: { query: "everyday", water_resistant: true, limit: 3 } }] }),
+  "under 2000": () => ({ text: "Here are some favourites under ₹2,000.", cards: [], trace: [{ tool: "search_catalog", args: { query: "", max_price_inr: 2000, limit: 3 } }] }),
   "delivery  returns": (db) => {
     const pol = db.brand.policies;
     const wh = db.logistics.warehouses[0];
-    return { text: `Orders placed before ${wh.cutoff_ist} IST ship the same day from ${wh.city}, unless a piece is made to order. Shipping is free over ₹${pol.free_shipping_threshold_inr.toLocaleString("en-IN")} (otherwise ₹${pol.shipping_fee_inr}). Returns and exchanges are open for ${pol.return_window_days} days. Open any piece to see its exact delivery date.`, cards: [], trace: [] };
+    return { text: `Order before ${wh.cutoff_ist} IST and most pieces ship the same day from ${wh.city}. Shipping is free over ₹${pol.free_shipping_threshold_inr.toLocaleString("en-IN")}, and returns are open for ${pol.return_window_days} days.`, cards: [], trace: [] };
   },
 };
 
@@ -100,7 +100,7 @@ function fallback(userText: string, injection: boolean, reason: string, pageSku:
     cached ? { cached_response: cached }
     : !page && STORE_CHIPS[norm(userText)] ? { cached_response: STORE_CHIPS[norm(userText)](db) }
     : norm(userText) === "show me other products" && page
-      ? { cached_response: { text: `Here are a few pieces in a similar style to the ${page.title}. Tap any of them to see more.`, cards: [], trace: [{ tool: "search_catalog", args: { query: page.metafields.jewellery.subtype, similar_to: page.handle, limit: 3 } as Record<string, unknown> }] } }
+      ? { cached_response: { text: `Here are a few similar pieces.`, cards: [], trace: [{ tool: "search_catalog", args: { query: page.metafields.jewellery.subtype, similar_to: page.handle, limit: 3 } as Record<string, unknown> }] } }
       : norm(userText) === "when will it be delivered" && page
         ? (() => {
             // tier 0: approx city from IP → Pune; the exact date is computed by check_delivery
@@ -108,16 +108,16 @@ function fallback(userText: string, injection: boolean, reason: string, pageSku:
             const d = core.checkDelivery(db, page.handle, pin);
             const nudge = ctx.loggedIn && ctx.rtoRisk === "high" ? " Pay online at checkout and you get an extra 5% off." : "";
             const text = ctx.pincode
-              ? `${ctx.firstName ? `${ctx.firstName}, it` : "It"} arrives ${"error" in d ? "" : d.arrives_label} at your saved address in ${"error" in d ? "" : d.city} (${pin}) if you order before 2pm today.${nudge}`
-              : `It arrives ${"error" in d ? "" : d.arrives_label} in ${"error" in d ? "" : d.city} (approximate location) if you order before 2pm today. Share your pincode and I'll check the exact date for your address.`;
+              ? `${ctx.firstName ? `${ctx.firstName}, it` : "It"} arrives ${"error" in d ? "" : d.arrives_label} at your saved address in ${"error" in d ? "" : d.city} if you order before 2pm today.${nudge}`
+              : `It arrives ${"error" in d ? "" : d.arrives_label} in ${"error" in d ? "" : d.city} if you order before 2pm today. Share your pincode for an exact date.`;
             return "error" in d ? null : { cached_response: { text, cards: [], trace: [{ tool: "check_delivery", args: { sku: page.handle, pincode: pin } as Record<string, unknown> }] } };
           })()
         : /^(any offers|any offers on this|koi offer hai kya|can i pay cash on delivery|cod available)/.test(norm(userText)) && page
           ? (() => {
               const o = core.getOffer(db, [{ sku: page.handle, qty: 1 }], { prepaid: true, logged_in: !!ctx.loggedIn, rto_risk: ctx.rtoRisk });
               const lines = o.applied.map((a) => `${a.label} (−₹${a.amount_inr.toLocaleString("en-IN")})`).join("; ");
-              const extra = ctx.loggedIn && ctx.rtoRisk === "high" ? " Paying online gets you the extra 5%; cash on delivery doesn't include these offers." : "";
-              return { cached_response: { text: `${ctx.firstName ? `${ctx.firstName}, here` : "Here"}'s what applies if you pay online: ${lines || "no offers right now"}. ${o.wallet.usable_inr > 0 ? ` With ₹${o.wallet.usable_inr.toLocaleString("en-IN")} from your Cosmos wallet` : ""}${o.wallet.usable_inr > 0 ? ", you'd" : " You'd"} pay ₹${o.total_inr.toLocaleString("en-IN")}.${extra}`, cards: [], trace: [{ tool: "get_offer", args: { cart: [{ sku: page.handle, qty: 1 }], prepaid: true } as Record<string, unknown> }] } };
+              const extra = ctx.loggedIn && ctx.rtoRisk === "high" ? " Cash on delivery doesn't get these offers." : "";
+              return { cached_response: { text: `${ctx.firstName ? `${ctx.firstName}, pay` : "Pay"} online and you get: ${lines || "no offers right now"}. ${o.wallet.usable_inr > 0 ? `With your ₹${o.wallet.usable_inr.toLocaleString("en-IN")} wallet, you'd` : "You'd"} pay ₹${o.total_inr.toLocaleString("en-IN")}.${extra}`, cards: [], trace: [{ tool: "get_offer", args: { cart: [{ sku: page.handle, qty: 1 }], prepaid: true } as Record<string, unknown> }] } };
             })()
         : ["what metal is this", "is it nickelfree", "is it nickel free", "are these nickelfree", "are these nickel free"].includes(norm(userText)) && page
           ? (() => {
@@ -127,12 +127,11 @@ function fallback(userText: string, injection: boolean, reason: string, pageSku:
               const finish = j.plating === "18k gold plating" ? "18K gold plating" : j.plating === "gold vermeil" ? "gold vermeil" : j.plating ?? "a gold-toned finish";
               const verb = /s$/i.test(page.title) ? "are" : "is";
               if (norm(userText) === "what metal is this")
-                return { cached_response: { text: `The ${page.title} ${verb} ${metal} all the way through, finished with ${finish}.`, cards: [], trace: [] } };
-              const h = core.handoff(db, "nickel / sensitive-ears question");
+                return { cached_response: { text: `${verb === "are" ? "They're" : "It's"} ${metal} all the way through, with ${finish}.`, cards: [], trace: [] } };
               const text =
                 j.nickel_free === false
-                  ? `No. The ${page.title} ${verb} ${metal} all the way through, and ${metal} contains a small amount of nickel, so we don't describe ${verb === "are" ? "them" : "it"} as hypoallergenic. Many people who react to plated brass do fine with steel, but if you have a known nickel allergy, please check with your doctor first. Our care team is on ${h.contact} if you'd like to talk it through.`
-                  : `The brand hasn't confirmed the nickel content of the ${page.title}, so I can't say. ${verb === "are" ? "They're" : "It's"} ${metal} all the way through, finished with ${finish}. If you have a known nickel allergy, please check with your doctor first; our care team is on ${h.contact}.`;
+                  ? `No. ${verb === "are" ? "They're" : "It's"} ${metal}, which has a little nickel, so we don't call ${verb === "are" ? "them" : "it"} hypoallergenic. If you have a nickel allergy, please check with your doctor first. Our care team can help too.`
+                  : `The brand hasn't confirmed this. ${verb === "are" ? "They're" : "It's"} ${metal} with ${finish}. If you have a nickel allergy, please check with your doctor first. Our care team can help too.`;
               return { cached_response: { text, cards: [], trace: [{ tool: "handoff", args: { reason: "nickel / sensitive-ears question" } as Record<string, unknown> }] } };
             })()
         : (norm(userText) === "suitable for wedding gift" || norm(userText) === "is gift wrap available") && page
@@ -141,15 +140,15 @@ function fallback(userText: string, injection: boolean, reason: string, pageSku:
               const j = page.metafields.jewellery;
               const pol = db.brand.policies;
               const fits = j.occasions.includes("wedding guest") || j.occasions.includes("gifting");
-              const wrap = `Gift wrap is ₹${pol.gift_wrap_inr} and a handwritten note is free. Returns and exchanges are open for ${pol.return_window_days} days, in case it's a duplicate.`;
+              const wrap = `Gift wrap is ₹${pol.gift_wrap_inr} and a note is free. Returns are open for ${pol.return_window_days} days.`;
               const isGiftWrap = norm(userText) === "is gift wrap available";
               const verb = /s$/i.test(page.title) ? "are" : "is";
               const uses = [j.occasions.includes("wedding guest") ? "wedding-guest looks" : null, j.occasions.includes("gifting") ? "gifting" : null].filter(Boolean).join(" and ");
               const text = isGiftWrap
                 ? `Yes. ${wrap}`
                 : fits
-                  ? `Yes. The ${page.title} ${verb} listed by the brand for ${uses}. ${wrap}`
-                  : `The ${page.title} ${verb} more of an everyday piece. For a wedding gift, the jhumkas or pearl pieces are a better fit; tap "Show me other products" to see some. ${wrap}`;
+                  ? `Yes, a lovely pick for ${uses}. ${wrap}`
+                  : `${verb === "are" ? "They're" : "It's"} more of an everyday piece. For a wedding, jhumkas or pearls suit better: tap "Show me other products". ${wrap}`;
               const trace = isGiftWrap ? [] : [{ tool: "get_return_insight", args: { sku: page.handle, context: "wedding" } as Record<string, unknown> }];
               return { cached_response: { text, cards: [], trace } };
             })()
@@ -182,7 +181,7 @@ function fallback(userText: string, injection: boolean, reason: string, pageSku:
       } else {
         const h = core.handoff(db, "assistant offline");
         writer.write({ type: "text-start", id });
-        writer.write({ type: "text-delta", id, delta: `I'm running in offline preview mode right now, so I can only answer the suggested questions. For anything else, our care team is on ${h.contact} (${h.hours}).` });
+        writer.write({ type: "text-delta", id, delta: `I can only answer the suggested questions right now. For anything else, our care team is on ${h.contact} (${h.hours}).` });
         writer.write({ type: "text-end", id });
       }
       writer.write({ type: "data-usage", data: { model: "cached", tokens_in: 0, tokens_out: 0, cost_usd: 0, latency_ms: 0, tools: step?.cached_response?.trace.map((t) => ({ tool: t.tool, args: t.args, ms: 0 })) ?? [], fallback: reason } });

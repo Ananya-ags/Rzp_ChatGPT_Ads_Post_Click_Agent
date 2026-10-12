@@ -5,6 +5,7 @@ This is the single source of truth the agent may quote for anything that isn't a
 - Cosmos is a **fictional brand**; every policy here is invented for the prototype.
 - Numbers match `brand.json`, `offers.json`, `razorpay.json` and the catalogue.
 - All assumptions were confirmed on 13 Oct 2026.
+- **Units (13 Oct 2026):** every size is in **cm** (e.g. "Diameter: 3cm", "Length: 4.8cm", ring inner diameters such as 1.73cm).
 - **Materials revised 13 Oct 2026:**
   - Every earring is **one metal throughout**; nothing is made of a second metal, including the part that goes through the piercing (the titanium and surgical-steel parts are gone).
   - "PVD" and "316L" are no longer used anywhere; steel pieces are "stainless steel" with "18K gold plating".
@@ -171,7 +172,7 @@ COD fees, and shipping fees on orders under the free-shipping threshold, aren't 
 
 ### `shipping.dispatch`
 - **In-stock pieces:** ship from Jaipur the same day if you order before 2pm IST (Mon–Sat).
-- **Made-to-order pieces** (e.g. Medium Classic Hoops 30mm): dispatch 5 days after you order.
+- **Made-to-order pieces** (e.g. Medium Classic Hoops 3cm): dispatch 5 days after you order.
 - **Exact dates:** the agent always uses the delivery tool for your pincode.
 
 ### `shipping.delivery_times`
@@ -241,19 +242,19 @@ Every piece comes in a Cosmos pouch inside a recyclable box.
 ## Sizing
 
 ### `sizing.earrings`
-- **One size per earring:** hoops and huggies are sized by **diameter** (outer, in mm); studs by **diameter** (width of the stud face); drops and danglers by **length** (top of the earring to the bottom). We give only that one number, e.g. "Diameter: 30mm" or "Length: 45mm".
-- **Huggies:** sit close to the lobe and suit second piercings. 14mm and under is a common choice.
+- **One size per earring:** hoops and huggies are sized by **diameter** (outer, in cm); studs by **diameter** (width of the stud face); drops and danglers by **length** (top of the earring to the bottom). We give only that one number, e.g. "Diameter: 3cm" or "Length: 4.5cm".
+- **Huggies:** sit close to the lobe and suit second piercings. 1.4cm and under is a common choice.
 - **Hoops by look:**
-  - 20mm: subtle
-  - 28–30mm: everyday
-  - 40mm: a statement
+  - 2cm: subtle
+  - 2.8–3cm: everyday
+  - 4cm: a statement
 
 ### `sizing.rings`
 | Our size | Inner diameter (approx.) |
 |---|---|
-| 6 | 16.5mm |
-| 7 | 17.3mm |
-| 8 | 18.2mm |
+| 6 | 1.65cm |
+| 7 | 1.73cm |
+| 8 | 1.82cm |
 
 - **Adjustable rings:** fit roughly sizes 5 to 9.
 - **Not sure of your size:** measure a ring you own, or choose an adjustable style. Ring size exchanges are free.
@@ -370,4 +371,4 @@ The bag allows up to 15 pieces of the same item. For 16 or more pieces (weddings
 | "What's the warranty on the jhumkas?" | 6 months anti-tarnish; covers fading/tarnish, not scratches or water damage | `warranty.anti_tarnish` |
 | "Can I get 50% off?" | Can't create discounts; here's what applies (get_offer); capped at 10% / ₹300 | `offers.terms` + get_offer |
 | "I'm allergic to everything, what should I buy?" | No medical advice; state what each piece is made of if asked; dermatologist; care line | `materials.skin_sensitivity` + care line |
-| "Ring size 7 in mm?" | About 17.3mm inner diameter; ring size exchanges are free | `sizing.rings`, `exchanges` |
+| "Ring size 7 in cm?" | About 1.73cm inner diameter; ring size exchanges are free | `sizing.rings`, `exchanges` |

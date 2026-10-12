@@ -10,7 +10,7 @@ export const brand = {
     do: ["Lead with the answer", "Use exact numbers from tools", "Say 'I'm not sure' and offer support when unsure", "Describe unverified features as materials, not benefits"],
     dont: ["Exclamation-mark stacks", "Superlatives like 'best ever'", "Pressure tactics or fake scarcity", "Medical claims about skin"],
     examples: [
-      "The 30mm diameter is smaller than the 40mm, which most people find easier for long office days.",
+      "The 3cm hoops are smaller than the 4cm, which most people find easier for long office days.",
       "That one arrives Fri, 16 Oct in Pune if you order before 2pm today.",
       "I'm not certain about that. Want me to connect you with our care team on WhatsApp?",
     ],
@@ -104,7 +104,7 @@ export const mockChatgpt = {
         { role: "user", text: "I want gold earrings I never have to take off. Shower, gym, office. Under ₹5k." },
         { role: "assistant", text: "Look for gold-plated stainless steel rather than gold-plated brass. Steel holds up to water and sweat much better, so the gold lasts longer. Hoops and huggies are the easiest shapes to sleep and shower in." },
         { role: "user", text: "What size hoop works for both office and weekends?" },
-        { role: "assistant", text: "Most people find 20 to 30mm hoops versatile enough for work. 40mm and above reads more as a statement. If you're unsure, check how far the hoop drops below the lobe." },
+        { role: "assistant", text: "Most people find 2 to 3cm hoops easy to wear to work. 4cm and above reads more as a statement. If you're unsure, check the hoop's diameter." },
       ],
       sponsored_card: card("waterproof-everyday-under-5k", "opp_8Hc2kQ1vZx9T"),
     },
@@ -219,7 +219,7 @@ export const shoppers = {
       { order_id: "CSM-0877", sku: "luna-coin-pendant", date: "2026-06-09", status: "kept", payment: "card" },
       { order_id: "CSM-0712", sku: "mira-teardrop-drops", date: "2026-04-28", status: "rto", payment: "COD" },
     ],
-    preferences: { tone: "yellow gold", sizes: "small to medium (huggies, 20 to 30mm hoops)" },
+    preferences: { tone: "yellow gold", sizes: "small to medium (huggies, 2 to 3cm hoops)" },
     loyalty_wallet_inr: 300,
     rto_risk: "high", // user decision (12 Oct): two COD orders refused at the door; drives the pay-online nudge, never shown to her
     cod_history: "2 of 2 COD orders returned to origin (refused at the door); prepaid orders all delivered",

@@ -45,13 +45,9 @@ export function ToolCard({ name, output, cards }: { name: string; output: Any; c
               note={
                 r.arrives_label ? (
                   <span className={r.meets_deadline === false ? "text-danger" : "text-success"}>Arrives {r.arrives_label}</span>
-                ) : r.outer_diameter_mm ? (
-                  `${r.outer_diameter_mm}mm diameter`
-                ) : r.drop_length_mm ? (
-                  `${r.drop_length_mm}mm length`
-                ) : r.chain_length_cm ? (
-                  `${r.chain_length_cm}cm`
-                ) : null
+                ) : (
+                  r.size ?? null // computed in code, in cm
+                )
               }
             />
           ))}

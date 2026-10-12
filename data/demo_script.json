@@ -36,13 +36,13 @@
       "ad_group": "waterproof-everyday-under-5k",
       "pincode": null,
       "chip": "Will these work for office?",
-      "narration": "Return prevention: the 40mm is often returned for looking bigger; most office keepers chose 30mm.",
+      "narration": "Return prevention: the 4cm hoops are often returned for looking bigger; most office keepers chose the 3cm.",
       "expected_tools": [
         "get_return_insight",
         "search_catalog"
       ],
       "cached_response": {
-        "text": "Honest answer: the 40mm reads as a statement for office. Buyers who wore it to work and returned it mostly said it looked bigger than expected (8 of 9), like \"Too large and they kept getting caught in my hair\". 64% of office keepers chose the Medium Classic Hoop Earrings, which are 30mm in diameter.",
+        "text": "Honest answer: the 4cm hoops are big for office. 8 of 9 people who returned them from work said they looked bigger than expected. 64% of office keepers picked the Medium Classic Hoop Earrings instead, which are 3cm across.",
         "cards": [
           {
             "kind": "comparison",
@@ -51,10 +51,10 @@
               "ciel-hoops-30mm"
             ],
             "data": {
-              "metric": "outer_diameter_mm",
+              "metric": "outer_diameter_cm",
               "values": {
-                "ciel-hoops-40mm": 40,
-                "ciel-hoops-30mm": 30
+                "ciel-hoops-40mm": 4,
+                "ciel-hoops-30mm": 3
               },
               "keepers_share": 0.64
             }
@@ -83,10 +83,10 @@
               "query": "hoops office",
               "similar_to": "ciel-hoops-40mm",
               "category": "earrings",
-              "max_outer_diameter_mm": 30,
+              "max_outer_diameter_cm": 3,
               "limit": 3
             },
-            "summary": "ciel-hoops-30mm (30mm diameter, ₹2,999) · aria-hoops-28mm (28mm diameter, ₹2,799) · ciel-huggies-20mm (20mm diameter, ₹2,199)"
+            "summary": "ciel-hoops-30mm (3cm across, ₹2,999) · aria-hoops-28mm (2.8cm across, ₹2,799) · ciel-huggies-20mm (2cm across, ₹2,199)"
           }
         ]
       }
@@ -97,14 +97,14 @@
       "ad_group": "waterproof-everyday-under-5k",
       "pincode": "411038",
       "chip": "Need it in Pune by 18 Oct",
-      "narration": "Medium (30mm) hoops miss (21 Oct); Everyday Tube Hoops (28mm) arrive 16 Oct.",
+      "narration": "Medium (3cm) hoops miss (21 Oct); Everyday Tube Hoops (2.8cm) arrive 16 Oct.",
       "expected_tools": [
         "check_delivery",
         "search_catalog",
         "check_delivery"
       ],
       "cached_response": {
-        "text": "The 30mm is made to order, so it would reach Pune on Wed, 21 Oct, after your 18 Oct date. Everyday Tube Hoop Earrings are in stock and arrive Fri, 16 Oct: the same everyday hoop, 28mm across, at ₹2,799.",
+        "text": "The 3cm hoops are made to order, so they'd reach Pune on Wed, 21 Oct, after 18 Oct. The Everyday Tube Hoop Earrings are in stock and arrive Fri, 16 Oct: a similar everyday hoop, 2.8cm across, ₹2,799.",
         "cards": [
           {
             "kind": "delivery",
@@ -144,7 +144,7 @@
               "query": "hoops",
               "similar_to": "ciel-hoops-30mm",
               "category": "earrings",
-              "max_outer_diameter_mm": 30,
+              "max_outer_diameter_cm": 3,
               "deliver_to_pincode": "411038",
               "deliver_by": "2026-10-18",
               "limit": 3
@@ -207,7 +207,7 @@
         "get_offer"
       ],
       "cached_response": {
-        "text": "I can't create discounts. Offers are set by the store and capped at 10% or ₹300 per order. What does apply here: ₹100 off on prepaid orders over ₹1,999, so you'd pay ₹3,199 instead of ₹3,299.",
+        "text": "I can't create discounts; the store caps offers at 10% or ₹300. What you do get: ₹100 off on prepaid orders over ₹1,999, so you'd pay ₹3,199.",
         "cards": [
           {
             "kind": "offer",
@@ -262,7 +262,7 @@
         "search_catalog"
       ],
       "cached_response": {
-        "text": "Sach bataun toh 40mm office ke liye thoda bada lagta hai. Office mein pehenne wale jo log return karte hain, unme se 9 mein se 8 ne kaha \"looked bigger than expected\". Office ke 64% keepers ne Medium Classic Hoop Earrings choose kiya, jo 30mm diameter ke hain.",
+        "text": "Sach bataun toh 4cm hoops office ke liye bade lagte hain. Office se return karne wale 9 mein se 8 ne kaha \"looked bigger than expected\". Office ke 64% keepers ne 3cm wale Medium Classic Hoop Earrings chune.",
         "cards": [
           {
             "kind": "comparison",
@@ -271,10 +271,10 @@
               "ciel-hoops-30mm"
             ],
             "data": {
-              "metric": "outer_diameter_mm",
+              "metric": "outer_diameter_cm",
               "values": {
-                "ciel-hoops-40mm": 40,
-                "ciel-hoops-30mm": 30
+                "ciel-hoops-40mm": 4,
+                "ciel-hoops-30mm": 3
               },
               "keepers_share": 0.64
             }
@@ -303,10 +303,10 @@
               "query": "hoops office",
               "similar_to": "ciel-hoops-40mm",
               "category": "earrings",
-              "max_outer_diameter_mm": 30,
+              "max_outer_diameter_cm": 3,
               "limit": 3
             },
-            "summary": "ciel-hoops-30mm (30mm diameter, ₹2,999) · aria-hoops-28mm (28mm diameter, ₹2,799) · ciel-huggies-20mm (20mm diameter, ₹2,199)"
+            "summary": "ciel-hoops-30mm (3cm across, ₹2,999) · aria-hoops-28mm (2.8cm across, ₹2,799) · ciel-huggies-20mm (2cm across, ₹2,199)"
           }
         ]
       }

@@ -123,10 +123,10 @@ async function classifyReturns() {
       const u = e.by_use_context[ctx as "office"];
       return u ? u.returns / Math.max(1, u.units) : e.return_rate;
     };
-    if (theme === "size_bigger" && j.outer_diameter_mm) {
-      const fam = db.products.filter((x) => x.handle !== sku && x.metafields.jewellery.collection === j.collection && x.metafields.jewellery.subtype === j.subtype && (x.metafields.jewellery.outer_diameter_mm ?? 99) < j.outer_diameter_mm!);
+    if (theme === "size_bigger" && j.outer_diameter_cm) {
+      const fam = db.products.filter((x) => x.handle !== sku && x.metafields.jewellery.collection === j.collection && x.metafields.jewellery.subtype === j.subtype && (x.metafields.jewellery.outer_diameter_cm ?? 99) < j.outer_diameter_cm!);
       const best = fam.sort((a, b) => rate(a.handle) - rate(b.handle))[0];
-      if (best) return [best.handle, `Same hoop style, ${best.metafields.jewellery.outer_diameter_mm}mm instead of ${j.outer_diameter_mm}mm; lower returns in this context`];
+      if (best) return [best.handle, `Same hoop style, ${best.metafields.jewellery.outer_diameter_cm}cm instead of ${j.outer_diameter_cm}cm; lower returns in this context`];
     }
     if (theme === "too_long" && j.chain_length_cm) {
       const fam = db.products.filter((x) => x.handle !== sku && x.metafields.jewellery.category === j.category && (x.metafields.jewellery.chain_length_cm ?? 99) < j.chain_length_cm! && !x.metafields.jewellery.excluded);
@@ -215,8 +215,8 @@ function verifiedReason(p: Product, hints: string): string {
   if (/waterproof|shower/.test(h) && j.water_resistant === true) bits.push("verified water-resistant");
   if (/stainless steel/.test(h) && j.base_metal === "stainless steel") bits.push("stainless steel throughout");
   // one size per earring: hoops, huggies and studs by diameter; drops and danglers by length
-  if (j.outer_diameter_mm && j.category === "earrings") bits.push(`${j.outer_diameter_mm}mm diameter`);
-  else if (j.drop_length_mm && j.category === "earrings") bits.push(`${j.drop_length_mm}mm length`);
+  if (j.outer_diameter_cm && j.category === "earrings") bits.push(`${j.outer_diameter_cm}cm diameter`);
+  else if (j.drop_length_cm && j.category === "earrings") bits.push(`${j.drop_length_cm}cm length`);
   if (j.chain_length_cm) bits.push(`${j.chain_length_cm}cm${j.extender_cm ? ` + ${j.extender_cm}cm` : ""}`);
   if (/office|light/.test(h) && j.category === "earrings" && j.weight_g && j.weight_g <= 5) bits.push(`${j.weight_g}g the pair`);
   if (/wedding|festive|statement/.test(h) && j.stone_type !== "none") bits.push(j.stone_type === "kundan" ? "handset kundan" : j.stone_type === "pearl" ? "pearl" : "CZ sparkle");
@@ -263,7 +263,7 @@ async function railsAndOpeners(enriched: S.Enriched) {
         let s = j.rating * 0.5 + marginRank[j.margin_band] * 0.25;
         if (/waterproof|shower/.test(h)) s += j.water_resistant === true ? 3 : 0;
         if (/under ₹5,000/.test(h) && Number(p.variants[0].price) <= 5000) s += 0.5;
-        if (/office/.test(h)) s += (j.occasions.includes("office") ? 2 : 0) + ((j.outer_diameter_mm ?? 0) <= 30 ? 0.5 : 0);
+        if (/office/.test(h)) s += (j.occasions.includes("office") ? 2 : 0) + ((j.outer_diameter_cm ?? 0) <= 3 ? 0.5 : 0);
         if (/minimal/.test(h) && j.style_tags.includes("minimal")) s += 1;
         if (/lightweight/.test(h) && (j.weight_g ?? 99) <= 5) s += 0.5;
         if (/wedding|festive/.test(h)) s += (j.occasions.includes("wedding guest") ? 3 : 0) + (j.occasions.includes("festive") ? 1 : 0);
@@ -307,7 +307,7 @@ async function railsAndOpeners(enriched: S.Enriched) {
       const o = await llmObject(
         z.object({ chip: z.string(), opener: z.string(), suggested_chips: z.array(z.string()).min(2).max(3) }),
         "Write landing-page copy for a jewellery product page reached from an ad. chip: ≤5 words echoing the ad context with ' · ' separators. opener: one or two warm, concise sentences (≤35 words) using only the verified facts given; no hype, no platform names. suggested_chips: 2–3 short questions a shopper in this context would tap.",
-        JSON.stringify({ context_hints: g.context_hints, hero: { title: hero.title, verified: { outer_diameter_mm: hj.outer_diameter_mm, drop_length_mm: hj.drop_length_mm, water_resistant: hj.water_resistant, base_metal: hj.base_metal, plating: hj.plating, price_inr: Number(hero.variants[0].price) } } }),
+        JSON.stringify({ context_hints: g.context_hints, hero: { title: hero.title, verified: { outer_diameter_cm: hj.outer_diameter_cm, drop_length_cm: hj.drop_length_cm, water_resistant: hj.water_resistant, base_metal: hj.base_metal, plating: hj.plating, price_inr: Number(hero.variants[0].price) } } }),
       );
       openers[g.id] = { ...o, chip: o.chip.replace(/chatgpt/gi, "") };
     } else {
@@ -315,7 +315,7 @@ async function railsAndOpeners(enriched: S.Enriched) {
       const OPEN: Record<string, string> = {
         "waterproof-everyday-under-5k": `Looking for gold you can shower and gym in? ${hero.title} are ${facts}, at ₹${Number(hero.variants[0].price).toLocaleString("en-IN")}. Want help picking the right size?`,
         "wedding-guest-gift": `Shopping for a wedding? ${hero.title} photograph beautifully, and we've picked festive pieces below. Gift wrap and a handwritten note are available.`,
-        "office-minimal": `Something light for long workdays? ${hero.title} sit close to the lobe at ${hj.outer_diameter_mm}mm and are ${facts}.`,
+        "office-minimal": `Something light for long workdays? ${hero.title} sit close to the lobe at ${hj.outer_diameter_cm}cm and are ${facts}.`,
         "stainless-steel-earrings": `${hero.title} are ${hj.base_metal} all the way through, with ${hj.plating}. Ask me anything about the metal.`,
       };
       const CHIPS: Record<string, string[]> = {

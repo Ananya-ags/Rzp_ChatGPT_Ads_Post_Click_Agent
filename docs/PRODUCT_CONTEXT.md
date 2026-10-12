@@ -2,6 +2,7 @@
 
 > **Update, 13 Oct 2026:**
 > - Every earring is one metal throughout; there are no titanium or surgical-steel parts, and no "PVD" or "316L".
+> - All sizes are in cm (data, copy, product page and chat).
 > - The loop's new ad is "Stainless steel earrings (sensitive ears)". It states the metal only; steel contains some nickel, so nothing is called hypoallergenic or nickel-free.
 
 ## 1. The product in one paragraph
@@ -76,14 +77,14 @@ Tool results render as UI in chat (product cards with "Add", delivery badges, co
 9. **`/`** start page: Guided demo, Try it yourself, Merchant console, "Best viewed on a phone" + QR.
 
 ## 7. Wow moments
-- **Shopper:** return prevention ("Will these work for office?" → 40mm often returned as "looked bigger"; most keepers chose 30mm). Then delivery rescue ("need in Pune by 18 Oct" → 30mm arrives 21 Oct ✗ → Aria 28mm arrives 16 Oct ✓).
+- **Shopper:** return prevention ("Will these work for office?" → 4cm often returned as "looked bigger"; most keepers chose 3cm). Then delivery rescue ("need in Pune by 18 Oct" → 3cm arrives 21 Oct ✗ → Aria 2.8cm arrives 16 Oct ✓).
 - **Judge:** the loop closing (approve → new ad → new rail).
 
 ## 8. Models
 - Chat agent: a fast, cheap model with reliable tool calling (e.g. Claude Haiku 5.5 or a Gemini Flash-tier model). Run a 1-hour bake-off on 10 eval cases (time to first token, tool accuracy, cost); log it in BUILD_LOG.md.
 - Offline pipelines: a stronger model.
 - Eval judge: a different model family from the agent.
-- Vision: offline only (enrichment from product images). Size comparisons come from mm data computed in code, never from vision at runtime.
+- Vision: offline only (enrichment from product images). Size comparisons come from cm data computed in code, never from vision at runtime.
 
 ## 9. Evals and guardrails
 **~40 cases** in `evals/cases.json`, categories:

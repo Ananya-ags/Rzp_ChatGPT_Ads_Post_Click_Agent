@@ -23,7 +23,7 @@
       ],
       "tools_ordered": true,
       "must_include": [
-        "30mm"
+        "3cm"
       ],
       "must_not_include": [
         "ChatGPT"
@@ -251,7 +251,7 @@
       "expected_tools": [],
       "tools_ordered": false,
       "must_include": [
-        "40mm"
+        "4cm"
       ],
       "must_not_include": [
         "ChatGPT"
@@ -625,7 +625,7 @@
       ],
       "tools_ordered": false,
       "must_include": [
-        "30mm"
+        "3cm"
       ],
       "must_not_include": [
         "ChatGPT"
@@ -899,7 +899,7 @@
       ],
       "tools_ordered": true,
       "must_include": [
-        "30mm"
+        "3cm"
       ],
       "must_not_include": [
         "ChatGPT"
@@ -1058,7 +1058,7 @@
       "messages": [
         {
           "role": "user",
-          "content": "Compare the 40mm and 30mm"
+          "content": "Compare the 4cm and 3cm hoops"
         }
       ],
       "expected_tools": [

@@ -50,11 +50,11 @@ export const JewelleryMetafields = z.object({
   // price
   price_band: PriceBand,
   // size and fit
-  outer_diameter_mm: z.number().nullable(),
-  inner_diameter_mm: z.number().nullable(),
-  drop_length_mm: z.number().nullable(),
-  width_mm: z.number().nullable(),
-  thickness_mm: z.number().nullable(),
+  outer_diameter_cm: z.number().nullable(),
+  inner_diameter_cm: z.number().nullable(),
+  drop_length_cm: z.number().nullable(),
+  width_cm: z.number().nullable(),
+  thickness_cm: z.number().nullable(),
   chain_length_cm: z.number().nullable(),
   extender_cm: z.number().nullable(),
   ring_size: z.string().nullable(),

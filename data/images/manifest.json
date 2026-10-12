@@ -1,5 +1,5 @@
 {
-  "style_note": "Two images per SKU: product shot first, then on model. Installed from ~/Desktop/Cosmos-Full-Catalogue-Images (sha256-verified against its image-manifest.json), resized to 800px JPEG for mobile. Model proportions are approximate; size answers come from verified mm data.",
+  "style_note": "Two images per SKU: product shot first, then on model. Installed from ~/Desktop/Cosmos-Full-Catalogue-Images (sha256-verified against its image-manifest.json), resized to 800px JPEG for mobile. Model proportions are approximate; size answers come from verified cm data.",
   "products": {
     "ciel-hoops-40mm": {
       "front": {

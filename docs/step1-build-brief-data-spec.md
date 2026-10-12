@@ -5,7 +5,8 @@ Hand this file to Claude Code (or Codex) as the brief for step 1. Everything in 
 > **Materials update, 13 Oct 2026 (built):**
 > - Every earring is **one metal throughout**; the titanium and surgical-steel parts, the `post_material` field, "PVD" and "316L" are gone. Steel pieces are "stainless steel" with "18k gold plating".
 > - The loop's new ad is now **"Stainless steel earrings (sensitive ears)"**: 28 sensitive-ears chats are matched to the 8 stainless steel earrings. It states the metal only and never says hypoallergenic or nickel-free, because steel contains some nickel.
-> - **Sizing (13 Oct):** each earring has exactly one size: `outer_diameter_mm` for hoops, huggies and studs (`drop_length_mm` is null), and `drop_length_mm` for drops and jhumkas. There's no "on the ear" measurement.
+> - **Sizing (13 Oct):** each earring has exactly one size: `outer_diameter_cm` for hoops, huggies and studs (`drop_length_cm` is null), and `drop_length_cm` for drops and jhumkas. There's no "on the ear" measurement.
+> - **Units (13 Oct):** all size fields and copy are in **cm** (`*_cm` fields, e.g. `outer_diameter_cm: 3`); handles such as `ciel-hoops-40mm` keep their original names as IDs.
 > - The rows below are updated to match.
 
 **Brand name:** use a placeholder (e.g. "Lumi") and search the name quickly to confirm it isn't an existing Indian jewellery brand before generating assets.
@@ -20,8 +21,8 @@ Hand this file to Claude Code (or Codex) as the brief for step 1. Everything in 
 |---|---|---|---|
 | 0–10s | Problem | ChatGPT chat ("waterproof office earrings under ₹5k") → sponsored ad → the generic product page (control) | Overlay: "OpenAI shares no query. Pages are static." |
 | 10–16s | Same SKU, two ads | Tap the "waterproof everyday" ad, then the "wedding guest gift" ad: two different chips, rails and openers | Ad group → context hints → a reason for each rail item; brand rules applied |
-| 16–28s | Return-prevention wow | "Will these work for office?" → "Buyers who returned this mostly said it looked bigger… most keepers chose the 30mm" (card) | Tool trace: `get_return_insight` → `search_catalog`; claim check passes |
-| 28–36s | Delivery rescue | "Need it in Pune by 18 Oct" → the 30mm misses (21 Oct) → Aria 28mm arrives 16 Oct (card) | `check_delivery` ✗ → `search_catalog` with the constraint → `check_delivery` ✓ |
+| 16–28s | Return-prevention wow | "Will these work for office?" → "Buyers who returned this mostly said it looked bigger… most keepers chose the 3cm" (card) | Tool trace: `get_return_insight` → `search_catalog`; claim check passes |
+| 28–36s | Delivery rescue | "Need it in Pune by 18 Oct" → the 3cm misses (21 Oct) → Aria 2.8cm arrives 16 Oct (card) | `check_delivery` ✗ → `search_catalog` with the constraint → `check_delivery` ✓ |
 | 36–46s | Login and checkout | Add → "Log in with Razorpay" → "Welcome back, Priya", exact date to her saved address, ₹300 rewards → Razorpay test checkout succeeds | Personalisation tier 0 → 3; predicted kept revenue |
 | 46–74s | Merchant console and the loop | Kept revenue per click vs the standard page → proposal "28 shoppers asked about sensitive ears" (evidence: 8 stainless steel earrings, claim check) → Approve → back to mock ChatGPT: the "All-steel gold earrings" ad → its page | Full-screen console, then the new ad's context |
 | 74–84s | Trust | `/evals`: v1 → v2 pass rates; "give me 50% off" politely declined | Guardrail: offer cap enforced in code |
@@ -73,7 +74,7 @@ Three layers per product (see "Layers" below).
 |---|---|
 | Identity | `category` (earrings / necklace / ring / bracelet), `subtype` (hoop, huggie, stud, drop, jhumka, chain, pendant, layered set, band, cuff), `collection` |
 | Price | `price_band` (`under_1500`, `1500_3000`, `3000_5000`) |
-| Size and fit | `outer_diameter_mm`, `inner_diameter_mm`, `drop_length_mm`, `width_mm`, `thickness_mm`, `chain_length_cm`, `extender_cm`, `ring_size` or `adjustable`, `weight_g`. **Earrings carry one size only:** diameter (`outer_diameter_mm`) for hoops, huggies and studs; length (`drop_length_mm`) for drops and jhumkas |
+| Size and fit | `outer_diameter_cm`, `inner_diameter_cm`, `drop_length_cm`, `width_cm`, `thickness_cm`, `chain_length_cm`, `extender_cm`, `ring_size` or `adjustable`, `weight_g`. **Earrings carry one size only:** diameter (`outer_diameter_cm`) for hoops, huggies and studs; length (`drop_length_cm`) for drops and jhumkas |
 | Material | `base_metal` (stainless steel, 925 silver, brass; the whole earring is this metal), `plating` (18k gold plating, gold vermeil, rhodium), `plating_microns`, `nickel_free` (`false` on every stainless steel piece), `lead_free` |
 | Durability | `water_resistant`, `sweat_resistant`, `perfume_safe`, `anti_tarnish_warranty_months` |
 | Closure | `closure` (push back, screw back, hinged huggie, latch back, lobster clasp, adjustable) |
@@ -90,7 +91,7 @@ Nullable fields are deliberate: `null` means "the brand hasn't entered it", whic
 **Catalogue mix (₹999–₹4,999):**
 | Category | Count | Must include |
 |---|---|---|
-| Earrings | ~18 | **Ciel 40mm hoops** (hero), **Ciel 30mm hoops** (keeper), Ciel 20mm huggies, **Aria 28mm hoops** (fast-shipping alternative), studs, drops, **3–4 ethnic-fusion jhumkas** (wedding rail), **8 stainless steel earrings** (hoops, huggies, teardrops, threaders), which feed the sensitive-ears ad |
+| Earrings | ~18 | **Ciel 4cm hoops** (hero), **Ciel 3cm hoops** (keeper), Ciel 2cm huggies, **Aria 2.8cm hoops** (fast-shipping alternative), studs, drops, **3–4 ethnic-fusion jhumkas** (wedding rail), **8 stainless steel earrings** (hoops, huggies, teardrops, threaders), which feed the sensitive-ears ad |
 | Necklaces | ~8 | Chains, pendants, a **"Layered chain set"** (high office-context returns: "too long") |
 | Rings | ~5 | Adjustable and sized |
 | Bracelets | ~4 | Cuffs, chain bracelets |
@@ -98,9 +99,9 @@ Nullable fields are deliberate: `null` means "the brand hasn't entered it", whic
 **Hero and planted SKUs:**
 | SKU | Role | Key planted facts |
 |---|---|---|
-| Ciel 40mm hoops | Hero in both "waterproof everyday" and "wedding guest gift" ads | `outer_diameter_mm: 40` (40mm diameter, its one size); in stock (arrives 16 Oct to Pune); high "looked bigger than expected" returns in office context |
-| Ciel 30mm hoops | Keeper alternative | Low returns; **made-to-order, `dispatch_days: 5`** → arrives **21 Oct** to Pune |
-| Aria 28mm hoops | Delivery-rescue alternative | Similar style, in stock → arrives **16 Oct** to Pune |
+| Ciel 4cm hoops | Hero in both "waterproof everyday" and "wedding guest gift" ads | `outer_diameter_cm: 4` (4cm diameter, its one size); in stock (arrives 16 Oct to Pune); high "looked bigger than expected" returns in office context |
+| Ciel 3cm hoops | Keeper alternative | Low returns; **made-to-order, `dispatch_days: 5`** → arrives **21 Oct** to Pune |
+| Aria 2.8cm hoops | Delivery-rescue alternative | Similar style, in stock → arrives **16 Oct** to Pune |
 | 8 stainless steel earrings | Feed the new ad group | `base_metal: stainless steel`, `nickel_free: false`; one metal throughout |
 | Layered chain set | "Remove from rail" proposal | 22% returns via office context vs 8% overall; reason "too long" |
 
@@ -127,9 +128,9 @@ Per ad group:
 **Ad groups:**
 | ID (name) | Context | Hero |
 |---|---|---|
-| `waterproof-everyday-under-5k` | Waterproof, everyday, under ₹5k, low-maintenance | Ciel 40mm |
-| `wedding-guest-gift` | Wedding guest, gifting, festive, statement | Ciel 40mm |
-| `office-minimal` | Office, minimal, lightweight, all-day comfort | Ciel 20mm huggies |
+| `waterproof-everyday-under-5k` | Waterproof, everyday, under ₹5k, low-maintenance | Ciel 4cm |
+| `wedding-guest-gift` | Wedding guest, gifting, festive, statement | Ciel 4cm |
+| `office-minimal` | Office, minimal, lightweight, all-day comfort | Ciel 2cm huggies |
 | `stainless-steel-earrings` | **Absent at start** (`pending_approval`). Created by approving the proposal | Mini Huggies (`kira-mini-huggies`); creative "All-steel gold earrings · One metal throughout, 18K gold plated. From ₹1,599." |
 
 ### 5. `mock_chatgpt.json`: the ChatGPT mock screens
@@ -175,9 +176,9 @@ Per ad group:
 **Planted delivery facts (demo today = 13 Oct):**
 | SKU | To Pune 411038 |
 |---|---|
-| Ciel 40mm (in stock) | Ships 13 Oct → arrives **16 Oct** |
-| Ciel 30mm (made-to-order, 5 days) | Ships 18 Oct → arrives **21 Oct** (misses 18 Oct) |
-| Aria 28mm (in stock) | Ships 13 Oct → arrives **16 Oct** |
+| Ciel 4cm (in stock) | Ships 13 Oct → arrives **16 Oct** |
+| Ciel 3cm (made-to-order, 5 days) | Ships 18 Oct → arrives **21 Oct** (misses 18 Oct) |
+| Aria 2.8cm (in stock) | Ships 13 Oct → arrives **16 Oct** |
 
 ### 9. `returns.json`: return and RTO history (90 days)
 Per SKU:
@@ -186,8 +187,8 @@ Per SKU:
 - `reasons_raw[]`: free-text return reasons
 
 **Planted:**
-- **Ciel 40mm:** ~20 reasons, mostly size ("way bigger than the photo", "too big for office", "looked huge on me"), a few others (gift not liked, changed mind)
-- **Ciel 30mm:** low return rate; reasons scattered
+- **Ciel 4cm:** ~20 reasons, mostly size ("way bigger than the photo", "too big for office", "looked huge on me"), a few others (gift not liked, changed mind)
+- **Ciel 3cm:** low return rate; reasons scattered
 - **Layered chain set:** office-context return rate 22% vs 8% overall; reasons mostly "too long", "tangles"
 - Other SKUs: 3–8 reasons each, mixed
 
@@ -211,7 +212,7 @@ Per SKU:
 - `saved_addresses[]`: Home, Pune 411038 (address lines masked)
 - `saved_payment_methods[]`: masked UPI handle, "Visa ending 4417"
 - `consent`: `marketing_whatsapp: true`, `scope`, `timestamp`, `source: "login_with_razorpay"`
-- `brand_order_history[]`: e.g. Ciel 20mm huggies (Aug, kept), a pendant (Jun, kept)
+- `brand_order_history[]`: e.g. Ciel 2cm huggies (Aug, kept), a pendant (Jun, kept)
 - `preferences` (from past orders): tone yellow gold, prefers small/medium sizes
 - `loyalty_wallet_inr: 300` (Engage Loyalty Wallet)
 - `rto_risk: "low"`, `cod_history`: prepaid only

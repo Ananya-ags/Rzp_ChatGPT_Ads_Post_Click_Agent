@@ -19,7 +19,7 @@ export type Persona = {
   walletInr: number;
   rtoRisk: "low" | "medium" | "high"; // internal: drives the pay-online nudge, never shown to her
   ownedSkus: string[];
-  maxEarringMm: number; // from her size preference (small to medium)
+  maxEarringCm: number; // from her size preference (small to medium)
 };
 
 export function personaFromDb(): Persona {
@@ -35,7 +35,7 @@ export function personaFromDb(): Persona {
     walletInr: p.loyalty_wallet_inr,
     rtoRisk: p.rto_risk,
     ownedSkus: p.brand_order_history.filter((o) => o.status === "kept").map((o) => o.sku),
-    maxEarringMm: 30,
+    maxEarringCm: 3,
   };
 }
 
@@ -61,7 +61,7 @@ export function personaliseRail(base: string[], candidates: string[], hero: stri
   const ok = (h: string) => !!P(h) && h !== hero && !persona.ownedSkus.includes(h) && !excluded.has(h) && !P(h)!.metafields.jewellery.excluded;
   const fitsHer = (h: string) => {
     const j = P(h)!.metafields.jewellery;
-    return j.category !== "earrings" || (j.outer_diameter_mm ?? j.drop_length_mm ?? 0) <= persona.maxEarringMm;
+    return j.category !== "earrings" || (j.outer_diameter_cm ?? j.drop_length_cm ?? 0) <= persona.maxEarringCm;
   };
   const out: string[] = base.filter((h) => ok(h) && fitsHer(h));
   // goes with her pendant: one chain she doesn't own
