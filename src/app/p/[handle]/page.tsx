@@ -4,12 +4,15 @@ import ProductPage, { type ProductPageProps } from "@/components/shop/ProductPag
 import { getDb, resolveAdGroup } from "@/lib/data";
 import { estimateDelivery, formatDay } from "@/lib/delivery";
 import { toCard } from "@/lib/view";
+import { getUser, personaliseRail } from "@/lib/user";
 
 type Props = { params: Promise<{ handle: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> };
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
 /** Fourth prompt tile on every agent page; answered with similar pieces (search_catalog). */
 const SHOW_OTHERS = "Show me other products";
+/** Guided-demo chips that belong to the waterproof → office return-prevention story; hidden on other ads. */
+const OFFICE_STORY_CHIPS = new Set(["Will these work for office?", "Ye office mein pehen sakte hain?", "Need it in Pune by 18 Oct"]);
 
 const RAIL_TITLE: Record<string, string> = {
   "waterproof-everyday-under-5k": "Picked for waterproof everyday",
@@ -32,13 +35,18 @@ export default async function Page({ params, searchParams }: Props) {
   if (!product) notFound();
 
   const group = resolveAdGroup({ ad_group_id: one(sp.ad_group_id), ad_group: one(sp.ad_group) });
+  // Opened from a sponsored card (utm_source/oppref) → render inside the in-app browser chrome; product links keep it.
+  const viaChatgpt = !!group && (one(sp.utm_source) === "chatgpt" || !!one(sp.oppref) || one(sp.via) === "chatgpt");
+  const backConv = group ? db.mock.conversations.find((c) => c.ad_group === group.id)?.id : undefined;
   const armParam = one(sp.arm)?.toUpperCase();
   const arm: "A" | "B" | "C" = armParam === "A" || armParam === "B" || armParam === "C" ? armParam : group ? "C" : "A";
   const j = product.metafields.jewellery;
   const cards = Object.fromEntries(db.products.map((p) => [p.handle, toCard(p, db.manifest)]));
 
-  // tier 0: approx city from IP → Pune for the demo
-  const est = estimateDelivery(product, "411038", db.logistics, db.now);
+  // logged in (demo persona): exact saved address; otherwise tier 0 approx city from IP → Pune
+  const user = await getUser();
+  const area = user ? user.address.line1.split(",").pop()!.trim() : null;
+  const est = estimateDelivery(product, user?.address.pincode ?? "411038", db.logistics, db.now);
   // Shopper-friendly product details (verified fields only): finish and warranty first, plain words, no PVD/micron/316L jargon.
   const FINISH: Record<string, string> = { "18k gold PVD": "18K gold plated", "18k gold plating": "18K gold plated", "gold vermeil": "Gold vermeil (gold on silver)", rhodium: "Rhodium plated" };
   const METAL: Record<string, string> = { "316L stainless steel": "Stainless steel", "925 silver": "Sterling silver", brass: "Brass" };
@@ -65,7 +73,13 @@ export default async function Page({ params, searchParams }: Props) {
     { icon: "truck" as const, label: "Free shipping", sub: Number(product.variants[0].price) >= freeShip ? "On this item" : `Over ₹${freeShip.toLocaleString("en-IN")}` },
   ].filter(Boolean) as ProductPageProps["badges"];
 
-  const railRaw = group ? db.rails.rails[group.id]?.items ?? [] : [];
+  const railBase = group ? db.rails.rails[group.id]?.items ?? [] : [];
+  // personalised for the logged-in shopper: drop what she owns, favour her sizes, add a chain for her pendant
+  const railRaw =
+    group && user
+      ? personaliseRail(railBase.map((r) => r.sku), group.candidate_skus, group.hero_sku, user, db.rules.rail_size).map((sku) => ({ sku, reason: "", pinned: railBase.find((r) => r.sku === sku)?.pinned ?? false }))
+      : railBase;
+  const linkQuery = group ? `?ad_group=${group.id}${armParam ? `&arm=${arm}` : ""}${viaChatgpt ? "&via=chatgpt" : ""}` : armParam ? `?arm=${arm}` : "";
   const opener = group ? db.openers.openers[group.id] : null;
   const more = db.products
     .filter((p) => p.handle !== handle && p.metafields.jewellery.category === j.category && !p.metafields.jewellery.excluded)
@@ -80,17 +94,21 @@ export default async function Page({ params, searchParams }: Props) {
     facts,
     badges,
     reviews: j.review_snippets,
-    arrives: { label: formatDay(est.arrives_on), city: est.city, madeToOrder: j.made_to_order, dispatchDays: j.dispatch_days },
-    context: group && opener ? { adGroupId: group.id, chip: opener.chip, opener: `Any questions about the ${product.title}?`, chips: [...opener.suggested_chips, SHOW_OTHERS], sheetChips: [...new Set([...opener.suggested_chips, SHOW_OTHERS, ...db.demo.try_it_chips.map((c) => c.text)])], railTitle: RAIL_TITLE[group.id] ?? "Picked for you", pending: group.status !== "active" } : null,
+    arrives: { label: formatDay(est.arrives_on), where: user ? `${area}, ${user.address.city} ${user.address.pincode}` : `${est.city} (approx.)`, madeToOrder: j.made_to_order, dispatchDays: j.dispatch_days },
+    user: user ? { firstName: user.firstName, nudgePrepaid: user.rtoRisk === "high", pincode: user.address.pincode } : null,
+    loginHref: `/login?next=${encodeURIComponent(`/p/${handle}${linkQuery}`)}`,
+    context: group && opener ? { adGroupId: group.id, chip: opener.chip, opener: user ? `Welcome back. Any questions about the ${product.title}?` : `Any questions about the ${product.title}?`, chips: [...opener.suggested_chips, SHOW_OTHERS], sheetChips: [...new Set([...opener.suggested_chips, SHOW_OTHERS, ...db.demo.try_it_chips.map((c) => c.text).filter((t) => group.id === "waterproof-everyday-under-5k" || !OFFICE_STORY_CHIPS.has(t))])], railTitle: user ? "Picked for you" : RAIL_TITLE[group.id] ?? "Picked for you", pending: group.status !== "active" } : null,
     rail: railRaw.map((r) => ({ card: cards[r.sku], reason: r.reason, pinned: r.pinned })),
     more,
     cards,
-    linkQuery: group ? `?ad_group=${group.id}${armParam ? `&arm=${arm}` : ""}` : armParam ? `?arm=${arm}` : "",
+    linkQuery,
     simulatedNote: "Reviews, ratings and stock are simulated for this prototype. Cosmos is a fictional brand.",
   };
 
   return (
-    <PhoneFrame label={`Shopper view · arm ${arm}${group ? ` · ad group: ${group.name}` : " · standard page"}${one(sp.oppref) ? ` · oppref ${one(sp.oppref)}` : ""}`}>
+    <PhoneFrame
+      chrome={viaChatgpt ? { kind: "webview", backHref: `/chatgpt${backConv ? `?c=${backConv}` : ""}`, domain: "cosmos.example" } : undefined}
+      label={`Shopper view · arm ${arm}${group ? ` · ad group: ${group.name}` : " · standard page"}${one(sp.oppref) ? ` · oppref ${one(sp.oppref)}` : ""}`}>
       <ProductPage key={handle} {...props} />
     </PhoneFrame>
   );

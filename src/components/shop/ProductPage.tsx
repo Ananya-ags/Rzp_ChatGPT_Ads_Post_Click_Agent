@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import ProductImage from "./ProductImage";
 import ChatSheet from "./ChatSheet";
 import { MiniProduct } from "./ToolCards";
 import { ProductLinkProvider } from "./productLink";
 import { useDemoState } from "@/lib/state";
 import CartButton from "./CartButton";
+import SiteHeader from "./SiteHeader";
 import TrustBadges, { type Badge } from "./TrustBadges";
 import { inr, type CardVM } from "@/lib/view";
 
@@ -17,7 +17,9 @@ export type ProductPageProps = {
   facts: { label: string; value: string }[];
   badges: Badge[];
   reviews: { author: string; rating: number; text: string }[];
-  arrives: { label: string; city: string; madeToOrder: boolean; dispatchDays: number };
+  arrives: { label: string; where: string; madeToOrder: boolean; dispatchDays: number };
+  user: null | { firstName: string; nudgePrepaid: boolean; pincode: string };
+  loginHref: string;
   context: null | { adGroupId: string; chip: string; opener: string; chips: string[]; sheetChips: string[]; railTitle: string; pending: boolean };
   rail: { card: CardVM; reason: string; pinned: boolean }[];
   more: CardVM[]; // uncurated list for the standard page
@@ -37,7 +39,6 @@ export default function ProductPage(p: ProductPageProps) {
   const [pending, setPending] = useState<string | null>(null);
   const [slide, setSlide] = useState(0);
   const agentOn = p.arm === "C" && !!p.context && !state.agentPaused;
-  const cartCount = state.cart.reduce((s, l) => s + l.qty, 0);
   const ask = (q?: string) => {
     if (q) setPending(q);
     setOpen(true);
@@ -46,16 +47,7 @@ export default function ProductPage(p: ProductPageProps) {
   return (
     <ProductLinkProvider value={p.linkQuery}>
     <div className="relative pb-28">
-      {/* header */}
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line/70 bg-ivory/90 px-4 py-2 backdrop-blur">
-        <Link href="/" aria-label="Cosmos home">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/cosmos-logo-v3.png" alt="Cosmos" className="h-6 w-auto md:h-[30px]" />
-        </Link>
-        <span className="relative rounded-full bg-sand px-3 py-1 text-[12px]">
-          Bag <b>{cartCount}</b>
-        </span>
-      </header>
+      <SiteHeader user={p.user ? { firstName: p.user.firstName } : null} loginHref={p.loginHref} />
 
       {p.context && p.arm !== "A" && (
         <div className="px-4 pt-3">
@@ -101,7 +93,7 @@ export default function ProductPage(p: ProductPageProps) {
         </div>
         <p className="mt-2 flex items-center gap-1.5 text-[13px]">
           <span className="text-success">●</span> Arrives by <b>{p.arrives.label}</b>
-          <span className="text-muted">to {p.arrives.city} (approx.)</span>
+          <span className="text-muted">to {p.arrives.where}</span>
         </p>
         {p.arrives.madeToOrder && <p className="mt-0.5 text-[12px] text-muted">Made to order · dispatches in {p.arrives.dispatchDays} days</p>}
       </section>
@@ -128,15 +120,35 @@ export default function ProductPage(p: ProductPageProps) {
       )}
 
       {/* agent opener */}
+      {p.arm === "C" && p.context && state.agentPaused && (
+        <p className="mx-4 mt-6 rounded-2xl border border-dashed border-line px-4 py-3 text-[12.5px] text-muted">
+          Cosmos AI is paused by the store right now (demo control on the start page).
+        </p>
+      )}
       {agentOn && p.context && (
-        <section className="mx-4 mt-6 rounded-2xl border border-line bg-white p-3.5">
-          <p className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-gold-deep">
-            <span aria-hidden className="text-[13px]">✦</span> Ask Cosmos AI
-          </p>
-          <p className="mt-1 text-[14px] leading-relaxed">{p.context.opener}</p>
-          <div className="mt-2.5 flex flex-wrap gap-2">
+        <section className="ai-card mx-4 mt-6 rounded-2xl p-4">
+          <div className="flex items-center gap-2.5">
+            <span aria-hidden className="ai-badge grid size-9 shrink-0 place-items-center rounded-full text-[16px] text-[#3a2a10]">
+              ✦
+            </span>
+            <div className="leading-tight">
+              <p className="font-display text-[18px] text-ink">Ask Cosmos AI</p>
+              <p className="text-[11px] text-gold-deep">Answers from verified product details</p>
+            </div>
+          </div>
+          <p className="mt-3 text-[14.5px] leading-relaxed text-ink">{p.context.opener}</p>
+          {p.user?.nudgePrepaid && (
+            <p className="mt-2 rounded-lg bg-white/80 px-3 py-2 text-[12.5px] text-gold-deep">
+              ✦ Pay online at checkout and get an <b>extra 5% off</b> your order.
+            </p>
+          )}
+          <div className="mt-3 flex flex-wrap gap-2">
             {p.context.chips.map((c) => (
-              <button key={c} onClick={() => ask(c)} className="rounded-full border border-line bg-ivory px-3 py-1.5 text-[12px]">
+              <button
+                key={c}
+                onClick={() => ask(c)}
+                className="rounded-full border border-gold/45 bg-white/85 px-3 py-1.5 text-[12.5px] text-ink shadow-[0_1px_0_rgba(140,101,36,0.08)] hover:border-gold active:bg-[#f6ecd6]"
+              >
                 {c}
               </button>
             ))}
@@ -186,8 +198,8 @@ export default function ProductPage(p: ProductPageProps) {
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-ivory/95 px-4 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 backdrop-blur">
         <div className="flex gap-2.5">
           {agentOn && (
-            <button onClick={() => ask()} className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full border border-ink/80 text-[14px] font-medium">
-              <span aria-hidden>✦</span> Ask about this
+            <button onClick={() => ask()} className="ai-cta relative flex h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full text-[14px] font-semibold text-[#3a2a10] active:scale-[0.98]">
+              <span aria-hidden className="ai-cta-star text-[16px]">✦</span> Ask Cosmos AI
             </button>
           )}
           <CartButton sku={p.hero.handle} max={p.hero.maxQty} limitReason={p.hero.limitReason} label={`Add · ${inr(p.hero.price)}`} size="lg" className="flex-1" />
@@ -200,11 +212,11 @@ export default function ProductPage(p: ProductPageProps) {
           onOpenChange={setOpen}
           pending={pending}
           clearPending={() => setPending(null)}
-          context={{ sku: p.hero.handle, adGroupId: p.context.adGroupId, pincode: null, tier: state.returningVisitor ? 2 : 1 }}
+          context={{ sku: p.hero.handle, adGroupId: p.context.adGroupId, pincode: p.user?.pincode ?? null, tier: p.user ? 3 : 1 }}
           hero={p.hero}
           cards={p.cards}
           chips={p.context.sheetChips}
-          opener={null}
+          opener={p.user?.nudgePrepaid ? `Welcome back, ${p.user.firstName}. Tip: pay online at checkout and you get an extra 5% off your order.` : null}
         />
       )}
     </div>

@@ -72,11 +72,11 @@ export default function ChatSheet({ open, onOpenChange, pending, clearPending, c
           <button onClick={() => setFull((f) => !f)} className="mx-auto mt-2 h-1.5 w-10 shrink-0 rounded-full bg-line" aria-label={full ? "Collapse" : "Expand"} />
           <div className="flex items-center justify-between px-4 pb-2 pt-2">
             <div>
-              <Drawer.Title className="font-display text-[17px]">Ask about this</Drawer.Title>
+              <Drawer.Title className="font-display text-[17px]">Ask Cosmos AI</Drawer.Title>
               <p className="text-[11px] text-muted">AI assistant · answers from verified product facts</p>
             </div>
             <div className="flex items-center gap-2 text-[12px]">
-              <span className="rounded-full bg-sand px-2.5 py-1">Bag {cartCount}</span>
+              <span className="whitespace-nowrap rounded-full bg-sand px-2.5 py-1">Bag {cartCount}</span>
               <Drawer.Close className="grid size-7 place-items-center rounded-full bg-sand text-[13px]" aria-label="Close">✕</Drawer.Close>
             </div>
           </div>

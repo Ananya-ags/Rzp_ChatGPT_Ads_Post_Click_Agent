@@ -59,9 +59,28 @@
       "stackable": true
     },
     {
+      "id": "prepaid_nudge",
+      "type": "percent",
+      "label": "Extra 5% off when you pay online",
+      "value": 5,
+      "eligibility": {
+        "min_cart_inr": 0,
+        "first_order_only": false,
+        "channels": [
+          "all"
+        ],
+        "prepaid_only": true,
+        "requires": "Customer flagged for a prepaid nudge (Magic Checkout RTO risk: high)"
+      },
+      "cap_inr": 250,
+      "valid_till": "2026-10-31",
+      "cofunded": false,
+      "stackable": true
+    },
+    {
       "id": "loyalty",
       "type": "wallet",
-      "label": "Use your Engage Loyalty Wallet (up to 20% of cart)",
+      "label": "Use your Cosmos wallet (up to 20% of the bag)",
       "value": 20,
       "eligibility": {
         "min_cart_inr": 0,
@@ -70,7 +89,7 @@
           "all"
         ],
         "prepaid_only": false,
-        "requires": "Login With Razorpay"
+        "requires": "Logged-in customer (wallet held by Engage Loyalty)"
       },
       "cap_inr": null,
       "valid_till": "2026-12-31",

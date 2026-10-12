@@ -22,7 +22,7 @@ export default async function Page({ searchParams }: Props) {
   });
   const initial = typeof sp.c === "string" ? sp.c : conversations[0].id;
   return (
-    <PhoneFrame label="Mock ChatGPT (simulated) · tap a sponsored card">
+    <PhoneFrame chrome={{ kind: "status" }} label="Mock ChatGPT (simulated) · tap a sponsored card">
       <MockChatgpt conversations={conversations} initial={initial} />
     </PhoneFrame>
   );

@@ -6,7 +6,7 @@
     "NEXT_PUBLIC_RAZORPAY_KEY_ID"
   ],
   "order_route": "/api/checkout/order",
-  "checkout_prefill_from": "shoppers.tier3_priya (only after simulated Login With Razorpay)",
+  "checkout_prefill_from": "shoppers.tier3_demo (only after the simulated login)",
   "magic_checkout_simulated": {
     "login_with_razorpay": {
       "otp_length": 6,

@@ -169,7 +169,7 @@
       "ad_group": "waterproof-everyday-under-5k",
       "pincode": "411038",
       "chip": null,
-      "narration": "Add → Log in with Razorpay (OTP 123456) → Welcome back, Priya → exact date to saved address, ₹300 wallet → test checkout.",
+      "narration": "Add → Log in (99999 99999, OTP 123456) → Welcome back, Ananya → exact date to saved address, ₹300 wallet → test checkout.",
       "expected_tools": [
         "get_offer",
         "create_checkout"

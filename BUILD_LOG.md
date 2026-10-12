@@ -131,3 +131,72 @@ Running log of which AI tool did what, key prompts, rejected AI output and decis
 - **Note on the storyboard.** The ad context still differs per ad via the chip, the rail and the suggested prompts. The per-context opener text is still generated in `openers.json`, but it is no longer shown.
 - **Fourth prompt tile, "Show me other products".** It is also available in the chat sheet. With an API key the agent answers via `search_catalog` (similar_to the page product). Without one, the offline fallback runs the real `search_catalog` (3 similar pieces) and returns product cards.
 - Prompt tile "Need it by a date" renamed to "When will it be delivered?" (opener chips in the pipeline). The offline fallback answers it with `check_delivery` for the page product to the approx-city pincode (Pune 411038) and asks for the pincode for an exact date.
+- **Ad-dependent first prompt.** The waterproof ad keeps "Will these work for office?"; the wedding ad now leads with "Suitable for wedding gift?". The wedding prompt set is now: Suitable for wedding gift? · Is gift wrap available? · When will it be delivered? · Show me other products.
+- **Chat sheet.** Office-story demo chips ("Will these work for office?", its Hinglish twin, "Need it in Pune by 18 Oct") appear only on the waterproof ad's pages.
+- **Offline answers.** Both wedding prompts now answer without an API key, from verified occasions and store policy (₹99 gift wrap, free note, 15-day returns). The wedding answer also runs `get_return_insight(wedding)`, which comes back not relevant, so returns aren't mentioned.
+- The sticky-bar button "Ask about this" and the chat sheet title are now "Ask Cosmos AI", matching the assistant card.
+
+## 12 Oct 2026 · In-app browser look for ad clicks (user request)
+- **What shows.** Product pages opened from a sponsored card get a fixed white top area above the Cosmos site, on real phones and inside the desktop frame: a phone status bar (10:00 demo clock, signal, Wi-Fi, battery) and an in-app browser bar (✕ back to the same mock ChatGPT conversation, lock + `cosmos.example`, "Sponsored link", ⋯ menu). The site scrolls underneath (`PhoneFrame` `chrome` prop; `src/components/PhoneChrome.tsx`).
+- **When it shows.** Only when `utm_source=chatgpt` or an `oppref` is present. Product links on that page carry `&via=chatgpt`, so the shopper stays "inside the app". Direct visits (start page "Try it yourself", control page) keep the normal full-screen site.
+- **Mock ChatGPT screen.** It got the same status bar, so the hop from chat to site looks continuous.
+- **Copy rule.** The browser bar never names the ad platform (rule 4).
+
+## 12 Oct 2026 · Store header, menu panel, bag page (user request)
+- **Shared `SiteHeader`** (product + bag pages): ☰ menu, logo (unchanged sizes: 24px phone / 30px desktop frame), search and profile icons (display only), and a bag icon with a live count badge that links to `/cart` (ad context and in-app view carried along).
+- **Menu.** A slide-in left panel with Earrings, Rings, Necklaces, Bracelets and FAQs, styled to the site and not clickable yet. In the in-app browser view it opens below the browser bar.
+- **`/cart` bag page:**
+  - items with the − qty + stepper and line totals
+  - free-shipping progress
+  - delivery date (slowest item, approx. city Pune)
+  - gift wrap toggle (₹99, free note)
+  - offers: applied ✓, and available with how to unlock (first order / bank card / Razorpay wallet), plus the cap note
+  - price details and total
+  - payment methods (UPI, cards, netbanking, wallets, EMI/Pay Later above ₹3,000, COD +₹49)
+  - Razorpay Buyer Protection / Trusted Business badges, labelled simulated
+  - a disabled "Proceed to pay ₹X" button ("Razorpay checkout coming soon")
+  - an empty state
+- **Pricing is server-side** (`POST /api/cart`): quantities are clamped to min(stock, 15), offers come from `checkoutTotals` (same code as the agent's `get_offer`, with caps enforced). A tampered bag of 40 jhumkas is priced as 15.
+- The sticky "Ask Cosmos AI" button is now brushed gold (gradient, soft gold shadow, dark-brown text). A slow shine sweeps across it every ~3.6s and the ✦ star twinkles, to invite a tap. Both stop under prefers-reduced-motion. Styles live in `globals.css` (`.ai-cta`). Note: the dev server needed a restart to pick up the new CSS.
+- **Bag page:** removed the "Offers are set by Cosmos and capped at 10% or ₹300 per order." line (user request). The cap is still enforced in code.
+- **In-page "Ask Cosmos AI" card** restyled, static with no motion (user request):
+  - warm gold-cream gradient panel with a gold border and soft gold shadow
+  - a gold ✦ badge, "Ask Cosmos AI" in the display serif, and "Answers from verified product details" underneath
+  - gold-outlined prompt buttons
+  - styles: `.ai-card` / `.ai-badge` in `globals.css`
+- **Logo `cosmos-logo-v4.png`** (Claude Code's design call, user asked for "more noticeable"). Rebuilt from the supplied PNG with the gold recoloured into a deeper, richer range (#7A541A → #C4923E) that keeps the original shading, plus a faint bronze edge (~3px, 55% opacity) so it holds up on ivory at 24px. Sizes are unchanged; v3 was removed.
+- **Dev note:** Turbopack's dev server didn't hot-reload CSS appended to `globals.css`. Restart `npm run dev` after editing it.
+
+## 12 Oct 2026 · Mobile check (user: "actual mobile version looks messed up")
+- **Re-tested as an iPhone** (UA + touch) through the LAN address at 360, 375 and 390px, plus a 600px narrow window. Covered the ChatGPT screen, ad landing page, menu, chat sheet and bag. No console errors, no broken images, and the layout matched desktop's phone frame.
+- **Only fix:** the chat sheet's "Bag 0" pill wrapped onto two lines at 360px. It is now `whitespace-nowrap`, which doesn't change desktop, where it already fit.
+- **Likely cause of what the user saw:** a phone tab holding a stale dev stylesheet. The dev server was serving old CSS earlier (same reason the gold button needed a restart), so the new markup rendered with old styles.
+- **Hydration warnings in the dev log** come from a desktop Chrome extension injecting `__gcrremoteframetoken` on `<body>`. They are harmless and not a phone issue.
+- **For phone testing:** a production build runs on port 3001 (`next start -H 0.0.0.0 -p 3001`). It has no hot reload and no stale assets. Rebuild it after changes.
+- Ciel 40mm description: "your nani's wedding" changed to "a wedding" (user request).
+
+## 12 Oct 2026 · Demo login and personalisation (user request)
+- **Login** at `/login`: phone + OTP, simulated. The demo account is mobile **99999 99999** (a clearly dummy number; the validator allows only this one) with OTP **123456**. Success sets a `cosmos_user=priya` cookie; the server reads it so pages render already personalised (`src/lib/user.ts`).
+  - The header profile icon links to login and shows her initial when logged in.
+  - The page offers log out; "Reset demo state" on the start page also logs out.
+  - No "Login with Razorpay" wording anywhere, per the user. The wallet is shown as "Cosmos wallet".
+- **Personalisation when logged in:**
+  - delivery to her exact saved address ("to Kothrud, Pune 411038"), on product pages, bag and chat
+  - rail "Picked for you, Priya": pieces she owns are dropped (Classic Huggies, Sun Coin Pendant), earrings ≤30mm (her size preference) are favoured, and a chain is added if missing (she owns a pendant)
+  - greeting in the AI card and chat
+  - bag: "Delivering to Priya" (masked address, phone, email), saved methods (UPI, Visa ending 4417), ₹300 wallet applied
+- **User decision (overrides the brief).** Priya is now **high RTO risk**: two COD orders refused at the door were added to her history, and `rto_risk: high`.
+- **New offer `prepaid_nudge`:** "Extra 5% off when you pay online". It is eligible only for a logged-in customer flagged high RTO, applies only to prepaid orders, has a ₹250 cap, and still sits inside the 10% / ₹300 order cap (on ₹3,299: ₹100 + ₹164 = ₹264). It appears in the AI card, chat answers and bag. She is never told why; the RTO label is for the console only (PRODUCT_CONTEXT: never a judgement on the shopper).
+- **Security.** The chat and bag APIs take identity only from the cookie. A request that merely *claims* tier 3 / high RTO in its body does not get the 5% (tested).
+- **Fixes found by testing:**
+  - the login input's `id="phone"` clashed with the phone frame's id; renamed to `login-phone`
+  - the wallet offer copy no longer mentions Razorpay login
+- **Start page:** a "Log in as the demo shopper" card with the credentials.
+- **Bug fix (user: "Ask Cosmos AI disappears after login and stays gone after logout").** Root cause was a stale cache in `src/lib/state.ts`: `writeState` only refreshed the `useSyncExternalStore` snapshot via subscribers, and the login page has none. The next page therefore rendered from an outdated copy (for example a leftover "agent paused" flag) until a reload.
+  - `writeState` now always updates the snapshot, with an in-memory fallback if storage is blocked.
+  - Login and logout also reset the store's "pause Cosmos AI" switch.
+  - A paused agent now shows a visible note on the product page instead of silently disappearing.
+  - The start-page switch is relabelled "Store control: pause Cosmos AI on product pages".
+  - Verified in headless Chrome on dev and prod: ad → login → personalised chat ("Welcome back, Priya…", delivery to 411038) → logout → back. The card and button are present at every step, including when the pause flag was left on beforehand.
+- **No names on the site pages** (user: naming the shopper on the website is creepy). The rail reads "Picked for you", the in-page AI card "Welcome back. Any questions about…", the bag "Delivering to", and the login screens "Welcome back" / "You're logged in"; the profile icon label is "Your account". Her first name now appears only inside the Cosmos AI chat ("Welcome back, Priya…", "Priya, it arrives…").
+- **Demo shopper renamed from Priya to Ananya** (user request). Changed: data key `tier3_priya` → `tier3_demo`, name, masked email (a•••••@), UPI handle (ananya•••@okbank), customer id, cookie value (`cosmos_user=ananya`), guided-demo narration, and the start-page card. Login is the same: 99999 99999 / 123456. Her name appears only in the Cosmos AI chat; the avatar shows "A". Old `priya` cookies no longer log in.

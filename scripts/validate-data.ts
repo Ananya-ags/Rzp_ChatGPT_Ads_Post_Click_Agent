@@ -96,8 +96,8 @@ rules.excluded_skus.forEach((e) => sku(e.sku, "brand_rules.excluded_skus"));
 returns.skus.forEach((r) => { sku(r.sku, "returns"); Object.keys(r.by_ad_group).forEach((g) => agRef(g, `returns.${r.sku}.by_ad_group`)); r.reasons_raw.forEach((x) => agRef(x.ad_group_id, `returns.${r.sku}.reasons`)); });
 check(returns.skus.length === products.length, "returns.json covers every SKU", `returns.json has ${returns.skus.length} SKUs, catalogue has ${products.length}`);
 [...shoppers.tier2_cookie.recently_viewed_skus, ...shoppers.tier2_cookie.wishlist_skus].forEach((s) => sku(s, "shoppers.tier2"));
-shoppers.tier3_priya.brand_order_history.forEach((o) => sku(o.sku, "shoppers.priya.history"));
-shoppers.tier3_priya.saved_addresses.forEach((a) => pin(a.pincode, "shoppers.priya"));
+shoppers.tier3_demo.brand_order_history.forEach((o) => sku(o.sku, "shoppers.demo.history"));
+shoppers.tier3_demo.saved_addresses.forEach((a) => pin(a.pincode, "shoppers.demo"));
 shoppers.extra.forEach((x) => { pin(x.pincode, `shoppers.${x.id}`); agRef(x.ad_group, `shoppers.${x.id}`); });
 logistics.demo_pincodes.forEach((p) => pin(p, "logistics.demo_pincodes"));
 logistics.rto_risk.forEach((r) => pin(r.pincode, "logistics.rto_risk"));
@@ -236,6 +236,7 @@ if (os.orders.length < 250) warn(`orders = ${os.orders.length} (brief said ~400;
 check(rzp.kept_revenue.return_window_days === brand.policies.return_window_days, "return window consistent (brand ↔ razorpay)");
 check(offers.offers.filter((o) => o.type !== "wallet").every((o) => (o.type === "percent" ? o.value <= rules.offer_caps.max_pct : (o.cap_inr ?? o.value) <= rules.offer_caps.max_flat_inr)), "each offer within caps");
 check(offers.offers.find((o) => o.id === "first_order")?.cap_inr === 300, "first order 10% capped at ₹300");
+check(shoppers.tier3_demo.demo_login_phone === "9999999999", "demo login uses the dummy number 99999 99999");
 
 /* ───────── demo script & evals ───────── */
 const cats = new Set(evals.cases.map((c) => c.category));
@@ -268,7 +269,7 @@ if (placeholders) warn(`${placeholders} products still use placeholder art`);
 /* ───────── fictional-data guard ───────── */
 const allText = ["data/brand.json", "data/shoppers.json", "data/catalogue/products.json", "data/returns.json", "data/chat_logs_seed.json", "data/razorpay.json"].map((f) => readFileSync(join(ROOT, f), "utf8")).join("\n");
 if (/\b\d{13,19}\b/.test(allText.replace(/"id": \d+/g, ""))) err("found a long digit string that looks like a card number");
-const phoneHit = allText.replace(/"id": \d+/g, "").replace(/\d{11,}/g, "").match(/\b[6-9]\d{9}\b/);
+const phoneHit = allText.replace(/"id": \d+/g, "").replace(/"demo_login_phone": "9999999999"/g, "").replace(/\d{11,}/g, "").match(/\b[6-9]\d{9}\b/);
 if (phoneHit) err(`found an unmasked Indian mobile number: ${phoneHit[0]}`);
 for (const e of allText.match(/[\w.•-]+@[\w-]+\.[\w.]+/g) ?? []) if (!/@(cosmos\.example|example\.com|okbank)/.test(e)) err(`non-fictional-looking email ${e}`);
 

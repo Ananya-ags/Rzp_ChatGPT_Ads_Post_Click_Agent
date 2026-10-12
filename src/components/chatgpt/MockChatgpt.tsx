@@ -22,7 +22,7 @@ export default function MockChatgpt({ conversations, initial }: { conversations:
   const unlocked = !conv.requires_approval_of || (ready && conv.proposalId && state.approvedProposals.includes(conv.proposalId));
 
   return (
-    <div className="flex min-h-dvh flex-col bg-white text-[#0d0d0d] md:min-h-full">
+    <div className="flex min-h-full flex-col bg-white text-[#0d0d0d]">
       <header className="sticky top-0 z-10 border-b border-black/5 bg-white/95 px-4 pb-2 pt-3 backdrop-blur">
         <div className="flex items-center justify-between">
           <span className="text-[16px] font-semibold">ChatGPT</span>

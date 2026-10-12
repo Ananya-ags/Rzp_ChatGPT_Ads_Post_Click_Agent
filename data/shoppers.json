@@ -62,12 +62,13 @@
     "tone_preference": "yellow gold",
     "last_utm_source": "instagram"
   },
-  "tier3_priya": {
-    "rzp_customer_id": "cust_SIMpriya0001",
-    "name": "Priya",
-    "phone_masked": "+91 98XXXX1234",
-    "email_masked": "p•••••@example.com",
+  "tier3_demo": {
+    "rzp_customer_id": "cust_SIMananya0001",
+    "name": "Ananya",
+    "phone_masked": "+91 99XXXX9999",
+    "email_masked": "a•••••@example.com",
     "otp_for_demo": "123456",
+    "demo_login_phone": "9999999999",
     "saved_addresses": [
       {
         "label": "Home",
@@ -80,7 +81,7 @@
     "saved_payment_methods": [
       {
         "type": "upi",
-        "display": "priya•••@okbank (simulated)"
+        "display": "ananya•••@okbank (simulated)"
       },
       {
         "type": "card",
@@ -101,13 +102,29 @@
         "order_id": "CSM-1042",
         "sku": "ciel-huggies-20mm",
         "date": "2026-08-14",
-        "status": "kept"
+        "status": "kept",
+        "payment": "UPI"
+      },
+      {
+        "order_id": "CSM-0931",
+        "sku": "noor-mini-jhumkas",
+        "date": "2026-07-20",
+        "status": "rto",
+        "payment": "COD"
       },
       {
         "order_id": "CSM-0877",
         "sku": "luna-coin-pendant",
         "date": "2026-06-09",
-        "status": "kept"
+        "status": "kept",
+        "payment": "card"
+      },
+      {
+        "order_id": "CSM-0712",
+        "sku": "mira-teardrop-drops",
+        "date": "2026-04-28",
+        "status": "rto",
+        "payment": "COD"
       }
     ],
     "preferences": {
@@ -115,8 +132,8 @@
       "sizes": "small to medium (huggies, 20 to 30mm hoops)"
     },
     "loyalty_wallet_inr": 300,
-    "rto_risk": "low",
-    "cod_history": "prepaid only (0 COD orders)"
+    "rto_risk": "high",
+    "cod_history": "2 of 2 COD orders returned to origin (refused at the door); prepaid orders all delivered"
   },
   "extra": [
     {

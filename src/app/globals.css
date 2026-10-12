@@ -50,3 +50,45 @@ body {
 [data-vaul-drawer] {
   touch-action: none;
 }
+
+/* "Ask Cosmos AI" sticky button: brushed-gold fill, slow shine sweep and a twinkling star */
+.ai-cta {
+  background: linear-gradient(135deg, #f6e2b0 0%, #e2bc6e 38%, #c99a45 62%, #e8c983 100%);
+  box-shadow: 0 6px 18px -6px rgba(140, 101, 36, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(140, 101, 36, 0.35);
+}
+.ai-cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.55) 48%, transparent 66%);
+  transform: translateX(-120%);
+  animation: ai-cta-shine 3.6s ease-in-out 1.2s infinite;
+  pointer-events: none;
+}
+.ai-cta-star {
+  display: inline-block;
+  animation: ai-cta-twinkle 3.6s ease-in-out 1.2s infinite;
+}
+@keyframes ai-cta-shine {
+  0%, 55% { transform: translateX(-120%); }
+  85%, 100% { transform: translateX(120%); }
+}
+@keyframes ai-cta-twinkle {
+  0%, 60%, 100% { transform: scale(1) rotate(0deg); }
+  75% { transform: scale(1.35) rotate(20deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ai-cta::after, .ai-cta-star { animation: none; }
+}
+
+/* "Ask Cosmos AI" card in the page body: static, warm gold-cream panel (no motion) */
+.ai-card {
+  background: linear-gradient(150deg, #fdf6e7 0%, #ffffff 45%, #f6e8c9 100%);
+  border: 1px solid rgba(184, 137, 59, 0.45);
+  box-shadow: 0 10px 28px -18px rgba(140, 101, 36, 0.55);
+}
+.ai-badge {
+  background: linear-gradient(135deg, #f6e2b0 0%, #e2bc6e 40%, #c99a45 70%, #e8c983 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 2px 6px -2px rgba(140, 101, 36, 0.5);
+}

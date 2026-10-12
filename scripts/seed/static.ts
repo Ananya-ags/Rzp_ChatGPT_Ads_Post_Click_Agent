@@ -17,7 +17,7 @@ export const brand = {
   },
   palette: { ivory: "#FBF7F2", sand: "#F1E8DD", ink: "#1F1A17", muted: "#6F655C", gold: "#B8893B", gold_deep: "#8C6524", blush: "#E9D8CF", success: "#2F7D5B", danger: "#B4483A" },
   fonts: { display: "Fraunces", body: "Inter" },
-  logo: { wordmark: "COSMOS", file: "/brand/cosmos-logo-v3.png" },
+  logo: { wordmark: "COSMOS", file: "/brand/cosmos-logo-v4.png" },
   policies: {
     return_window_days: 15,
     exchange_allowed: true,
@@ -156,7 +156,8 @@ export const offers = {
     { id: "prepaid_bonus", type: "flat", label: "₹100 off on prepaid orders over ₹1,999", value: 100, eligibility: { min_cart_inr: 1999, first_order_only: false, channels: ["all"], prepaid_only: true, requires: null }, cap_inr: 100, valid_till: "2026-10-31", cofunded: false, stackable: true },
     { id: "first_order", type: "percent", label: "10% off your first order (up to ₹300)", value: 10, eligibility: { min_cart_inr: 0, first_order_only: true, channels: ["all"], prepaid_only: false, requires: null }, cap_inr: 300, valid_till: "2026-10-31", cofunded: false, stackable: false },
     { id: "bank_offer", type: "flat", label: "₹200 off with select bank cards over ₹2,499", value: 200, eligibility: { min_cart_inr: 2499, first_order_only: false, channels: ["all"], prepaid_only: true, requires: "Select bank credit cards (simulated issuer)" }, cap_inr: 200, valid_till: "2026-10-31", cofunded: true, stackable: true },
-    { id: "loyalty", type: "wallet", label: "Use your Engage Loyalty Wallet (up to 20% of cart)", value: 20, eligibility: { min_cart_inr: 0, first_order_only: false, channels: ["all"], prepaid_only: false, requires: "Login With Razorpay" }, cap_inr: null, valid_till: "2026-12-31", cofunded: false, stackable: true },
+    { id: "prepaid_nudge", type: "percent", label: "Extra 5% off when you pay online", value: 5, eligibility: { min_cart_inr: 0, first_order_only: false, channels: ["all"], prepaid_only: true, requires: "Customer flagged for a prepaid nudge (Magic Checkout RTO risk: high)" }, cap_inr: 250, valid_till: "2026-10-31", cofunded: false, stackable: true },
+    { id: "loyalty", type: "wallet", label: "Use your Cosmos wallet (up to 20% of the bag)", value: 20, eligibility: { min_cart_inr: 0, first_order_only: false, channels: ["all"], prepaid_only: false, requires: "Logged-in customer (wallet held by Engage Loyalty)" }, cap_inr: null, valid_till: "2026-12-31", cofunded: false, stackable: true },
   ],
 };
 
@@ -206,19 +207,22 @@ export const shoppers = {
     recently_viewed_skus: ["ciel-hoops-40mm", "ciel-huggies-20mm", "sol-paperclip-chain"], wishlist_skus: ["luna-coin-pendant"],
     category_affinity: { earrings: 0.7, necklace: 0.2, ring: 0.05, bracelet: 0.05 }, tone_preference: "yellow gold", last_utm_source: "instagram",
   },
-  tier3_priya: {
-    rzp_customer_id: "cust_SIMpriya0001", name: "Priya", phone_masked: "+91 98XXXX1234", email_masked: "p•••••@example.com", otp_for_demo: "123456",
+  tier3_demo: {
+    rzp_customer_id: "cust_SIMananya0001", name: "Ananya", phone_masked: "+91 99XXXX9999", email_masked: "a•••••@example.com", otp_for_demo: "123456",
+    demo_login_phone: "9999999999",
     saved_addresses: [{ label: "Home", line1_masked: "Flat •••, •••••• Society, Kothrud", city: "Pune", pincode: "411038", default: true }],
-    saved_payment_methods: [{ type: "upi", display: "priya•••@okbank (simulated)" }, { type: "card", display: "Visa ending 4417" }],
+    saved_payment_methods: [{ type: "upi", display: "ananya•••@okbank (simulated)" }, { type: "card", display: "Visa ending 4417" }],
     consent: { marketing_whatsapp: true, scope: ["order_updates", "personalised_recommendations"], timestamp: "2026-06-09T18:22:00+05:30", source: "login_with_razorpay" },
     brand_order_history: [
-      { order_id: "CSM-1042", sku: "ciel-huggies-20mm", date: "2026-08-14", status: "kept" },
-      { order_id: "CSM-0877", sku: "luna-coin-pendant", date: "2026-06-09", status: "kept" },
+      { order_id: "CSM-1042", sku: "ciel-huggies-20mm", date: "2026-08-14", status: "kept", payment: "UPI" },
+      { order_id: "CSM-0931", sku: "noor-mini-jhumkas", date: "2026-07-20", status: "rto", payment: "COD" },
+      { order_id: "CSM-0877", sku: "luna-coin-pendant", date: "2026-06-09", status: "kept", payment: "card" },
+      { order_id: "CSM-0712", sku: "mira-teardrop-drops", date: "2026-04-28", status: "rto", payment: "COD" },
     ],
     preferences: { tone: "yellow gold", sizes: "small to medium (huggies, 20 to 30mm hoops)" },
     loyalty_wallet_inr: 300,
-    rto_risk: "low",
-    cod_history: "prepaid only (0 COD orders)",
+    rto_risk: "high", // user decision (12 Oct): two COD orders refused at the door; drives the pay-online nudge, never shown to her
+    cod_history: "2 of 2 COD orders returned to origin (refused at the door); prepaid orders all delivered",
   },
   extra: [
     { id: "arjun", label: "Arjun, anonymous gift buyer", tier: 0, city: "Delhi", pincode: "110001", ad_group: "wedding-guest-gift", payment_preference: "UPI", notes: "Buying for a friend's wedding; no login." },
@@ -231,7 +235,7 @@ export const razorpay = {
   mode: "test",
   env_keys: ["RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET", "NEXT_PUBLIC_RAZORPAY_KEY_ID"],
   order_route: "/api/checkout/order",
-  checkout_prefill_from: "shoppers.tier3_priya (only after simulated Login With Razorpay)",
+  checkout_prefill_from: "shoppers.tier3_demo (only after the simulated login)",
   magic_checkout_simulated: {
     login_with_razorpay: {
       otp_length: 6,

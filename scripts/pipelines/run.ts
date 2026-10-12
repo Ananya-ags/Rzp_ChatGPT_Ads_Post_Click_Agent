@@ -324,7 +324,7 @@ async function railsAndOpeners(enriched: S.Enriched) {
       };
       const CHIPS: Record<string, string[]> = {
         "waterproof-everyday-under-5k": ["Will these work for office?", "Can I shower with these?", "When will it be delivered?"],
-        "wedding-guest-gift": ["Is gift wrap available?", "Need it before the wedding", "Show me jhumkas"],
+        "wedding-guest-gift": ["Suitable for wedding gift?", "Is gift wrap available?", "When will it be delivered?"],
         "office-minimal": ["How big do they look?", "Can I sleep in them?", "When will it be delivered?"],
         "hypoallergenic-studs": ["What are the posts made of?", "Which is best for a gift?", "When will it be delivered?"],
       };

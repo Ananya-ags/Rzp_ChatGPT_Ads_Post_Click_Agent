@@ -20,8 +20,9 @@ import railsJson from "../../../data/generated/rails.json";
 import openersJson from "../../../data/generated/openers.json";
 import enrichedJson from "../../../data/generated/enriched_catalogue.json";
 import returnsClsJson from "../../../data/generated/returns_classified.json";
+import razorpayJson from "../../../data/razorpay.json";
 
-let cached: (Db & { mock: z.infer<typeof S.MockChatgptSchema>; demo: S.DemoScript; manifest: S.Manifest; rails: S.Rails; openers: S.Openers; enriched: S.Enriched }) | null = null;
+let cached: (Db & { razorpay: z.infer<typeof S.RazorpayConfigSchema>; mock: z.infer<typeof S.MockChatgptSchema>; demo: S.DemoScript; manifest: S.Manifest; rails: S.Rails; openers: S.Openers; enriched: S.Enriched }) | null = null;
 
 export function getDb() {
   if (cached) return cached;
@@ -36,6 +37,7 @@ export function getDb() {
     shoppers: S.ShoppersSchema.parse(shoppersJson),
     returnsClassified: returnsClsJson as unknown as ReturnsClassified,
     now: demoNow(),
+    razorpay: S.RazorpayConfigSchema.parse(razorpayJson),
     mock: S.MockChatgptSchema.parse(mockJson),
     demo: S.DemoScriptSchema.parse(demoJson),
     manifest: S.ManifestSchema.parse(manifestJson),

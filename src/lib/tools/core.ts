@@ -144,7 +144,7 @@ export function checkDelivery(db: Db, sku: string, pincode: string, deadline?: s
 /* ───────────────────────── get_offer ───────────────────────── */
 
 export type CartLine = { sku: string; qty: number };
-export type OfferContext = { first_order?: boolean; prepaid?: boolean; logged_in?: boolean; bank_card?: boolean; requested_discount_pct?: number };
+export type OfferContext = { first_order?: boolean; prepaid?: boolean; logged_in?: boolean; bank_card?: boolean; requested_discount_pct?: number; rto_risk?: "low" | "medium" | "high" };
 
 export function cartSubtotal(db: Db, cart: CartLine[]) {
   return cart.reduce((s, l) => {
@@ -166,6 +166,8 @@ export function getOffer(db: Db, cart: CartLine[], ctx: OfferContext = {}) {
     if (el.first_order_only && !ctx.first_order) { ineligible.push({ id: o.id, reason: "First order only" }); continue; }
     if (el.prepaid_only && ctx.prepaid === false) { ineligible.push({ id: o.id, reason: "Prepaid only" }); continue; }
     if (o.id === "bank_offer" && !ctx.bank_card) { ineligible.push({ id: o.id, reason: "Needs a select bank card" }); continue; }
+    // pay-online nudge: only for a logged-in customer the RTO model flags as high risk (never shown as a judgement)
+    if (o.id === "prepaid_nudge" && !(ctx.logged_in && ctx.rto_risk === "high")) { ineligible.push({ id: o.id, reason: "Not offered to this customer" }); continue; }
     const amount = o.type === "percent" ? Math.min(Math.floor((subtotal * o.value) / 100), o.cap_inr ?? Infinity) : o.value;
     eligible.push({ id: o.id, label: o.label, amount, stackable: o.stackable, cofunded: o.cofunded });
   }
@@ -177,7 +179,7 @@ export function getOffer(db: Db, cart: CartLine[], ctx: OfferContext = {}) {
   const raw = applied.reduce((s, e) => s + e.amount, 0);
   const discount = Math.min(raw, capInr);
   const walletOffer = db.offers.find((o) => o.type === "wallet");
-  const walletBalance = ctx.logged_in ? db.shoppers.tier3_priya.loyalty_wallet_inr : 0;
+  const walletBalance = ctx.logged_in ? db.shoppers.tier3_demo.loyalty_wallet_inr : 0;
   const walletUsable = walletOffer ? Math.min(walletBalance, Math.floor(((subtotal - discount) * walletOffer.value) / 100)) : 0;
   const ship = subtotal >= db.brand.policies.free_shipping_threshold_inr ? 0 : db.brand.policies.shipping_fee_inr;
   const requested = ctx.requested_discount_pct ?? null;

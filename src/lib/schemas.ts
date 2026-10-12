@@ -287,12 +287,13 @@ export const ShoppersSchema = z.object({
     cookie_id: z.string(), first_seen: IsoDate, last_visit: IsoDate, recently_viewed_skus: z.array(Handle), wishlist_skus: z.array(Handle),
     category_affinity: z.record(z.string(), z.number()), tone_preference: z.string(), last_utm_source: z.string(),
   }),
-  tier3_priya: z.object({
+  tier3_demo: z.object({
     rzp_customer_id: z.string(), name: z.string(), phone_masked: z.string(), email_masked: z.string(), otp_for_demo: z.string(),
+    demo_login_phone: z.string().regex(/^\d{10}$/), // clearly dummy number judges type on the login page
     saved_addresses: z.array(z.object({ label: z.string(), line1_masked: z.string(), city: z.string(), pincode: Pincode, default: z.boolean() })),
     saved_payment_methods: z.array(z.object({ type: z.enum(["upi", "card"]), display: z.string() })),
     consent: z.object({ marketing_whatsapp: z.boolean(), scope: z.array(z.string()), timestamp: IsoDateTime, source: z.literal("login_with_razorpay") }),
-    brand_order_history: z.array(z.object({ order_id: z.string(), sku: Handle, date: IsoDate, status: z.enum(["kept", "returned"]) })),
+    brand_order_history: z.array(z.object({ order_id: z.string(), sku: Handle, date: IsoDate, status: z.enum(["kept", "returned", "rto"]), payment: z.enum(["UPI", "card", "COD"]) })),
     preferences: z.object({ tone: z.string(), sizes: z.string() }),
     loyalty_wallet_inr: z.number(),
     rto_risk: z.enum(["low", "medium", "high"]),

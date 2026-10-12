@@ -6,13 +6,14 @@ const LINKS = [
   { href: "/p/ciel-hoops-40mm?ad_group=waterproof-everyday-under-5k", title: "Try it yourself", body: "The waterproof-everyday ad's page, with the agent." },
   { href: "/p/ciel-hoops-40mm?ad_group=wedding-guest-gift", title: "Same SKU, wedding ad", body: "Same product, different context, rail and opener." },
   { href: "/p/ciel-hoops-40mm?ad_group=waterproof-everyday-under-5k&arm=A", title: "Standard page (control)", body: "No context, no curation, no agent: arm A of the holdout." },
+  { href: "/login?next=%2Fp%2Fciel-hoops-40mm%3Fad_group%3Dwaterproof-everyday-under-5k", title: "Log in as the demo shopper", body: "Mobile 99999 99999 · OTP 123456. The page, bag and assistant personalise for Ananya (simulated)." },
 ];
 
 export default function Home() {
   return (
     <main className="mx-auto max-w-xl px-5 py-10">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/cosmos-logo-v3.png" alt="Cosmos" className="h-7 w-auto md:h-11" />
+      <img src="/brand/cosmos-logo-v4.png" alt="Cosmos" className="h-7 w-auto md:h-11" />
       <h1 className="mt-6 font-display text-[32px] leading-tight">The page that remembers why they clicked.</h1>
       <p className="mt-3 text-[15px] leading-relaxed text-muted">
         A post-click AI agent for D2C brands running ChatGPT Ads through Razorpay Engage. Prototype for the Razorpay × ISB AI PM Build Challenge.

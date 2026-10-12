@@ -16,10 +16,14 @@ export type DemoState = {
 };
 
 const KEY = "cosmos-demo-state-v1";
+let snapshot: DemoState | null = null; // cached for useSyncExternalStore (must be a stable object)
+let memory: DemoState | null = null; // fallback when localStorage is unavailable
+let storageBlocked = false;
 const DEFAULT: DemoState = { cart: [], approvedProposals: [], agentPaused: false, returningVisitor: false, loggedIn: false, loginOffered: false };
 const EVENT = "cosmos-demo-state";
 
 export function readState(): DemoState {
+  if (memory) return memory;
   try {
     const raw = window.localStorage.getItem(KEY);
     return raw ? { ...DEFAULT, ...JSON.parse(raw) } : DEFAULT;
@@ -34,15 +38,18 @@ export function writeState(patch: Partial<DemoState> | ((s: DemoState) => Partia
   try {
     window.localStorage.setItem(KEY, JSON.stringify(next));
   } catch {
-    /* storage unavailable: state lives for this render only */
+    storageBlocked = true; // storage unavailable: keep state in memory for this tab
   }
+  // refresh the cached snapshot even when no component is subscribed right now (e.g. on the login page),
+  // otherwise the next page would render from a stale copy until a reload
+  snapshot = next;
+  if (storageBlocked) memory = next;
   try {
     window.dispatchEvent(new CustomEvent(EVENT, { detail: next }));
   } catch {}
   return next;
 }
 
-let snapshot: DemoState | null = null;
 function subscribe(cb: () => void) {
   const onChange = () => {
     snapshot = null;

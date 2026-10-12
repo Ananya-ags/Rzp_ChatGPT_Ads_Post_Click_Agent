@@ -4,6 +4,7 @@ import { getDb, resolveAdGroup } from "@/lib/data";
 import { AGENT_MODEL, buildTools, systemPrompt, type ChatContext } from "@/lib/agent/agent";
 import { inputCheck, outputChecks, redact } from "@/lib/agent/guardrails";
 import * as core from "@/lib/tools/core";
+import { userFromRequest } from "@/lib/user";
 
 export const maxDuration = 30;
 
@@ -16,15 +17,26 @@ const lastUserText = (messages: UIMessage[]) =>
   [...messages].reverse().find((m) => m.role === "user")?.parts.map((p) => (p.type === "text" ? p.text : "")).join(" ").trim() ?? "";
 
 export async function POST(req: Request) {
-  const { messages, context }: Body = await req.json();
+  const { messages, context: clientCtx }: Body = await req.json();
   const db = getDb();
+  // who the shopper is comes from the login cookie on the server, never from the client's claim
+  const user = userFromRequest(req);
+  const context: ChatContext = {
+    ...clientCtx,
+    tier: user ? 3 : Math.min(clientCtx.tier ?? 1, 2),
+    loggedIn: !!user,
+    firstName: user?.firstName ?? null,
+    pincode: user?.address.pincode ?? null,
+    rtoRisk: user?.rtoRisk,
+    ownedTitles: user ? user.ownedSkus.map((s) => core.findProduct(db, s)?.title ?? s) : [],
+  };
   const page = core.findProduct(db, context.sku) ?? db.products[0];
   const group = context.adGroupId ? resolveAdGroup({ ad_group: context.adGroupId }) : null;
   const userText = lastUserText(messages);
   const input = inputCheck(userText);
   const started = Date.now();
 
-  if (!process.env.ANTHROPIC_API_KEY) return fallback(userText, input.injection, "no_api_key", page.handle);
+  if (!process.env.ANTHROPIC_API_KEY) return fallback(userText, input.injection, "no_api_key", page.handle, context);
 
   const tools = buildTools(db, context);
   const { stable, context: ctxText } = systemPrompt(db, context, page, group, input);
@@ -65,7 +77,7 @@ export async function POST(req: Request) {
 }
 
 /** No API key (or outage): replay the guided-demo answer with real tool outputs, else hand off politely. */
-function fallback(userText: string, injection: boolean, reason: string, pageSku: string) {
+function fallback(userText: string, injection: boolean, reason: string, pageSku: string, ctx: ChatContext) {
   const db = getDb();
   const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim();
   const cached = db.demo.steps.find((s) => s.chip && s.cached_response && norm(s.chip) === norm(userText))?.cached_response ?? null;
@@ -78,17 +90,47 @@ function fallback(userText: string, injection: boolean, reason: string, pageSku:
       : norm(userText) === "when will it be delivered" && page
         ? (() => {
             // tier 0: approx city from IP → Pune; the exact date is computed by check_delivery
-            const d = core.checkDelivery(db, page.handle, "411038");
-            return "error" in d ? null : { cached_response: { text: `It arrives ${d.arrives_label} in ${d.city} (approximate location) if you order before 2pm today. Share your pincode and I'll check the exact date for your address.`, cards: [], trace: [{ tool: "check_delivery", args: { sku: page.handle, pincode: "411038" } as Record<string, unknown> }] } };
+            const pin = ctx.pincode ?? "411038";
+            const d = core.checkDelivery(db, page.handle, pin);
+            const nudge = ctx.loggedIn && ctx.rtoRisk === "high" ? " Pay online at checkout and you get an extra 5% off." : "";
+            const text = ctx.pincode
+              ? `${ctx.firstName ? `${ctx.firstName}, it` : "It"} arrives ${"error" in d ? "" : d.arrives_label} at your saved address in ${"error" in d ? "" : d.city} (${pin}) if you order before 2pm today.${nudge}`
+              : `It arrives ${"error" in d ? "" : d.arrives_label} in ${"error" in d ? "" : d.city} (approximate location) if you order before 2pm today. Share your pincode and I'll check the exact date for your address.`;
+            return "error" in d ? null : { cached_response: { text, cards: [], trace: [{ tool: "check_delivery", args: { sku: page.handle, pincode: pin } as Record<string, unknown> }] } };
           })()
-        : null;
+        : /^(any offers|any offers on this|koi offer hai kya|can i pay cash on delivery|cod available)/.test(norm(userText)) && page
+          ? (() => {
+              const o = core.getOffer(db, [{ sku: page.handle, qty: 1 }], { prepaid: true, logged_in: !!ctx.loggedIn, rto_risk: ctx.rtoRisk });
+              const lines = o.applied.map((a) => `${a.label} (−₹${a.amount_inr.toLocaleString("en-IN")})`).join("; ");
+              const extra = ctx.loggedIn && ctx.rtoRisk === "high" ? " Paying online gets you the extra 5%; cash on delivery doesn't include these offers." : "";
+              return { cached_response: { text: `${ctx.firstName ? `${ctx.firstName}, here` : "Here"}'s what applies if you pay online: ${lines || "no offers right now"}. ${o.wallet.usable_inr > 0 ? ` With ₹${o.wallet.usable_inr.toLocaleString("en-IN")} from your Cosmos wallet` : ""}${o.wallet.usable_inr > 0 ? ", you'd" : " You'd"} pay ₹${o.total_inr.toLocaleString("en-IN")}.${extra}`, cards: [], trace: [{ tool: "get_offer", args: { cart: [{ sku: page.handle, qty: 1 }], prepaid: true } as Record<string, unknown> }] } };
+            })()
+        : (norm(userText) === "suitable for wedding gift" || norm(userText) === "is gift wrap available") && page
+          ? (() => {
+              // answered from verified occasions + store policy (no numbers invented)
+              const j = page.metafields.jewellery;
+              const pol = db.brand.policies;
+              const fits = j.occasions.includes("wedding guest") || j.occasions.includes("gifting");
+              const wrap = `Gift wrap is ₹${pol.gift_wrap_inr} and a handwritten note is free. Returns and exchanges are open for ${pol.return_window_days} days, in case it's a duplicate.`;
+              const isGiftWrap = norm(userText) === "is gift wrap available";
+              const verb = /s$/i.test(page.title) ? "are" : "is";
+              const uses = [j.occasions.includes("wedding guest") ? "wedding-guest looks" : null, j.occasions.includes("gifting") ? "gifting" : null].filter(Boolean).join(" and ");
+              const text = isGiftWrap
+                ? `Yes. ${wrap}`
+                : fits
+                  ? `Yes. The ${page.title} ${verb} listed by the brand for ${uses}. ${wrap}`
+                  : `The ${page.title} ${verb} more of an everyday piece. For a wedding gift, the jhumkas or pearl pieces are a better fit; tap "Show me other products" to see some. ${wrap}`;
+              const trace = isGiftWrap ? [] : [{ tool: "get_return_insight", args: { sku: page.handle, context: "wedding" } as Record<string, unknown> }];
+              return { cached_response: { text, cards: [], trace } };
+            })()
+          : null;
   const run = (t: { tool: string; args: Record<string, unknown> }) => {
     const a = t.args as never as Record<string, never>;
     switch (t.tool) {
       case "get_return_insight": return core.getReturnInsight(db, a.sku, a.context);
       case "search_catalog": { const { query, ...f } = a; return core.searchCatalog(db, query, f); }
       case "check_delivery": return core.checkDelivery(db, a.sku, a.pincode, a.deadline);
-      case "get_offer": { const { cart, ...o } = a; return core.getOffer(db, cart, o); }
+      case "get_offer": { const { cart, ...o } = a; return core.getOffer(db, cart, { ...(o as object), logged_in: !!ctx.loggedIn, rto_risk: ctx.rtoRisk }); }
       default: return null;
     }
   };
