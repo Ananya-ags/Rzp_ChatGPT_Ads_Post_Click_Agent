@@ -31,8 +31,8 @@
     "100% waterproof forever"
   ],
   "escalation": {
-    "text": "I'd rather not guess on that. Our care team can help on WhatsApp, Mon to Sat, 10am to 7pm.",
-    "contact": "care@cosmos.example · +91 55555 01234 (simulated)"
+    "text": "I don't have that information right now. Please write to our care team at care@cosmosjewels.example and we'll get back to you within 24 hours.",
+    "contact": "care@cosmosjewels.example"
   },
   "holdout_pct": 20,
   "arms": {

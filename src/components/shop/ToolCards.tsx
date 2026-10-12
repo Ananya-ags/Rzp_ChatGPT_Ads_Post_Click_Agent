@@ -125,7 +125,10 @@ export function ToolCard({ name, output, cards }: { name: string; output: Any; c
         <div className="rounded-2xl border border-line bg-white px-3 py-2.5 text-[12.5px]">
           <p className="font-medium">Cosmos care team</p>
           <p className="text-muted">
-            {output.contact} · {output.hours}
+            <a href={`mailto:${output.contact}`} className="underline underline-offset-2">
+              {output.contact}
+            </a>{" "}
+            · We reply {output.reply}
           </p>
         </div>
       );

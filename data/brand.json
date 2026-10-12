@@ -19,7 +19,7 @@
     "examples": [
       "The 3cm hoops are smaller than the 4cm, which most people find easier for long office days.",
       "That one arrives Fri, 16 Oct in Pune if you order before 2pm today.",
-      "I'm not certain about that. Want me to connect you with our care team on WhatsApp?"
+      "I'm not certain about that. Our care team can help by email, and they reply within 24 hours."
     ]
   },
   "palette": {
@@ -54,9 +54,8 @@
     "care_guide": "Steel pieces: rinse, pat dry, done. Brass and silver pieces: keep dry, skip perfume on the metal, wipe after wear and store in the pouch."
   },
   "support": {
-    "email": "care@cosmos.example",
-    "whatsapp": "+91 55555 01234 (simulated)",
-    "hours": "Mon to Sat, 10am to 7pm IST"
+    "email": "care@cosmosjewels.example",
+    "reply": "within 24 hours"
   },
   "warehouse": {
     "city": "Jaipur",

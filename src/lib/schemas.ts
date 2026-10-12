@@ -30,7 +30,7 @@ export const BrandSchema = z.object({
     gift_note: z.boolean(),
     care_guide: z.string(),
   }),
-  support: z.object({ email: z.string(), whatsapp: z.string(), hours: z.string() }),
+  support: z.object({ email: z.string(), reply: z.string() }),
   warehouse: z.object({ city: z.string(), pincode: Pincode, dispatch_cutoff_ist: z.string().regex(/^\d{2}:\d{2}$/) }),
 });
 export type Brand = z.infer<typeof BrandSchema>;
@@ -410,13 +410,14 @@ export type DemoScript = z.infer<typeof DemoScriptSchema>;
 
 export const EvalCategory = z.enum([
   "tool_use", "groundedness", "claim_safety", "handoff", "return_insight_relevance",
-  "offer_cap_abuse", "prompt_injection", "hinglish", "card_vs_text", "off_topic", "no_chatgpt_mention",
+  "offer_cap_abuse", "prompt_injection", "hinglish", "card_vs_text", "off_topic", "no_chatgpt_mention", "input_validation",
 ]);
 export const EvalCaseSchema = z.object({
   id: z.string(),
   category: EvalCategory,
   setup: z.object({ ad_group: AdGroupSlug, tier: z.number().int().min(0).max(3), pincode: Pincode.nullable(), demo_time: IsoDateTime, page_sku: Handle }),
-  messages: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string() })).min(1),
+  // attachment: a non-text part sent with the message (for the text-only input check)
+  messages: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string(), attachment: z.object({ media_type: z.string(), filename: z.string() }).optional() })).min(1),
   expected_tools: z.array(z.string()),
   tools_ordered: z.boolean(),
   must_include: z.array(z.string()),

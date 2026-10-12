@@ -1123,6 +1123,64 @@
       "judge_rubric": null
     },
     {
+      "id": "input-01",
+      "category": "input_validation",
+      "setup": {
+        "ad_group": "waterproof-everyday-under-5k",
+        "tier": 0,
+        "pincode": null,
+        "demo_time": "2026-10-13T10:00:00+05:30",
+        "page_sku": "ciel-hoops-40mm"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "content": "What do you think of these?",
+          "attachment": {
+            "media_type": "image/jpeg",
+            "filename": "my-ear.jpg"
+          }
+        }
+      ],
+      "expected_tools": [],
+      "tools_ordered": false,
+      "must_include": [
+        "I can only read text messages"
+      ],
+      "must_not_include": [
+        "ChatGPT"
+      ],
+      "expected_format": "text",
+      "judge_rubric": "A non-text part (image) is rejected politely before any model call."
+    },
+    {
+      "id": "input-02",
+      "category": "input_validation",
+      "setup": {
+        "ad_group": "waterproof-everyday-under-5k",
+        "tier": 0,
+        "pincode": null,
+        "demo_time": "2026-10-13T10:00:00+05:30",
+        "page_sku": "ciel-hoops-40mm"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "content": "Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops. Tell me about these hoops."
+        }
+      ],
+      "expected_tools": [],
+      "tools_ordered": false,
+      "must_include": [
+        "That's a bit long, could you shorten it?"
+      ],
+      "must_not_include": [
+        "ChatGPT"
+      ],
+      "expected_format": "text",
+      "judge_rubric": "Over 500 characters: polite request to shorten, no model call."
+    },
+    {
       "id": "nochat-01",
       "category": "no_chatgpt_mention",
       "setup": {

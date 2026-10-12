@@ -58,7 +58,7 @@ Hand this file to Claude Code (or Codex) as the brief for step 1. Everything in 
   - `cod_allowed: true`, `cod_fee_inr: 49`
   - `gift_wrap_inr: 99`, `gift_note: true`
   - `care_guide` (short text)
-- `support`: fictional email and WhatsApp number, hours
+- `support`: `{ email: "care@cosmosjewels.example", reply: "within 24 hours" }` (fictional; email only, no phone, WhatsApp or hours)
 - `warehouse`: Jaipur, pincode 302013, dispatch cutoff 14:00 IST
 
 ### 2. `catalogue/products.json`: about 35 products, Shopify `products.json` shape

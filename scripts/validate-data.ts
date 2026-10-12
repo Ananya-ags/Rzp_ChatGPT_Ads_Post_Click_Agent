@@ -278,7 +278,7 @@ const allText = ["data/brand.json", "data/shoppers.json", "data/catalogue/produc
 if (/\b\d{13,19}\b/.test(allText.replace(/"id": \d+/g, ""))) err("found a long digit string that looks like a card number");
 const phoneHit = allText.replace(/"id": \d+/g, "").replace(/"demo_login_phone": "9999999999"/g, "").replace(/\d{11,}/g, "").match(/\b[6-9]\d{9}\b/);
 if (phoneHit) err(`found an unmasked Indian mobile number: ${phoneHit[0]}`);
-for (const e of allText.match(/[\w.•-]+@[\w-]+\.[\w.]+/g) ?? []) if (!/@(cosmos\.example|example\.com|okbank)/.test(e)) err(`non-fictional-looking email ${e}`);
+for (const e of allText.match(/[\w.•-]+@[\w-]+\.[\w.]+/g) ?? []) if (!/@([\w-]+\.example\b|example\.com|okbank)/.test(e)) err(`non-fictional-looking email ${e}`); // .example is reserved (RFC 2606), never a real domain
 
 finish();
 

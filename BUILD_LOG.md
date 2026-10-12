@@ -411,3 +411,92 @@ Running log of which AI tool did what, key prompts, rejected AI output and decis
   - Validator 76 passed, 0 errors; `tsc`, `eslint` and `next build` are clean.
   - Click-through 42/42 (new: Diameter row reads 3cm; chat cards show "2.8cm across"; no mm anywhere).
   - Loop 17/17 (new: chat never shows mm). Both pass on dev and production.
+
+## 13 Oct 2026: Support is email only (user request)
+- **Data:** `brand.json` `support` is now `{ email: "care@cosmosjewels.example", reply: "within 24 hours" }`; WhatsApp, phone and hours were removed. Changed in `scripts/seed/static.ts` and re-seeded.
+- **Escalation** (`brand_rules.json`): the text is now the KB care line, verbatim: "I don't have that information right now. Please write to our care team at care@cosmosjewels.example and we'll get back to you within 24 hours." The contact is the email.
+- **Code:**
+  - `handoff` returns `{ message, contact, reply }`.
+  - The chat care card shows a `mailto:` link and "We reply within 24 hours".
+  - The agent prompt says email only, with no phone, WhatsApp or chat line, and to give the care line as written.
+  - The error and offline messages point to the email.
+  - The brand-voice example no longer offers WhatsApp.
+- **Validator:** the fictional-email guard now accepts any `.example` domain (reserved by RFC 2606), so `cosmosjewels.example` passes. Real-looking domains are still rejected.
+- **Docs:** the data spec's `support` line is updated. The KB and plan already said email only.
+- **Unchanged:** the shopper's `marketing_whatsapp` consent and the plan's order-update WhatsApp ideas. They're marketing consent and order notifications, not support contact.
+- **Verified:**
+  - Validator 76 passed, 0 errors; `tsc`, `eslint` and `next build` are clean.
+  - Click-through 42/42.
+  - Loop 17/17: the care card shows the email, a mailto link and the reply time, with no WhatsApp, phone or hours.
+
+## 13 Oct 2026: Gemini switch finished (agent on 3.1 Flash-Lite, failover to 3.8 Flash), spending guards, text-only input
+**Budget:** ₹300 total (~$3.50) for all API use. This session's testing cost about **$0.04 (~₹3.5)**. That's an underestimate: calls that timed out report no token counts.
+
+**Models** (all IDs, settings and prices in `src/lib/ai/model.ts`):
+- **Agent:**
+  - Main: `gemini-3.1-flash-lite` with thinking `minimal`.
+  - Fallback: `gemini-3.8-flash` with thinking `low`, because 3.8 rejects `minimal` ("Thinking level MINIMAL is not supported for this model").
+  - If both fail: a quick answer (fast path, cached, or a routed-intent template) plus a "limited mode" note.
+- **Pipelines:** `gemini-3.8-flash` with thinking `medium` and normal retries; fallback `gemini-3.5-flash-lite`.
+- **Judge:** a config entry only (`gemini-pro-latest`). No Pro model was callable on this key: 2.5 Pro is closed to new users, and the free tier gave 429 on Pro.
+- **Why Flash-Lite leads:** 3.8 Flash was overloaded at test time. One "OK" call took **210s** with retries; then it hit the free-tier cap (**20 requests/day per model**) and returned 429 on all 6 test messages. This is a deliberate latency-vs-accuracy choice: tools and code do the computing, so a fast model that picks tools well is enough.
+- **2.5 Flash** is listed by `npm run models` but closed to new API users ("no longer available to new users").
+- **Prices** in `COST`, USD per 1M tokens (re-check before quoting):
+  - 3.1 Flash-Lite: $0.25 in / $1.50 out
+  - 3.8 Flash: $0.75 / $3.75, **doubling from 1 Jan 2027**
+  - 3.5 Flash-Lite: $0.30 / $2.50
+
+**Agent settings:**
+- Temperature: default on 3.x (Google advises against lowering it; it can cause looping); 0.2 on 2.x. Default topP/topK.
+- `seed` 7; `maxOutputTokens` 800, with replies kept to 1–2 sentences by the prompt; `maxRetries` 0.
+- `timeout { stepMs: 8000, firstChunkMs: 5000, totalMs: 20000 }`; a slow or overloaded call fails over to the fallback model.
+- Default safety settings. A `content-filter` finish, or a blocked prompt, gets the plan 6.6 decline.
+- No Google Search, URL context or code execution (built-in tools are never added).
+- Stable system prompt first, dynamic context after. Only the last 10 messages are sent.
+- **Temperature doesn't keep it grounded; tools, verified flags and output checks do.**
+
+**Forced first tool** (rules in code, `src/lib/agent/intents.ts`, applied via `prepareStep` on step 1):
+- Offers / discounts / COD → `get_offer`.
+- Delivery / dates → `check_delivery`, using the approximate Pune pincode 411038 when none is known. The reply says it's an estimate and invites the shopper's pincode.
+- **Added beyond the brief (flagged for the user):**
+  - Nickel / allergy, customisation, order status or asking for a person (guardrail G16) → `handoff`.
+  - "Will these work for office / a wedding?" → `get_return_insight`.
+  - Why: unforced, Flash-Lite answered (a) "great office choice" without `get_return_insight`, and guessed the engraving policy on (f).
+
+**Other changes:**
+- `get_rto_risk` was removed from the agent's tools; the prepaid nudge stays code-driven from `ctx.rtoRisk`.
+- **Fast path:** only exact chip text skips the model (zero LLM calls). Free text always goes to Gemini.
+- **G11 safe template:** if the model goes quiet after its tool calls (late timeout), the reply is built from the tool results: offer, delivery, return insight, or care line with the honest nickel answer.
+- **Cached guided-demo answers** now apply only on the product they're about. Bug fixed: the 30mm "Pune by 18 Oct" answer was being replayed on the 40mm page.
+- **AI console:** stream parts unchanged (`data-guard`, `data-usage`). `data-usage` gained `first_output_ms`, `attempts` (with reasons such as "429 quota" or "timeout"), `forced_tool`, `finish_reason`, `mode`, and today's spend. Any `finishReason: length` is flagged as a guard.
+
+**Spending guards** (judges shouldn't feel them):
+- **Rate limit:** 40 messages per 10 minutes per visitor. Keyed on the `cosmos_vid` cookie, with the IP only as backup (judges may share an office network). Fast-path chips don't count.
+- **Daily cap:** `LLM_DAILY_BUDGET_USD` (default 1.50), estimated from tokens × `COST`. The running total is in `data-usage`.
+- **Over either limit:** quick answers keep working, plus "Lots of questions! Quick answers are still on; try a suggestion below." Never an error.
+- **Per instance:** both counters are in memory, so on Vercel each server instance counts separately and resets on a cold start.
+- **`DEMO_BYPASS_TOKEN`** (video only): `?demo=<token>` on any page sets an HttpOnly session cookie holding a SHA-256 hash, never the token. `src/proxy.ts` strips the parameter with a redirect so it can't end up in a shared link.
+- **Pipeline cache:** each LLM output is cached in `.cache/pipelines/` (git-ignored), keyed by a hash of model, prompt version, prompts and schema. `--force` refreshes it. Each run prints its estimated cost. The pipelines haven't been re-run in AI mode yet: that changes all generated data, and is the user's call.
+
+**Text-only input:**
+- The chat input has no attachment, camera or mic buttons; pasting or dropping a file does nothing.
+- `/api/chat` rejects non-text parts ("I can only read text messages…") and messages over 500 characters ("That's a bit long, could you shorten it?") with no model call.
+- New eval category `input_validation`: `input-01` (image) and `input-02` (539 characters). 44 eval cases in total.
+
+**Support:** `brand.json` support is `{ email: "care@cosmosjewels.example", reply: "within 24 hours" }`, and handoff returns the KB care line verbatim (logged earlier).
+
+**Tests:**
+- **Final run**, 3.1 Flash-Lite on `/p/ciel-hoops-40mm`, office ad group: all 7 cases (a, b, c, c2, d, e, f) gave correct answers. Google's free tier was slow (first output 1–13s), so (a), (b) and (d) finished through the tool-result template after a late timeout, and (c2) went to the routed-intent quick answer once both models failed. Run cost: $0.0028.
+- **Tool choice Flash-Lite gets wrong:** (b2), "need it in Pune by 18 Oct" on the 30mm page. It correctly says 21 Oct is too late, but offers to look for alternatives instead of calling `search_catalog` (3 of 3 runs). Reported to the user, not worked around.
+- **Extra checks, all passing:**
+  - non-text and 600-character messages rejected politely
+  - 15 messages in a row from one visitor: none rate-limited, no errors or blanks
+  - daily cap at $0.0005 → quick answers + note, and chips still work
+  - rate limit at 2 → the same behaviour
+  - bypass: wrong token sets no cookie; the right token sets a hashed session cookie and strips the parameter; the over-limit visitor gets the model again
+- No reply contained "ChatGPT", a hypoallergenic or nickel-free claim, or an mm size.
+- **Browser at 390px:** (a) typed in the chat sheet. "Thinking…" shows until the first words (2.5s), the text streams in chunks, the Fit-check card renders, and the sheet stays inside the frame.
+- **Regression suites:** click-through 42/42 and loop 17/17, with a key and with none.
+- `next build`, `tsc`, `eslint` and `validate-data` (76 passed, 0 errors) are clean.
+
+**Recommendation:** enable billing with a budget alert before judging. The free tier caps 3.8 Flash at 20 requests/day and adds latency spikes. The fast path and quick answers keep the demo working regardless.

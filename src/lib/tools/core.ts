@@ -270,7 +270,7 @@ export function getRtoRisk(db: Db, pincode: string) {
 /* ───────────────────────── handoff ───────────────────────── */
 
 export function handoff(db: Db, reason: string) {
-  return { routed: true, reason, message: db.rules.escalation.text, contact: db.rules.escalation.contact, hours: db.brand.support.hours };
+  return { routed: true, reason, message: db.rules.escalation.text, contact: db.brand.support.email, reply: db.brand.support.reply };
 }
 
 /* ───────────────────────── create_checkout (totals; the order itself is created server-side) ───────────────────────── */

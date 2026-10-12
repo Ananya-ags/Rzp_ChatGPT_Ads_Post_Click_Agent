@@ -12,7 +12,7 @@ export const brand = {
     examples: [
       "The 3cm hoops are smaller than the 4cm, which most people find easier for long office days.",
       "That one arrives Fri, 16 Oct in Pune if you order before 2pm today.",
-      "I'm not certain about that. Want me to connect you with our care team on WhatsApp?",
+      "I'm not certain about that. Our care team can help by email, and they reply within 24 hours.",
     ],
   },
   palette: { ivory: "#FBF7F2", sand: "#F1E8DD", ink: "#1F1A17", muted: "#6F655C", gold: "#B8893B", gold_deep: "#8C6524", blush: "#E9D8CF", success: "#2F7D5B", danger: "#B4483A" },
@@ -30,7 +30,7 @@ export const brand = {
     gift_note: true,
     care_guide: "Steel pieces: rinse, pat dry, done. Brass and silver pieces: keep dry, skip perfume on the metal, wipe after wear and store in the pouch.",
   },
-  support: { email: "care@cosmos.example", whatsapp: "+91 55555 01234 (simulated)", hours: "Mon to Sat, 10am to 7pm IST" },
+  support: { email: "care@cosmosjewels.example", reply: "within 24 hours" }, // email only: no phone, WhatsApp or hours
   warehouse: { city: "Jaipur", pincode: "302013", dispatch_cutoff_ist: "14:00" },
 };
 
@@ -142,7 +142,7 @@ export const brandRules = {
   offer_caps: { max_pct: 10, max_flat_inr: 300, applies_to: "Combined promotional discount per order. Loyalty wallet redemption is stored value and not counted." },
   claims_policy: "Only verified attributes (metafields.jewellery, entered by the brand) are stated as claims. AI-extracted attributes are described as materials, never as benefits.",
   banned_phrases: ["ChatGPT", "guaranteed hypoallergenic", "100% waterproof forever"],
-  escalation: { text: "I'd rather not guess on that. Our care team can help on WhatsApp, Mon to Sat, 10am to 7pm.", contact: "care@cosmos.example · +91 55555 01234 (simulated)" },
+  escalation: { text: "I don't have that information right now. Please write to our care team at care@cosmosjewels.example and we'll get back to you within 24 hours.", contact: "care@cosmosjewels.example" }, // the KB care line, used verbatim
   holdout_pct: 20,
   arms: { A: "Standard product page (holdout)", B: "Curated rail, no agent", C: "Curated rail + agent" },
   arm_split: { A: 0.2, B: 0.4, C: 0.4 },

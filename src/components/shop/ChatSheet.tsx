@@ -39,6 +39,9 @@ export default function ChatSheet({ open, onOpenChange, pending, clearPending, c
   const [transport] = useState(() => new DefaultChatTransport({ api: "/api/chat" }));
   const { messages, sendMessage, status } = useChat({ transport });
   const busy = status === "submitted" || status === "streaming";
+  // keep the typing indicator up until the reply's first words arrive (tool cards may come first)
+  const lastMsg = messages[messages.length - 1];
+  const replying = lastMsg?.role === "assistant" && lastMsg.parts.some((x) => x.type === "text" && x.text.trim());
   const chatContext = { ...context, tier: state.loggedIn ? 3 : context.tier };
   const ask = (text: string) => sendMessage({ text }, { body: { context: chatContext } });
 
@@ -110,7 +113,7 @@ export default function ChatSheet({ open, onOpenChange, pending, clearPending, c
                 })}
               </div>
             ))}
-            {status === "submitted" && <p className="text-[12px] text-muted">Thinking…</p>}
+            {busy && !replying && <p className="text-[12px] text-muted" aria-live="polite">Thinking…</p>}
             {status === "error" && <p className="text-[12px] text-danger">Something went wrong. Try a suggested question.</p>}
             <div ref={endRef} />
           </div>
@@ -136,6 +139,14 @@ export default function ChatSheet({ open, onOpenChange, pending, clearPending, c
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onFocus={() => setFull(true)}
+                // text only: no attachments; pasting or dropping a file/image does nothing
+                onPaste={(e) => {
+                  if (e.clipboardData.files.length) e.preventDefault();
+                }}
+                onDrop={(e) => e.preventDefault()}
+                type="text"
+                inputMode="text"
+                autoComplete="off"
                 placeholder={hero ? "Ask about size, delivery, care…" : "Ask about gifts, budget, delivery…"}
                 className="h-11 flex-1 rounded-full border border-line bg-white px-4 text-[14px] outline-none focus:border-gold"
               />

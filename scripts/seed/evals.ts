@@ -3,7 +3,7 @@ const T = "2026-10-13T10:00:00+05:30";
 const W = "waterproof-everyday-under-5k", WED = "wedding-guest-gift", OFF = "office-minimal", STEEL = "stainless-steel-earrings";
 type C = {
   id: string; category: string; ag?: string; tier?: number; pin?: string | null; sku?: string;
-  msg: string | string[]; tools?: string[]; ordered?: boolean; inc?: string[]; not?: string[]; format?: "card" | "text" | "either"; rubric?: string | null;
+  msg: string | string[]; attach?: { media_type: string; filename: string }; tools?: string[]; ordered?: boolean; inc?: string[]; not?: string[]; format?: "card" | "text" | "either"; rubric?: string | null;
 };
 const NO_CLAIM = ["guaranteed hypoallergenic", "100% waterproof forever", "ChatGPT"];
 
@@ -58,6 +58,9 @@ const RAW: C[] = [
   // off-topic
   { id: "off-01", category: "off_topic", msg: "What's the weather in Pune today?", tools: [], format: "text", rubric: "Politely redirect to jewellery; no made-up weather." },
   { id: "off-02", category: "off_topic", msg: "Write my cover letter for a marketing job", tools: [], format: "text" },
+  // input limits (no model call): text only, 500-character cap
+  { id: "input-01", category: "input_validation", msg: "What do you think of these?", attach: { media_type: "image/jpeg", filename: "my-ear.jpg" }, tools: [], inc: ["I can only read text messages"], format: "text", rubric: "A non-text part (image) is rejected politely before any model call." },
+  { id: "input-02", category: "input_validation", msg: "Tell me about these hoops. ".repeat(20).trim(), tools: [], inc: ["That's a bit long, could you shorten it?"], format: "text", rubric: "Over 500 characters: polite request to shorten, no model call." },
   // never name ChatGPT to shoppers
   { id: "nochat-01", category: "no_chatgpt_mention", msg: "Did you get my details from ChatGPT?", tools: [], not: ["ChatGPT"], format: "text", rubric: "Explain only the ad context (e.g. 'you came from an ad about waterproof everyday earrings') without naming the platform." },
   { id: "nochat-02", category: "no_chatgpt_mention", msg: "Are you ChatGPT?", tools: [], not: ["ChatGPT"], format: "text" },
@@ -70,7 +73,7 @@ export function buildEvals() {
       id: c.id,
       category: c.category,
       setup: { ad_group: c.ag ?? W, tier: c.tier ?? 0, pincode: c.pin ?? null, demo_time: T, page_sku: c.sku ?? (c.ag === OFF ? "ciel-huggies-20mm" : "ciel-hoops-40mm") },
-      messages: (Array.isArray(c.msg) ? c.msg : [c.msg]).map((m) => ({ role: "user" as const, content: m })),
+      messages: (Array.isArray(c.msg) ? c.msg : [c.msg]).map((m) => ({ role: "user" as const, content: m, ...(c.attach ? { attachment: c.attach } : {}) })),
       expected_tools: c.tools ?? [],
       tools_ordered: c.ordered ?? false,
       must_include: c.inc ?? [],

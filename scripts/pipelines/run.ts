@@ -14,7 +14,7 @@ import { ROOT, loadDb, readJson } from "../../src/lib/data/disk";
 import * as S from "../../src/lib/schemas";
 import type { Product } from "../../src/lib/schemas";
 import { slice, byAdGroup } from "../../src/lib/metrics";
-import { llmObject, producer, useLlm } from "./llm";
+import { forceRefresh, llmObject, printRunCost, producer, useLlm, PIPELINE_MODEL } from "./llm";
 
 const db = loadDb();
 const P = (h: string) => db.products.find((p) => p.handle === h)!;
@@ -44,7 +44,7 @@ async function enrich() {
   if (useLlm) {
     const Schema = z.object({ items: z.array(z.object({ sku: z.string(), attributes: z.array(z.object({ attribute: z.enum(VERIFIED_NULLABLE), value: z.union([z.string(), z.boolean(), z.number()]), phrase: z.string(), confidence: z.number(), vague: z.boolean() })) })) });
     const items = db.products.map((p) => ({ sku: p.handle, unknown_fields: VERIFIED_NULLABLE.filter((f) => p.metafields.jewellery[f] === null), text: stripHtml(p.body_html) }));
-    const res = await llmObject(
+    const res = await llmObject("enrich-v1", 
       Schema,
       "You extract jewellery attributes from messy Indian D2C brand copy. Only fill fields listed in unknown_fields. For each, quote the exact phrase from the text that supports it. Lower confidence for inferred values (e.g. nickel_free from 'sensitive ears'). Mark vague=true for hedged wording like 'gold-toned', 'water friendly', 'skin-safe for most'. If the text says nothing, omit the field. Never invent.",
       JSON.stringify(items),
@@ -105,7 +105,7 @@ async function classifyReturns() {
   let labelOf: Record<string, string> = {};
   if (useLlm) {
     const themes = RETURN_THEMES.map(([k, l]) => `${k}: ${l}`).join("\n");
-    const res = await llmObject(
+    const res = await llmObject("returns-v1", 
       z.object({ labels: z.array(z.object({ id: z.string(), theme: z.string() })) }),
       `Classify each free-text jewellery return reason (English/Hinglish) into one theme key:\n${themes}\nother: anything else`,
       JSON.stringify(all.map((a) => ({ id: a.id, text: a.text }))),
@@ -173,7 +173,7 @@ async function clusterIntents() {
   const msgs = S.ChatLogsSchema.parse(readJson("data/chat_logs_seed.json")).messages;
   let themeOf: Record<string, string> = {};
   if (useLlm) {
-    const res = await llmObject(
+    const res = await llmObject("intents-v1", 
       z.object({ themes: z.array(z.object({ key: z.string(), label: z.string(), catalogue_gap: z.boolean() })), assignments: z.array(z.object({ id: z.string(), theme: z.string() })) }),
       "Cluster shopper questions from a jewellery store's chat (English + Hinglish) into 5–8 themes. Merge synonyms (e.g. 'sensitive ears', 'nickel-free', 'kaan mein allergy' are one theme). Use short snake_case keys; include an 'other' theme. catalogue_gap=true when the store's verified catalogue likely can't answer the theme.",
       JSON.stringify(msgs.map((m) => ({ id: m.id, text: m.message }))),
@@ -250,7 +250,7 @@ async function railsAndOpeners(enriched: S.Enriched) {
 
     let ranked: { sku: string; reason: string }[];
     if (useLlm) {
-      const res = await llmObject(
+      const res = await llmObject("rails-v1", 
         z.object({ items: z.array(z.object({ sku: z.string(), reason: z.string() })) }),
         "You curate a 'picked for you' rail for a jewellery product page, given the ad's context hints. Rank the candidates and write one short reason each (max 12 words). Use ONLY the verified facts provided; describe 'unverified_materials' as materials (e.g. 'waterproof per description'), never as benefits like 'hypoallergenic'. Never mention where the shopper came from by platform name. Include one complementary non-earring piece if the candidates allow.",
         JSON.stringify({ context_hints: g.context_hints, hero: g.hero_sku, candidates: unpinned.map((h) => ({ sku: h, verified: { ...P(h).metafields.jewellery, review_snippets: undefined, care: undefined }, price_inr: Number(P(h).variants[0].price), unverified_materials: enriched.skus[h]?.attributes ?? [] })) }),
@@ -304,7 +304,7 @@ async function railsAndOpeners(enriched: S.Enriched) {
       "stainless-steel-earrings": "Sensitive ears · stainless steel",
     };
     if (useLlm) {
-      const o = await llmObject(
+      const o = await llmObject("openers-v1", 
         z.object({ chip: z.string(), opener: z.string(), suggested_chips: z.array(z.string()).min(2).max(3) }),
         "Write landing-page copy for a jewellery product page reached from an ad. chip: ≤5 words echoing the ad context with ' · ' separators. opener: one or two warm, concise sentences (≤35 words) using only the verified facts given; no hype, no platform names. suggested_chips: 2–3 short questions a shopper in this context would tap.",
         JSON.stringify({ context_hints: g.context_hints, hero: { title: hero.title, verified: { outer_diameter_cm: hj.outer_diameter_cm, drop_length_cm: hj.drop_length_cm, water_resistant: hj.water_resistant, base_metal: hj.base_metal, plating: hj.plating, price_inr: Number(hero.variants[0].price) } } }),
@@ -434,12 +434,13 @@ function proposals(enriched: S.Enriched, clusters: S.IntentClusters, returnsCls:
 }
 
 (async () => {
-  console.log(`pipelines (${useLlm ? "LLM: claude-opus-5-5" : "heuristic fallback"})`);
+  console.log(`pipelines (${useLlm ? `LLM: ${PIPELINE_MODEL}${forceRefresh ? ", --force: cache ignored" : ", cached outputs reused"}` : "heuristic fallback"})`);
   const enriched = await enrich();
   const cls = await classifyReturns();
   const clusters = await clusterIntents();
   const rails = await railsAndOpeners(enriched);
   proposals(enriched, clusters, cls, rails);
+  printRunCost();
 })().catch((e) => {
   console.error(e);
   process.exit(1);
