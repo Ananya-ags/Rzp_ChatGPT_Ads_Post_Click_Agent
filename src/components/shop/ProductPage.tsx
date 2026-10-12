@@ -9,6 +9,7 @@ import CartButton from "./CartButton";
 import SiteHeader from "./SiteHeader";
 import TrustBadges, { type Badge } from "./TrustBadges";
 import { inr, type CardVM } from "@/lib/view";
+import { CosmosStarBadge } from "../brand/CosmosStar";
 
 export type ProductPageProps = {
   arm: "A" | "B" | "C";
@@ -20,7 +21,9 @@ export type ProductPageProps = {
   arrives: { label: string; where: string; madeToOrder: boolean; dispatchDays: number };
   user: null | { firstName: string; nudgePrepaid: boolean; pincode: string };
   loginHref: string;
-  context: null | { adGroupId: string; chip: string; opener: string; chips: string[]; sheetChips: string[]; railTitle: string; pending: boolean };
+  // agent context: from an ad group (chip + ad opener + curated rail), or a direct visit (adGroupId/chip null,
+  // product-generic opener, "You may also like" rail). Null on the standard page (arm A).
+  context: null | { adGroupId: string | null; chip: string | null; opener: string; sheetOpener: string | null; chips: string[]; sheetChips: string[]; railTitle: string; pending: boolean };
   rail: { card: CardVM; reason: string; pinned: boolean }[];
   more: CardVM[]; // uncurated list for the standard page
   cards: Record<string, CardVM>;
@@ -49,7 +52,7 @@ export default function ProductPage(p: ProductPageProps) {
     <div className="relative pb-28">
       <SiteHeader user={p.user ? { firstName: p.user.firstName } : null} loginHref={p.loginHref} />
 
-      {p.context && p.arm !== "A" && (
+      {p.context?.chip && p.arm !== "A" && (
         <div className="px-4 pt-3">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-[12px] font-medium text-gold-deep">
             <span aria-hidden>✦</span> {p.context.chip}
@@ -128,8 +131,8 @@ export default function ProductPage(p: ProductPageProps) {
       {agentOn && p.context && (
         <section className="ai-card mx-4 mt-6 rounded-2xl p-4">
           <div className="flex items-center gap-2.5">
-            <span aria-hidden className="ai-badge grid size-9 shrink-0 place-items-center rounded-full text-[16px] text-[#3a2a10]">
-              ✦
+            <span aria-hidden className="ai-badge grid size-9 shrink-0 place-items-center rounded-full">
+              <CosmosStarBadge className="size-7" />
             </span>
             <div className="leading-tight">
               <p className="font-display text-[18px] text-ink">Ask Cosmos AI</p>
@@ -199,7 +202,7 @@ export default function ProductPage(p: ProductPageProps) {
         <div className="flex gap-2.5">
           {agentOn && (
             <button onClick={() => ask()} className="ai-cta relative flex h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full text-[14px] font-semibold text-[#3a2a10] active:scale-[0.98]">
-              <span aria-hidden className="ai-cta-star text-[16px]">✦</span> Ask Cosmos AI
+              <CosmosStarBadge /> Ask Cosmos AI
             </button>
           )}
           <CartButton sku={p.hero.handle} max={p.hero.maxQty} limitReason={p.hero.limitReason} label={`Add · ${inr(p.hero.price)}`} size="lg" className="flex-1" />
@@ -216,7 +219,7 @@ export default function ProductPage(p: ProductPageProps) {
           hero={p.hero}
           cards={p.cards}
           chips={p.context.sheetChips}
-          opener={p.user?.nudgePrepaid ? `Welcome back, ${p.user.firstName}. Tip: pay online at checkout and you get an extra 5% off your order.` : null}
+          opener={p.user?.nudgePrepaid ? `Welcome back, ${p.user.firstName}. Tip: pay online at checkout and you get an extra 5% off your order.` : p.context.sheetOpener}
         />
       )}
     </div>

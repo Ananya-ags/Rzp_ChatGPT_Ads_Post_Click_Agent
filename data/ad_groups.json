@@ -119,36 +119,38 @@
       "landing_url_template": "/p/{hero_sku_handle}?utm_source=chatgpt&utm_medium=cpc&campaign_id={campaign_id}&ad_group_id={ad_group_id}&ad_id={ad_id}"
     },
     {
-      "id": "hypoallergenic-studs",
+      "id": "stainless-steel-earrings",
       "campaign_id": "cmp_7f3a9c21d84e",
       "ad_group_id": "adg_c47f18e2d6b9",
       "ad_id": "ad_7d05e2c9b4f1",
-      "name": "Studs for sensitive ears",
+      "name": "Stainless steel earrings (sensitive ears)",
       "status": "pending_approval",
       "created_by": "engage_campaign_agent",
-      "origin_proposal": "prop-new-ad-group-hypoallergenic",
+      "origin_proposal": "prop-new-ad-group-steel-earrings",
       "daily_budget_inr": 1500,
       "context_hints": [
         "sensitive ears",
-        "nickel-free",
-        "titanium posts",
-        "everyday studs",
-        "gift for someone with allergies"
+        "earrings that don't itch",
+        "stainless steel",
+        "one metal throughout",
+        "everyday earrings"
       ],
-      "hero_sku": "tara-solitaire-studs",
+      "hero_sku": "kira-mini-huggies",
       "candidate_skus": [
-        "tara-solitaire-studs",
-        "tara-pearl-studs",
-        "tara-heart-studs",
-        "elle-bezel-studs",
         "kira-mini-huggies",
-        "kira-twist-huggies"
+        "sana-chain-threaders",
+        "mira-teardrop-drops",
+        "kira-twist-huggies",
+        "ciel-huggies-20mm",
+        "aria-hoops-28mm",
+        "ciel-hoops-30mm",
+        "ciel-hoops-40mm"
       ],
       "ad_creative": {
-        "title": "Studs on titanium posts",
-        "body": "Everyday sparkle on titanium and surgical-steel posts. From ₹1,199.",
-        "image": "/images/products/tara-solitaire-studs/front.jpg",
-        "cta": "Shop studs"
+        "title": "All-steel gold earrings",
+        "body": "One metal throughout, 18K gold plated. From ₹1,599.",
+        "image": "/images/products/kira-mini-huggies/front.jpg",
+        "cta": "Shop steel earrings"
       },
       "landing_url_template": "/p/{hero_sku_handle}?utm_source=chatgpt&utm_medium=cpc&campaign_id={campaign_id}&ad_group_id={ad_group_id}&ad_id={ad_id}"
     }

@@ -8,7 +8,7 @@ import type { z } from "zod";
 import * as S from "../src/lib/schemas";
 import { estimateDelivery, zoneFor } from "../src/lib/delivery";
 import { slice, byArm, byAdGroup } from "../src/lib/metrics";
-import { WATERPROOF_PROSE, HYPO_POST_PROSE } from "./seed/catalogue";
+import { WATERPROOF_PROSE } from "./seed/catalogue";
 import { DEMO_NOW_ISO } from "../src/config/demo";
 
 const ROOT = join(__dirname, "..");
@@ -36,6 +36,7 @@ function load<T extends z.ZodTypeAny>(rel: string, schema: T): z.infer<T> {
 
 const brand = load("data/brand.json", S.BrandSchema);
 const { products } = load("data/catalogue/products.json", S.ProductsFileSchema) ?? { products: [] };
+const P = (h: string) => products.find((p) => p.handle === h)!;
 const manifest = load("data/images/manifest.json", S.ManifestSchema);
 const ag = load("data/ad_groups.json", S.AdGroupsFileSchema);
 const mock = load("data/mock_chatgpt.json", S.MockChatgptSchema);
@@ -74,10 +75,16 @@ for (const g of ag.ad_groups) {
   const hero = products.find((p) => p.handle === g.hero_sku)!;
   if (!g.ad_creative.title.includes(" ") || /chatgpt/i.test(g.ad_creative.title + g.ad_creative.body)) err(`${g.id}: ad creative must not name ChatGPT`);
   const priceInCreative = g.ad_creative.body.match(/₹([\d,]+)/);
-  if (priceInCreative && g.id !== "hypoallergenic-studs" && Number(priceInCreative[1].replace(/,/g, "")) !== Number(hero.variants[0].price)) err(`${g.id}: creative price ₹${priceInCreative[1]} ≠ hero price ${hero.variants[0].price}`);
+  // "From ₹X" must be the cheapest candidate; a bare price must be the hero's
+  const fromPrice = /From ₹/.test(g.ad_creative.body) ? Math.min(...g.candidate_skus.map((h) => Number(P(h).variants[0].price))) : Number(hero.variants[0].price);
+  if (priceInCreative && Number(priceInCreative[1].replace(/,/g, "")) !== fromPrice) err(`${g.id}: creative price ₹${priceInCreative[1]} ≠ ${fromPrice}`);
 }
 check(ag.ad_groups.filter((g) => g.status === "active").length === 3, "3 active ad groups at start");
-check(ag.ad_groups.find((g) => g.id === "hypoallergenic-studs")?.status === "pending_approval", "hypoallergenic-studs absent at start (pending_approval)");
+const steelAd = ag.ad_groups.find((g) => g.id === "stainless-steel-earrings");
+check(steelAd?.status === "pending_approval", "steel earrings ad absent at start (pending_approval)");
+check(!!steelAd && steelAd.candidate_skus.every((h) => P(h).metafields.jewellery.category === "earrings" && P(h).metafields.jewellery.base_metal === "stainless steel"), "steel earrings ad: every candidate is a stainless steel earring");
+check(!!steelAd && !/hypoallergenic|nickel[- ]free|allerg/i.test(steelAd.ad_creative.title + steelAd.ad_creative.body), "steel earrings ad copy makes no hypoallergenic / nickel-free claim");
+check(products.filter((p) => p.metafields.jewellery.base_metal === "stainless steel").every((p) => p.metafields.jewellery.nickel_free === false), "every stainless steel piece is nickel_free: false");
 check(ag.ad_groups.find((g) => g.id === "waterproof-everyday-under-5k")?.hero_sku === "ciel-hoops-40mm" && ag.ad_groups.find((g) => g.id === "wedding-guest-gift")?.hero_sku === "ciel-hoops-40mm", "same hero SKU in waterproof + wedding ads");
 
 for (const c of mock.conversations) {
@@ -89,7 +96,8 @@ for (const c of mock.conversations) {
   if (u.searchParams.get("oppref") !== c.sponsored_card.oppref) err(`mock ${c.id}: oppref mismatch`);
   if (/chatgpt/i.test(c.sponsored_card.title + c.sponsored_card.body)) err(`mock ${c.id}: card copy names ChatGPT`);
 }
-check(mock.conversations.find((c) => c.id === "conv-sensitive")?.requires_approval_of === "hypoallergenic-studs", "conversation 3 card gated on approval");
+
+check(mock.conversations.find((c) => c.id === "conv-sensitive")?.requires_approval_of === "stainless-steel-earrings", "conversation 3 card gated on approval");
 
 Object.entries(rules.pinned).forEach(([g, pins]) => { agRef(g, "brand_rules.pinned"); pins.forEach((p) => sku(p.sku, "brand_rules.pinned")); });
 rules.excluded_skus.forEach((e) => sku(e.sku, "brand_rules.excluded_skus"));
@@ -138,7 +146,6 @@ for (const p of products) {
   if (/chatgpt/i.test(p.body_html)) err(`${p.handle}: body_html names ChatGPT`);
   for (const b of rules.banned_phrases) if (p.body_html.toLowerCase().includes(b.toLowerCase())) err(`${p.handle}: banned phrase "${b}" in body_html`);
 }
-const P = (h: string) => products.find((p) => p.handle === h)!;
 const noStock = products.filter((p) => p.variants.some((v) => !Number.isInteger(v.inventory_quantity) || v.inventory_quantity < 0));
 check(noStock.length === 0, "every SKU variant has a stock count", `missing/invalid stock: ${noStock.map((p) => p.handle).join(", ")}`);
 const outOfStock = products.filter((p) => !p.metafields.jewellery.made_to_order && p.variants.every((v) => v.inventory_quantity === 0));
@@ -159,19 +166,14 @@ check(!!near && P(near.sku).variants.reduce((s, v) => s + v.inventory_quantity, 
 const wpComputed = products.filter((p) => p.metafields.jewellery.water_resistant === null && WATERPROOF_PROSE.test(p.body_html)).map((p) => p.handle).sort();
 check(wpComputed.length === 18, `18 SKUs waterproof only in prose (${wpComputed.length})`);
 check(JSON.stringify(wpComputed) === JSON.stringify([...planted.waterproof_prose_only].sort()), "waterproof-prose set matches answer key", `waterproof-prose set differs from answer key: ${wpComputed.filter((h) => !planted.waterproof_prose_only.includes(h)).join(",")} / ${planted.waterproof_prose_only.filter((h) => !wpComputed.includes(h)).join(",")}`);
-const hyComputed = products.filter((p) => HYPO_POST_PROSE.test(p.body_html)).map((p) => p.handle).sort();
-check(hyComputed.length === 6, `6 SKUs with titanium/surgical-steel posts in prose (${hyComputed.length})`);
-check(JSON.stringify(hyComputed) === JSON.stringify([...planted.hypoallergenic_posts_prose_only].sort()), "hypo-post set matches answer key");
-for (const h of planted.hypoallergenic_posts_prose_only) {
-  const j = P(h).metafields.jewellery;
-  if (j.nickel_free !== null || j.post_material !== null) err(`${h}: nickel_free/post_material must be null`);
-  if (!["stud", "huggie"].includes(j.subtype)) err(`${h}: hypo-post SKU must be a stud or huggie`);
-}
+// each earring is one metal throughout (base_metal): copy and metafields never name a second metal for any part
+const separatePart = products.filter((p) => /\bposts?\b|titanium|surgical/i.test(p.body_html + JSON.stringify(p.metafields))).map((p) => p.handle);
+check(separatePart.length === 0, "every earring is one metal throughout (copy and metafields)", `a second metal is named for part of: ${separatePart.join(", ")}`);
 check(planted.vague_wording.length === 4, "4 vague-wording SKUs");
 for (const v of planted.vague_wording) {
   const p = P(v.sku);
   if (!p.body_html.toLowerCase().includes(v.phrase)) err(`${v.sku}: vague phrase "${v.phrase}" not in prose`);
-  if (WATERPROOF_PROSE.test(p.body_html) || HYPO_POST_PROSE.test(p.body_html)) err(`${v.sku}: vague SKU also matches a strong-claim pattern`);
+  if (WATERPROOF_PROSE.test(p.body_html)) err(`${v.sku}: vague SKU also matches a strong-claim pattern`);
 }
 
 /* ───────── planted delivery dates ───────── */
@@ -210,7 +212,7 @@ check(officeKeep(planted.keeper) > officeKeep(planted.hero), `office keepers fav
 /* ───────── chats ───────── */
 const themeOf = (id: string) => planted.chat_themes[id];
 const hypo = chats.messages.filter((m) => themeOf(m.id) === "hypoallergenic");
-check(hypo.length === 34 && new Set(hypo.map((m) => m.session_id)).size === 34, `34 hypoallergenic chats from 34 distinct sessions (${hypo.length}, ${new Set(hypo.map((m) => m.session_id)).size})`);
+check(hypo.length === 28 && new Set(hypo.map((m) => m.session_id)).size === 28, `28 sensitive-ears chats from 28 distinct sessions (${hypo.length}, ${new Set(hypo.map((m) => m.session_id)).size})`);
 check(chats.messages.length >= 140 && chats.messages.length <= 160, `~150 chat messages (${chats.messages.length})`);
 const hing = chats.messages.filter((m) => m.language === "hi-Latn").length;
 check(hing >= 12 && hing <= 18, `~15 Hinglish messages (${hing})`);

@@ -24,7 +24,7 @@ const out = (name: string, data: unknown) => {
   console.log("  wrote data/generated/" + name);
 };
 const stripHtml = (h: string) => h.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-const VERIFIED_NULLABLE = ["water_resistant", "sweat_resistant", "perfume_safe", "post_material", "nickel_free", "lead_free", "plating", "plating_microns"] as const;
+const VERIFIED_NULLABLE = ["water_resistant", "sweat_resistant", "perfume_safe", "nickel_free", "lead_free", "plating", "plating_microns"] as const;
 
 /* ═════════ 1. catalogue understanding ═════════ */
 
@@ -32,9 +32,6 @@ type Attr = z.infer<typeof S.ExtractedAttribute>;
 const EXTRACT_RULES: { re: RegExp; attribute: string; value: string | boolean; confidence: number; vague?: boolean }[] = [
   { re: /shower-?proof|waterproof|pool[- ]?(safe|proof)?|goes in the pool|swim(-safe)?/i, attribute: "water_resistant", value: true, confidence: 0.8 },
   { re: /sweat(-proof)?|gym/i, attribute: "sweat_resistant", value: true, confidence: 0.6 },
-  { re: /titanium posts?/i, attribute: "post_material", value: "titanium", confidence: 0.85 },
-  { re: /surgical-grade titanium/i, attribute: "post_material", value: "surgical-grade titanium", confidence: 0.9 },
-  { re: /surgical-steel posts?/i, attribute: "post_material", value: "surgical steel", confidence: 0.85 },
   { re: /sensitive (lobes|ears)/i, attribute: "nickel_free", value: true, confidence: 0.45 },
   { re: /water friendly/i, attribute: "water_resistant", value: "partial (vague wording)", confidence: 0.3, vague: true },
   { re: /gold-toned/i, attribute: "plating", value: "unspecified gold tone (vague wording)", confidence: 0.3, vague: true },
@@ -80,7 +77,7 @@ async function enrich() {
   const items = Object.entries(skus).flatMap(([sku, v]) =>
     v.attributes.filter((a) => !a.vague && a.confidence >= 0.5).map((a) => ({
       id: `atc-${sku}-${a.attribute}`, sku, title: P(sku).title, attribute: a.attribute, proposed_value: a.value, source_phrase: a.source.phrase, confidence: a.confidence,
-      unlocks: a.attribute === "post_material" ? ["prop-new-ad-group-hypoallergenic"] : a.attribute === "water_resistant" ? ["prop-feed-waterproof"] : [],
+      unlocks: a.attribute === "water_resistant" ? ["prop-feed-waterproof"] : [],
     })),
   );
   out("attributes_to_confirm.json", S.AttributesToConfirmSchema.parse({ producer: producer("enrichment", "enrich-v1"), items }));
@@ -163,8 +160,8 @@ async function classifyReturns() {
 /* ═════════ 3. chats → intent clusters ═════════ */
 
 const INTENT_RULES: [string, string, RegExp, boolean][] = [
-  ["hypoallergenic", "Sensitive ears / hypoallergenic", /allerg|sensitive|nickel|itch|titanium|surgical|irritat|piercing|swell|red with|skin safe|post material|posts made|316l steel ok/i, true],
-  ["waterproof", "Waterproof / shower / sweat", /shower|pool|swim|waterproof|water resistant|sweat|bath|sea water|chlorine|yoga|rain|tarnish if|turn green|faded|gold come off|gold last|pvd|perfume|hands|24\/7|steam|dishwash|sunscreen|tarnish warranty/i, false],
+  ["hypoallergenic", "Sensitive ears / hypoallergenic", /allerg|sensitive|nickel|itch|irritat|piercing|swell|red with|skin safe|steel ok/i, true],
+  ["waterproof", "Waterproof / shower / sweat", /shower|pool|swim|waterproof|water resistant|sweat|bath|sea water|chlorine|yoga|rain|tarnish if|turn green|faded|gold come off|gold last|coating|perfume|hands|24\/7|steam|dishwash|sunscreen|tarnish warranty/i, false],
   ["delivery", "Delivery by a date", /deliver|reach|ship|by friday|by saturday|by thursday|by 1\dth|kab|aayega|milega|mil jayega|express|same day|track|cod|2 days|before|weekend|charges|how long for|how many days|karva|sangeet/i, false],
   ["size_fit", "Size and fit", /big|size|heavy|hang|diameter|inner|small|length|long|fit|weight|thickness|petite|bade|lamba|wrist/i, false],
   ["gifting", "Gifting", /gift|note|wrap|anniversary|bhabhi|bridesmaid|shaadi|invoice|different address|matching|she doesn't like/i, false],
@@ -211,15 +208,12 @@ async function clusterIntents() {
 
 /* ═════════ 4. rails + openers ═════════ */
 
-function verifiedReason(p: Product, hints: string, enriched: S.Enriched): string {
+function verifiedReason(p: Product, hints: string): string {
   const j = p.metafields.jewellery;
   const bits: string[] = [];
   const h = hints.toLowerCase();
   if (/waterproof|shower/.test(h) && j.water_resistant === true) bits.push("verified water-resistant");
-  if (/sensitive|titanium|nickel/.test(h)) {
-    const post = enriched.skus[p.handle]?.attributes.find((a) => a.attribute === "post_material");
-    if (post) bits.push(`${post.value} posts (from product description, brand confirming)`);
-  }
+  if (/stainless steel/.test(h) && j.base_metal === "stainless steel") bits.push("stainless steel throughout");
   if (j.outer_diameter_mm && j.category === "earrings") bits.push(`${j.outer_diameter_mm}mm${j.drop_length_mm && j.drop_length_mm !== j.outer_diameter_mm ? `, ~${j.drop_length_mm}mm on the ear` : ""}`);
   else if (j.drop_length_mm && j.category === "earrings") bits.push(`${j.drop_length_mm}mm drop`);
   if (j.chain_length_cm) bits.push(`${j.chain_length_cm}cm${j.extender_cm ? ` + ${j.extender_cm}cm` : ""}`);
@@ -257,7 +251,7 @@ async function railsAndOpeners(enriched: S.Enriched) {
     if (useLlm) {
       const res = await llmObject(
         z.object({ items: z.array(z.object({ sku: z.string(), reason: z.string() })) }),
-        "You curate a 'picked for you' rail for a jewellery product page, given the ad's context hints. Rank the candidates and write one short reason each (max 12 words). Use ONLY the verified facts provided; describe 'unverified_materials' as materials (e.g. 'titanium posts per description'), never as benefits like 'hypoallergenic'. Never mention where the shopper came from by platform name. Include one complementary non-earring piece if the candidates allow.",
+        "You curate a 'picked for you' rail for a jewellery product page, given the ad's context hints. Rank the candidates and write one short reason each (max 12 words). Use ONLY the verified facts provided; describe 'unverified_materials' as materials (e.g. 'waterproof per description'), never as benefits like 'hypoallergenic'. Never mention where the shopper came from by platform name. Include one complementary non-earring piece if the candidates allow.",
         JSON.stringify({ context_hints: g.context_hints, hero: g.hero_sku, candidates: unpinned.map((h) => ({ sku: h, verified: { ...P(h).metafields.jewellery, review_snippets: undefined, care: undefined }, price_inr: Number(P(h).variants[0].price), unverified_materials: enriched.skus[h]?.attributes ?? [] })) }),
       );
       ranked = res.items.filter((i) => unpinned.includes(i.sku));
@@ -274,7 +268,8 @@ async function railsAndOpeners(enriched: S.Enriched) {
         if (/wedding|festive/.test(h)) s += (j.occasions.includes("wedding guest") ? 3 : 0) + (j.occasions.includes("festive") ? 1 : 0);
         if (/statement/.test(h) && j.style_tags.includes("statement")) s += 1;
         if (/gift/.test(h) && j.occasions.includes("gifting")) s += 0.5;
-        if (/sensitive|titanium|nickel/.test(h) && enriched.skus[sku]?.attributes.some((a) => a.attribute === "post_material")) s += 3;
+        if (/stainless steel/.test(h) && j.base_metal === "stainless steel") s += 3;
+        if (/everyday/.test(h) && j.occasions.includes("everyday")) s += 0.5;
         // gross sales in this context (returns are handled by proposals, not here)
         s += Math.log10(1 + (db.returns.find((r) => r.sku === sku)?.by_ad_group[g.id]?.units ?? 0)) * 0.8;
         return s;
@@ -288,13 +283,13 @@ async function railsAndOpeners(enriched: S.Enriched) {
       const gross = (sku: string) => (db.returns.find((r) => r.sku === sku)?.by_ad_group[g.id]?.units ?? 0) * Number(P(sku).variants[0].price);
       const comp = sorted.filter((s) => P(s).metafields.jewellery.category !== heroCat).sort((a, b) => gross(b) - gross(a))[0];
       if (comp && !pick.includes(comp)) pick = [...pick.slice(0, slots - 1), comp];
-      ranked = pick.map((sku) => ({ sku, reason: verifiedReason(P(sku), hints, enriched) }));
+      ranked = pick.map((sku) => ({ sku, reason: verifiedReason(P(sku), hints) }));
     }
     const items: { rank: number; sku: string; reason: string; pinned: boolean }[] = [];
     const queue = [...ranked];
     for (let slot = 1; slot <= rules.rail_size; slot++) {
       const pin = pins.find((p) => p.slot === slot);
-      if (pin) items.push({ rank: slot, sku: pin.sku, reason: verifiedReason(P(pin.sku), hints, enriched), pinned: true });
+      if (pin) items.push({ rank: slot, sku: pin.sku, reason: verifiedReason(P(pin.sku), hints), pinned: true });
       else if (queue.length) items.push({ rank: slot, ...queue.shift()!, pinned: false });
     }
     rails[g.id] = { items, rules_applied: rulesApplied };
@@ -305,7 +300,7 @@ async function railsAndOpeners(enriched: S.Enriched) {
       "waterproof-everyday-under-5k": "Waterproof everyday · under ₹5k",
       "wedding-guest-gift": "Wedding guest · gift-ready",
       "office-minimal": "Office · minimal & light",
-      "hypoallergenic-studs": "Sensitive ears · titanium posts",
+      "stainless-steel-earrings": "Sensitive ears · stainless steel",
     };
     if (useLlm) {
       const o = await llmObject(
@@ -320,13 +315,13 @@ async function railsAndOpeners(enriched: S.Enriched) {
         "waterproof-everyday-under-5k": `Looking for gold you can shower and gym in? ${hero.title} are ${facts}, at ₹${Number(hero.variants[0].price).toLocaleString("en-IN")}. Want help picking the right size?`,
         "wedding-guest-gift": `Shopping for a wedding? ${hero.title} photograph beautifully, and we've picked festive pieces below. Gift wrap and a handwritten note are available.`,
         "office-minimal": `Something light for long workdays? ${hero.title} sit close to the lobe at ${hj.outer_diameter_mm}mm and are ${facts}.`,
-        "hypoallergenic-studs": `Everyday studs on titanium and surgical-steel posts, as described by the brand. Ask me what each post is made of.`,
+        "stainless-steel-earrings": `${hero.title} are ${hj.base_metal} all the way through, with ${hj.plating}. Ask me anything about the metal.`,
       };
       const CHIPS: Record<string, string[]> = {
         "waterproof-everyday-under-5k": ["Will these work for office?", "Can I shower with these?", "When will it be delivered?"],
         "wedding-guest-gift": ["Suitable for wedding gift?", "Is gift wrap available?", "When will it be delivered?"],
         "office-minimal": ["How big do they look?", "Can I sleep in them?", "When will it be delivered?"],
-        "hypoallergenic-studs": ["What are the posts made of?", "Which is best for a gift?", "When will it be delivered?"],
+        "stainless-steel-earrings": ["What metal is this?", "Is it nickel-free?", "When will it be delivered?"],
       };
       openers[g.id] = { chip: CHIP[g.id] ?? g.context_hints.slice(0, 2).join(" · "), opener: OPEN[g.id] ?? `Here's ${hero.title}.`, suggested_chips: CHIPS[g.id] ?? ["When will it be delivered?", "Is gift wrap available?"] };
     }
@@ -342,25 +337,29 @@ function proposals(enriched: S.Enriched, clusters: S.IntentClusters, returnsCls:
   console.log("5. proposals");
   const os = S.OrdersSessionsSchema.parse(readJson("data/orders_sessions.json"));
   const list: S.Proposal[] = [];
-  const hypoCluster = clusters.clusters.find((c) => /allerg|sensitive|nickel|hypo/i.test(c.id + c.label));
-  const titaniumSkus = Object.entries(enriched.skus).filter(([, v]) => v.attributes.some((a) => a.attribute === "post_material" && /titanium|surgical/i.test(String(a.value)))).map(([k]) => k);
-  if (hypoCluster && titaniumSkus.length) {
-    const g = db.adGroups.find((x) => x.id === "hypoallergenic-studs")!;
+  // sensitive-ears demand → an ad for the earrings that are stainless steel throughout. Steel contains some nickel,
+  // so the proposal (and the ad) state the metal only: no hypoallergenic or nickel-free claim.
+  const sensitive = clusters.clusters.find((c) => /allerg|sensitive|nickel|hypo/i.test(c.id + c.label));
+  const steelEarrings = db.products.filter((p) => p.metafields.jewellery.category === "earrings" && p.metafields.jewellery.base_metal === "stainless steel" && !p.metafields.jewellery.excluded);
+  const steelAd = db.adGroups.find((x) => x.origin_proposal === "prop-new-ad-group-steel-earrings");
+  if (sensitive && steelEarrings.length && steelAd) {
+    const from = Math.min(...steelEarrings.map((p) => Number(p.variants[0].price)));
     list.push({
-      id: "prop-new-ad-group-hypoallergenic",
+      id: "prop-new-ad-group-steel-earrings",
       type: "new_ad_group",
-      title: `${hypoCluster.sessions} shoppers asked for hypoallergenic studs`,
-      summary: `Shoppers keep asking about sensitive ears and nickel, and ${titaniumSkus.length} studs/huggies already mention titanium or surgical-steel posts in their descriptions, but none are tagged. Confirm the post material and launch a "Studs for sensitive ears" ad group.`,
+      title: `${sensitive.sessions} shoppers asked about sensitive ears`,
+      summary: `Shoppers keep asking about itching, allergies and nickel. ${steelEarrings.length} earrings are stainless steel all the way through, but no ad says so. Launch an "All-steel gold earrings" ad that states the metal. It makes no hypoallergenic or nickel-free claim, because stainless steel contains some nickel.`,
       evidence: [
-        { label: "Shoppers who asked", value: `${hypoCluster.sessions} (${hypoCluster.count} messages, ${hypoCluster.hinglish_count} in Hinglish)` },
-        { label: "Unmet by the catalogue", value: `${Math.round(hypoCluster.unmet_rate * 100)}%` },
-        { label: "Conversion when asked", value: `${Math.round(hypoCluster.conversion_rate * 100)}%` },
-        { label: "Matching SKUs (unverified)", value: titaniumSkus.map((s) => P(s).title).join(", ") },
+        { label: "Shoppers who asked", value: `${sensitive.sessions} (${sensitive.count} messages, ${sensitive.hinglish_count} in Hinglish)` },
+        { label: "Unmet by the catalogue", value: `${Math.round(sensitive.unmet_rate * 100)}%` },
+        { label: "Conversion when asked", value: `${Math.round(sensitive.conversion_rate * 100)}%` },
+        { label: "Stainless steel earrings", value: `${steelEarrings.map((p) => p.title).join(", ")} (from ₹${from.toLocaleString("en-IN")})` },
+        { label: "Claim check", value: "Ad states the metal only; no 'hypoallergenic' or 'nickel-free'" },
       ],
-      examples: hypoCluster.sample_wordings.slice(0, 4),
-      confidence: 0.82,
-      impact: "New ad group; rail built from the newly tagged studs",
-      apply: { action: "activate_ad_group", ad_group_id: g.id, confirm_attributes: titaniumSkus.map((s) => ({ sku: s, attribute: "post_material" })), daily_budget_inr: g.daily_budget_inr, send_to: "engage_campaign_agent" },
+      examples: sensitive.sample_wordings.slice(0, 4),
+      confidence: 0.78,
+      impact: "New ad group for shoppers asking about sensitive ears; rail of stainless steel earrings",
+      apply: { action: "activate_ad_group", ad_group_id: steelAd.id, ad_creative: steelAd.ad_creative, daily_budget_inr: steelAd.daily_budget_inr, send_to: "engage_campaign_agent" },
     });
   }
   const wpSkus = Object.entries(enriched.skus).filter(([, v]) => v.attributes.some((a) => a.attribute === "water_resistant" && a.value === true && !a.vague)).map(([k]) => k);
@@ -370,7 +369,7 @@ function proposals(enriched: S.Enriched, clusters: S.IntentClusters, returnsCls:
       id: "prop-feed-waterproof",
       type: "feed_attribute",
       title: `Add "waterproof" to ${wpSkus.length} SKUs`,
-      summary: `${wpSkus.length} steel + PVD SKUs say "shower-proof" or "pool-safe" in their copy, but the water_resistant attribute is empty, so the agent can't claim it and the ad feed can't match waterproof queries.`,
+      summary: `${wpSkus.length} gold-plated steel SKUs say "shower-proof" or "pool-safe" in their copy, but the water_resistant attribute is empty, so the agent can't claim it and the ad feed can't match waterproof queries.`,
       evidence: [
         { label: "SKUs with the claim only in prose", value: String(wpSkus.length) },
         { label: "Shopper questions about water", value: wpCluster ? `${wpCluster.count}` : "n/a" },

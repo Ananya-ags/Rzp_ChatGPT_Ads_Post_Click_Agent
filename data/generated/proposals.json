@@ -8,65 +8,49 @@
   },
   "proposals": [
     {
-      "id": "prop-new-ad-group-hypoallergenic",
+      "id": "prop-new-ad-group-steel-earrings",
       "type": "new_ad_group",
-      "title": "34 shoppers asked for hypoallergenic studs",
-      "summary": "Shoppers keep asking about sensitive ears and nickel, and 6 studs/huggies already mention titanium or surgical-steel posts in their descriptions, but none are tagged. Confirm the post material and launch a \"Studs for sensitive ears\" ad group.",
+      "title": "28 shoppers asked about sensitive ears",
+      "summary": "Shoppers keep asking about itching, allergies and nickel. 8 earrings are stainless steel all the way through, but no ad says so. Launch an \"All-steel gold earrings\" ad that states the metal. It makes no hypoallergenic or nickel-free claim, because stainless steel contains some nickel.",
       "evidence": [
         {
           "label": "Shoppers who asked",
-          "value": "34 (34 messages, 4 in Hinglish)"
+          "value": "28 (28 messages, 4 in Hinglish)"
         },
         {
           "label": "Unmet by the catalogue",
-          "value": "88%"
+          "value": "96%"
         },
         {
           "label": "Conversion when asked",
-          "value": "3%"
+          "value": "4%"
         },
         {
-          "label": "Matching SKUs (unverified)",
-          "value": "Classic Solitaire Stud Earrings, Classic Pearl Stud Earrings, Heart Stud Earrings, Mini Bezel Stud Earrings, Mini Huggie Earrings, Twisted Huggie Earrings"
+          "label": "Stainless steel earrings",
+          "value": "Large Classic Hoop Earrings, Medium Classic Hoop Earrings, Classic Huggie Earrings, Everyday Tube Hoop Earrings, Mini Huggie Earrings, Twisted Huggie Earrings, Teardrop Earrings, Chain Threader Earrings (from ₹1,599)"
+        },
+        {
+          "label": "Claim check",
+          "value": "Ad states the metal only; no 'hypoallergenic' or 'nickel-free'"
         }
       ],
       "examples": [
-        "new piercing, which studs are safe",
-        "will the huggie fit a second piercing",
         "sensitive ears wale ke liye kya acha hai",
-        "is the post titanium or steel?"
+        "mere kaan sensitive hain, koi studs batao",
+        "earrings that won't irritate piercings",
+        "studs that don't make my ears itch"
       ],
-      "confidence": 0.82,
-      "impact": "New ad group; rail built from the newly tagged studs",
+      "confidence": 0.78,
+      "impact": "New ad group for shoppers asking about sensitive ears; rail of stainless steel earrings",
       "apply": {
         "action": "activate_ad_group",
-        "ad_group_id": "hypoallergenic-studs",
-        "confirm_attributes": [
-          {
-            "sku": "tara-solitaire-studs",
-            "attribute": "post_material"
-          },
-          {
-            "sku": "tara-pearl-studs",
-            "attribute": "post_material"
-          },
-          {
-            "sku": "tara-heart-studs",
-            "attribute": "post_material"
-          },
-          {
-            "sku": "elle-bezel-studs",
-            "attribute": "post_material"
-          },
-          {
-            "sku": "kira-mini-huggies",
-            "attribute": "post_material"
-          },
-          {
-            "sku": "kira-twist-huggies",
-            "attribute": "post_material"
-          }
-        ],
+        "ad_group_id": "stainless-steel-earrings",
+        "ad_creative": {
+          "title": "All-steel gold earrings",
+          "body": "One metal throughout, 18K gold plated. From ₹1,599.",
+          "image": "/images/products/kira-mini-huggies/front.jpg",
+          "cta": "Shop steel earrings"
+        },
         "daily_budget_inr": 1500,
         "send_to": "engage_campaign_agent"
       }
@@ -75,7 +59,7 @@
       "id": "prop-feed-waterproof",
       "type": "feed_attribute",
       "title": "Add \"waterproof\" to 18 SKUs",
-      "summary": "18 steel + PVD SKUs say \"shower-proof\" or \"pool-safe\" in their copy, but the water_resistant attribute is empty, so the agent can't claim it and the ad feed can't match waterproof queries.",
+      "summary": "18 gold-plated steel SKUs say \"shower-proof\" or \"pool-safe\" in their copy, but the water_resistant attribute is empty, so the agent can't claim it and the ad feed can't match waterproof queries.",
       "evidence": [
         {
           "label": "SKUs with the claim only in prose",
@@ -91,9 +75,9 @@
         }
       ],
       "examples": [
+        "does it turn green",
         "can my kid wear them in the pool",
-        "does sunscreen affect the coating",
-        "will the gold come off in water"
+        "does sunscreen affect the coating"
       ],
       "confidence": 0.74,
       "impact": "Waterproof rail and agent answers can include these SKUs once confirmed",

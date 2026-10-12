@@ -61,10 +61,9 @@ export const JewelleryMetafields = z.object({
   adjustable: z.boolean().nullable(),
   weight_g: z.number().nullable(),
   // material
-  base_metal: z.enum(["316L stainless steel", "925 silver", "brass"]),
-  plating: z.enum(["18k gold PVD", "gold vermeil", "rhodium", "18k gold plating"]).nullable(),
+  base_metal: z.enum(["stainless steel", "925 silver", "brass"]),
+  plating: z.enum(["18k gold plating", "gold vermeil", "rhodium"]).nullable(),
   plating_microns: z.number().nullable(),
-  post_material: z.string().nullable(),
   nickel_free: z.boolean().nullable(),
   lead_free: z.boolean().nullable(),
   // durability
@@ -432,7 +431,6 @@ export const EvalCasesSchema = z.object({ version: z.string(), cases: z.array(Ev
 export const PlantedFactsSchema = z.object({
   note: z.string(),
   waterproof_prose_only: z.array(Handle),
-  hypoallergenic_posts_prose_only: z.array(Handle),
   vague_wording: z.array(z.object({ sku: Handle, phrase: z.string() })),
   hero: Handle,
   keeper: Handle,

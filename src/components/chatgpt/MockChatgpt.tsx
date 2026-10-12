@@ -1,5 +1,5 @@
 "use client";
-/** Simulated ChatGPT screen with sponsored cards. Conversation 3's card appears only after the proposal is approved. */
+/** Simulated ChatGPT screen with sponsored cards. Conversation 3's card (steel earrings) appears only after the proposal is approved. */
 import Link from "next/link";
 import { useState } from "react";
 import ProductImage from "../shop/ProductImage";
@@ -68,7 +68,7 @@ export default function MockChatgpt({ conversations, initial }: { conversations:
           </Link>
         ) : (
           <p className="rounded-xl border border-dashed border-black/15 px-3 py-3 text-center text-[12px] text-black/45">
-            No sponsored result yet. It appears after the merchant approves the &ldquo;hypoallergenic studs&rdquo; proposal.
+            No sponsored result yet. It appears after the merchant approves the proposal (start page → Demo controls).
           </p>
         )}
       </main>

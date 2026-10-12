@@ -55,7 +55,6 @@ export function verifiedFacts(p: Product) {
     water_resistant: j.water_resistant,
     sweat_resistant: j.sweat_resistant,
     nickel_free: j.nickel_free,
-    post_material: j.post_material,
     closure: j.closure,
     tone: j.tone,
     occasions: j.occasions,

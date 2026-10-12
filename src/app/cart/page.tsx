@@ -25,7 +25,7 @@ export default async function Page({ searchParams }: Props) {
       chrome={via ? { kind: "webview", backHref: `/chatgpt${backConv ? `?c=${backConv}` : ""}`, domain: "cosmos.example" } : undefined}
       label="Shopper view · bag"
     >
-      <CartView cards={cards} linkQuery={linkQuery} continueHref={group ? `/p/${group.hero_sku}${linkQuery}` : "/"} trust={[m.buyer_protection_badge, m.trusted_business_badge]} user={user ? { firstName: user.firstName } : null} loginHref={`/login?next=${encodeURIComponent(`/cart${linkQuery}`)}`} />
+      <CartView cards={cards} linkQuery={linkQuery} continueHref={group ? `/p/${group.hero_sku}${linkQuery}` : "/shop"} trust={[m.buyer_protection_badge, m.trusted_business_badge]} user={user ? { firstName: user.firstName } : null} loginHref={`/login?next=${encodeURIComponent(`/cart${linkQuery}`)}`} />
     </PhoneFrame>
   );
 }

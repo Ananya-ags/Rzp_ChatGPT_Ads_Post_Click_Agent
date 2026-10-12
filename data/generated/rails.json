@@ -30,13 +30,13 @@
         {
           "rank": 4,
           "sku": "sol-paperclip-chain",
-          "reason": "45cm + 5cm · 316L stainless steel, 18k gold PVD",
+          "reason": "45cm + 5cm · stainless steel, 18k gold plating",
           "pinned": false
         },
         {
           "rank": 5,
           "sku": "luna-coin-pendant",
-          "reason": "45cm + 5cm · 316L stainless steel, 18k gold PVD",
+          "reason": "45cm + 5cm · stainless steel, 18k gold plating",
           "pinned": false
         }
       ],
@@ -82,7 +82,7 @@
         {
           "rank": 5,
           "sku": "kaya-hammered-cuff",
-          "reason": "Gift-ready · 316L stainless steel, 18k gold PVD",
+          "reason": "Gift-ready · stainless steel, 18k gold plating",
           "pinned": false
         }
       ],
@@ -116,7 +116,7 @@
         {
           "rank": 3,
           "sku": "luna-coin-pendant",
-          "reason": "45cm + 5cm · 316L stainless steel, 18k gold PVD",
+          "reason": "45cm + 5cm · stainless steel, 18k gold plating",
           "pinned": false
         },
         {
@@ -128,42 +128,42 @@
         {
           "rank": 5,
           "sku": "sol-layered-chain-set",
-          "reason": "50cm + 5cm · 316L stainless steel, 18k gold PVD",
+          "reason": "50cm + 5cm · stainless steel, 18k gold plating",
           "pinned": false
         }
       ],
       "rules_applied": []
     },
-    "hypoallergenic-studs": {
+    "stainless-steel-earrings": {
       "items": [
         {
           "rank": 1,
-          "sku": "tara-pearl-studs",
-          "reason": "Titanium posts (from product description, brand confirming) · 7mm · gift-ready",
+          "sku": "ciel-hoops-30mm",
+          "reason": "Stainless steel throughout · 30mm, ~32mm on the ear · made to order (5-day dispatch)",
           "pinned": false
         },
         {
           "rank": 2,
-          "sku": "kira-twist-huggies",
-          "reason": "Titanium posts (from product description, brand confirming) · 14mm · gift-ready",
+          "sku": "ciel-huggies-20mm",
+          "reason": "Stainless steel throughout · 20mm",
           "pinned": false
         },
         {
           "rank": 3,
-          "sku": "tara-heart-studs",
-          "reason": "Titanium posts (from product description, brand confirming) · 8mm · gift-ready",
+          "sku": "ciel-hoops-40mm",
+          "reason": "Stainless steel throughout · 40mm, ~42mm on the ear",
           "pinned": false
         },
         {
           "rank": 4,
-          "sku": "elle-bezel-studs",
-          "reason": "Surgical steel posts (from product description, brand confirming) · 5mm",
+          "sku": "aria-hoops-28mm",
+          "reason": "Stainless steel throughout · 28mm, ~30mm on the ear",
           "pinned": false
         },
         {
           "rank": 5,
-          "sku": "kira-mini-huggies",
-          "reason": "Titanium posts (from product description, brand confirming) · 12mm",
+          "sku": "mira-teardrop-drops",
+          "reason": "Stainless steel throughout · 30mm drop",
           "pinned": false
         }
       ],

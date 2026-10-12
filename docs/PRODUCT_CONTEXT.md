@@ -1,5 +1,9 @@
 # Product context for the build (condensed from the planning docs, 11 Oct 2026)
 
+> **Update, 13 Oct 2026:**
+> - Every earring is one metal throughout; there are no titanium or surgical-steel parts, and no "PVD" or "316L".
+> - The loop's new ad is "Stainless steel earrings (sensitive ears)". It states the metal only; steel contains some nickel, so nothing is called hypoallergenic or nickel-free.
+
 ## 1. The product in one paragraph
 Indian D2C brands (demo: a fictional anti-tarnish demi-fine jewellery brand) run ChatGPT Ads through Razorpay Engage. OpenAI shares no query data; the click carries only `campaign_id`, `ad_group_id`, `ad_id` (OpenAI URL macros) and `oppref` (OpenAI's click ID). Today the shopper lands on a static product page and loses their context. Our agent:
 1. Turns the ad group into context: a context chip, a curated rail of 4–5 SKUs with reasons, and an opening line.
@@ -29,7 +33,7 @@ Indian D2C brands (demo: a fictional anti-tarnish demi-fine jewellery brand) run
 4. **Reading return reasons** (offline): classifies free-text return reasons by SKU and context; powers return prevention and "remove from rail".
 5. **Turning chats into proposals** (offline): clusters shopper questions ("sensitive ears" = "nickel-free" = "hypoallergenic") into proposals with evidence.
 
-The loop: approve a proposal → a new ad appears in the mock ChatGPT → its page shows a rail built from newly tagged SKUs.
+The loop: approve the "28 shoppers asked about sensitive ears" proposal → the "All-steel gold earrings" ad appears in the mock ChatGPT → its page shows a rail of the 8 stainless steel earrings, and the agent answers "Is it nickel-free?" honestly (no).
 
 ## 4. Agent tools (same contract on the website and, later, as an MCP server)
 | Tool | Returns | Guardrail |
@@ -55,7 +59,7 @@ Tool results render as UI in chat (product cards with "Add", delivery badges, co
 
 ## 6. Screens
 1. **`/demo`** (desktop, for the video): left = phone frame running the mobile site; right = AI console. They communicate via BroadcastChannel/postMessage.
-2. **Mock ChatGPT** (in the phone frame): conversations with sponsored cards for two ad groups pointing at the same hero SKU; a third conversation shows a new ad only after the hypoallergenic proposal is approved.
+2. **Mock ChatGPT** (in the phone frame): conversations with sponsored cards for two ad groups pointing at the same hero SKU; a third conversation (sensitive ears) shows the stainless steel earrings ad only after its proposal is approved.
 3. **Product page `/p/[handle]?ad_group=…`**: context chip, hero SKU with price and "Arrives by", rail with reasons, sticky bar ("Ask about this" pill + Add). Chat in a `vaul` bottom sheet: pill → half → full (full when keyboard opens). In full screen, pin a slim product strip and cart count.
 4. **Control page**: same product with no agent and no curation (arm A).
 5. **AI console** (right pane): source and ad group, context hints, personalisation tier, rail reasons and brand rules applied, live tool trace (tool, key args, one-line result, latency), guardrail checks (claim check, offer cap, banned phrases), tokens and cost per chat, page load time. Show structured traces, not raw model reasoning.

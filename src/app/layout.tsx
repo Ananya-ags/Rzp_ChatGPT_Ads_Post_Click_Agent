@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
+import { StoreNavProvider } from "@/components/shop/storeNav";
+import { getDb } from "@/lib/data";
+import { categoriesFrom } from "@/lib/catalog";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], axes: ["opsz"] });
@@ -15,7 +18,9 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-IN" className={`${inter.variable} ${fraunces.variable} h-full`}>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <StoreNavProvider categories={categoriesFrom(getDb().products)}>{children}</StoreNavProvider>
+      </body>
     </html>
   );
 }

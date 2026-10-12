@@ -1,7 +1,13 @@
 import Link from "next/link";
 import DemoToggles from "@/components/DemoToggles";
+import proposalsJson from "../../data/generated/proposals.json";
+import { ProposalsSchema } from "@/lib/schemas";
+
+/** Proposals whose approval launches a new ad (the approve → new ad → new page loop). */
+const NEW_AD_PROPOSALS = ProposalsSchema.parse(proposalsJson).proposals.filter((p) => p.type === "new_ad_group").map(({ id, title }) => ({ id, title }));
 
 const LINKS = [
+  { href: "/shop", title: "Store home", body: "The Cosmos shop: every piece by category, the same for every visitor. Open any product to ask Cosmos AI." },
   { href: "/chatgpt", title: "Guided demo", body: "Start in the mock ChatGPT, tap a sponsored card and land on the adapted page." },
   { href: "/p/ciel-hoops-40mm?ad_group=waterproof-everyday-under-5k", title: "Try it yourself", body: "The waterproof-everyday ad's page, with the agent." },
   { href: "/p/ciel-hoops-40mm?ad_group=wedding-guest-gift", title: "Same SKU, wedding ad", body: "Same product, different context, rail and opener." },
@@ -29,7 +35,7 @@ export default function Home() {
           </li>
         ))}
       </ul>
-      <DemoToggles />
+      <DemoToggles proposals={NEW_AD_PROPOSALS} />
       <p className="mt-8 text-[13px] text-muted">Best viewed on a phone. On desktop the shopper site runs inside a phone frame.</p>
     </main>
   );

@@ -30,13 +30,14 @@ export async function POST(req: Request) {
     rtoRisk: user?.rtoRisk,
     ownedTitles: user ? user.ownedSkus.map((s) => core.findProduct(db, s)?.title ?? s) : [],
   };
-  const page = core.findProduct(db, context.sku) ?? db.products[0];
+  // the product page the chat was opened on; null when opened from the store home or a category page
+  const page = context.sku ? core.findProduct(db, context.sku) : null;
   const group = context.adGroupId ? resolveAdGroup({ ad_group: context.adGroupId }) : null;
   const userText = lastUserText(messages);
   const input = inputCheck(userText);
   const started = Date.now();
 
-  if (!process.env.ANTHROPIC_API_KEY) return fallback(userText, input.injection, "no_api_key", page.handle, context);
+  if (!process.env.ANTHROPIC_API_KEY) return fallback(userText, input.injection, "no_api_key", page?.handle ?? null, context);
 
   const tools = buildTools(db, context);
   const { stable, context: ctxText } = systemPrompt(db, context, page, group, input);
@@ -62,7 +63,7 @@ export async function POST(req: Request) {
       });
       writer.merge(toUIMessageStream({ stream: result.stream, tools, sendStart: false, sendFinish: false }));
       const [text, usage] = await Promise.all([result.text, result.totalUsage]);
-      const sources = JSON.stringify(toolLog.map((t) => t.output)) + JSON.stringify(core.verifiedFacts(page)) + JSON.stringify(db.brand.policies) + JSON.stringify(db.rules.offer_caps);
+      const sources = JSON.stringify(toolLog.map((t) => t.output)) + JSON.stringify(page ? core.verifiedFacts(page) : null) + JSON.stringify(db.brand.policies) + JSON.stringify(db.rules.offer_caps);
       for (const c of outputChecks(text, sources, db.rules, page)) writer.write({ type: "data-guard", data: { stage: "output", ...c } });
       const tokensIn = usage.inputTokens ?? 0, tokensOut = usage.outputTokens ?? 0;
       writer.write({ type: "data-usage", data: { model: AGENT_MODEL, tokens_in: tokensIn, tokens_out: tokensOut, cost_usd: +(tokensIn * COST_IN + tokensOut * COST_OUT).toFixed(5), latency_ms: Date.now() - started, tools: toolLog.map((t) => ({ tool: t.tool, args: t.args, ms: t.ms })), fallback: false } });
@@ -76,15 +77,28 @@ export async function POST(req: Request) {
   return createUIMessageStreamResponse({ stream });
 }
 
+/** Welcome chips on the store home / category chat: answered by the real tools and store policy (no LLM). */
+const STORE_CHIPS: Record<string, (db: ReturnType<typeof getDb>) => { text: string; cards: never[]; trace: { tool: string; args: Record<string, unknown> }[] }> = {
+  "find a gift": () => ({ text: "Here are a few pieces the brand lists for gifting. Gift wrap and a handwritten note are available at checkout.", cards: [], trace: [{ tool: "search_catalog", args: { query: "gift", occasion: "gifting", limit: 3 } }] }),
+  "waterproof pieces": () => ({ text: "These pieces are verified water-resistant, so you can wear them in the shower and at the gym.", cards: [], trace: [{ tool: "search_catalog", args: { query: "everyday", water_resistant: true, limit: 3 } }] }),
+  "under 2000": () => ({ text: "A few favourites at or under ₹2,000. Tap any piece to see the details.", cards: [], trace: [{ tool: "search_catalog", args: { query: "", max_price_inr: 2000, limit: 3 } }] }),
+  "delivery  returns": (db) => {
+    const pol = db.brand.policies;
+    const wh = db.logistics.warehouses[0];
+    return { text: `Orders placed before ${wh.cutoff_ist} IST ship the same day from ${wh.city}, unless a piece is made to order. Shipping is free over ₹${pol.free_shipping_threshold_inr.toLocaleString("en-IN")} (otherwise ₹${pol.shipping_fee_inr}). Returns and exchanges are open for ${pol.return_window_days} days. Open any piece to see its exact delivery date.`, cards: [], trace: [] };
+  },
+};
+
 /** No API key (or outage): replay the guided-demo answer with real tool outputs, else hand off politely. */
-function fallback(userText: string, injection: boolean, reason: string, pageSku: string, ctx: ChatContext) {
+function fallback(userText: string, injection: boolean, reason: string, pageSku: string | null, ctx: ChatContext) {
   const db = getDb();
   const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim();
   const cached = db.demo.steps.find((s) => s.chip && s.cached_response && norm(s.chip) === norm(userText))?.cached_response ?? null;
   // "Show me other products" (4th prompt tile): similar pieces to the page product, computed by the real tool
-  const page = core.findProduct(db, pageSku);
+  const page = pageSku ? core.findProduct(db, pageSku) : null;
   const step =
     cached ? { cached_response: cached }
+    : !page && STORE_CHIPS[norm(userText)] ? { cached_response: STORE_CHIPS[norm(userText)](db) }
     : norm(userText) === "show me other products" && page
       ? { cached_response: { text: `Here are a few pieces in a similar style to the ${page.title}. Tap any of them to see more.`, cards: [], trace: [{ tool: "search_catalog", args: { query: page.metafields.jewellery.subtype, similar_to: page.handle, limit: 3 } as Record<string, unknown> }] } }
       : norm(userText) === "when will it be delivered" && page
@@ -104,6 +118,22 @@ function fallback(userText: string, injection: boolean, reason: string, pageSku:
               const lines = o.applied.map((a) => `${a.label} (−₹${a.amount_inr.toLocaleString("en-IN")})`).join("; ");
               const extra = ctx.loggedIn && ctx.rtoRisk === "high" ? " Paying online gets you the extra 5%; cash on delivery doesn't include these offers." : "";
               return { cached_response: { text: `${ctx.firstName ? `${ctx.firstName}, here` : "Here"}'s what applies if you pay online: ${lines || "no offers right now"}. ${o.wallet.usable_inr > 0 ? ` With ₹${o.wallet.usable_inr.toLocaleString("en-IN")} from your Cosmos wallet` : ""}${o.wallet.usable_inr > 0 ? ", you'd" : " You'd"} pay ₹${o.total_inr.toLocaleString("en-IN")}.${extra}`, cards: [], trace: [{ tool: "get_offer", args: { cart: [{ sku: page.handle, qty: 1 }], prepaid: true } as Record<string, unknown> }] } };
+            })()
+        : ["what metal is this", "is it nickelfree", "is it nickel free", "are these nickelfree", "are these nickel free"].includes(norm(userText)) && page
+          ? (() => {
+              // answered from verified metafields only: the metal, and nickel_free (steel contains some nickel)
+              const j = page.metafields.jewellery;
+              const metal = { "stainless steel": "stainless steel", "925 silver": "sterling silver", brass: "brass" }[j.base_metal];
+              const finish = j.plating === "18k gold plating" ? "18K gold plating" : j.plating === "gold vermeil" ? "gold vermeil" : j.plating ?? "a gold-toned finish";
+              const verb = /s$/i.test(page.title) ? "are" : "is";
+              if (norm(userText) === "what metal is this")
+                return { cached_response: { text: `The ${page.title} ${verb} ${metal} all the way through, finished with ${finish}.`, cards: [], trace: [] } };
+              const h = core.handoff(db, "nickel / sensitive-ears question");
+              const text =
+                j.nickel_free === false
+                  ? `No. The ${page.title} ${verb} ${metal} all the way through, and ${metal} contains a small amount of nickel, so we don't describe ${verb === "are" ? "them" : "it"} as hypoallergenic. Many people who react to plated brass do fine with steel, but if you have a known nickel allergy, please check with your doctor first. Our care team is on ${h.contact} if you'd like to talk it through.`
+                  : `The brand hasn't confirmed the nickel content of the ${page.title}, so I can't say. ${verb === "are" ? "They're" : "It's"} ${metal} all the way through, finished with ${finish}. If you have a known nickel allergy, please check with your doctor first; our care team is on ${h.contact}.`;
+              return { cached_response: { text, cards: [], trace: [{ tool: "handoff", args: { reason: "nickel / sensitive-ears question" } as Record<string, unknown> }] } };
             })()
         : (norm(userText) === "suitable for wedding gift" || norm(userText) === "is gift wrap available") && page
           ? (() => {
@@ -130,6 +160,7 @@ function fallback(userText: string, injection: boolean, reason: string, pageSku:
       case "get_return_insight": return core.getReturnInsight(db, a.sku, a.context);
       case "search_catalog": { const { query, ...f } = a; return core.searchCatalog(db, query, f); }
       case "check_delivery": return core.checkDelivery(db, a.sku, a.pincode, a.deadline);
+      case "handoff": return core.handoff(db, a.reason);
       case "get_offer": { const { cart, ...o } = a; return core.getOffer(db, cart, { ...(o as object), logged_in: !!ctx.loggedIn, rto_risk: ctx.rtoRisk }); }
       default: return null;
     }

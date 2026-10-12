@@ -9,7 +9,7 @@
   "openers": {
     "waterproof-everyday-under-5k": {
       "chip": "Waterproof everyday · under ₹5k",
-      "opener": "Looking for gold you can shower and gym in? Large Classic Hoop Earrings are verified water-resistant, 316L stainless steel with 18k gold PVD, at ₹3,299. Want help picking the right size?",
+      "opener": "Looking for gold you can shower and gym in? Large Classic Hoop Earrings are verified water-resistant, stainless steel with 18k gold plating, at ₹3,299. Want help picking the right size?",
       "suggested_chips": [
         "Will these work for office?",
         "Can I shower with these?",
@@ -27,19 +27,19 @@
     },
     "office-minimal": {
       "chip": "Office · minimal & light",
-      "opener": "Something light for long workdays? Classic Huggie Earrings sit close to the lobe at 20mm and are verified water-resistant, 316L stainless steel with 18k gold PVD.",
+      "opener": "Something light for long workdays? Classic Huggie Earrings sit close to the lobe at 20mm and are verified water-resistant, stainless steel with 18k gold plating.",
       "suggested_chips": [
         "How big do they look?",
         "Can I sleep in them?",
         "When will it be delivered?"
       ]
     },
-    "hypoallergenic-studs": {
-      "chip": "Sensitive ears · titanium posts",
-      "opener": "Everyday studs on titanium and surgical-steel posts, as described by the brand. Ask me what each post is made of.",
+    "stainless-steel-earrings": {
+      "chip": "Sensitive ears · stainless steel",
+      "opener": "Mini Huggie Earrings are stainless steel all the way through, with 18k gold plating. Ask me anything about the metal.",
       "suggested_chips": [
-        "What are the posts made of?",
-        "Which is best for a gift?",
+        "What metal is this?",
+        "Is it nickel-free?",
         "When will it be delivered?"
       ]
     }

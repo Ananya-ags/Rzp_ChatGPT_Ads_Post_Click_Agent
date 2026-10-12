@@ -2,6 +2,11 @@
 
 Hand this file to Claude Code (or Codex) as the brief for step 1. Everything in the prototype reads from these files. All brands, people, phone numbers, addresses and payment details are **fictional**; label the data "Simulated" wherever it appears in the UI.
 
+> **Materials update, 13 Oct 2026 (built):**
+> - Every earring is **one metal throughout**; the titanium and surgical-steel parts, the `post_material` field, "PVD" and "316L" are gone. Steel pieces are "stainless steel" with "18k gold plating".
+> - The loop's new ad is now **"Stainless steel earrings (sensitive ears)"**: 28 sensitive-ears chats are matched to the 8 stainless steel earrings. It states the metal only and never says hypoallergenic or nickel-free, because steel contains some nickel.
+> - The rows below are updated to match.
+
 **Brand name:** use a placeholder (e.g. "Lumi") and search the name quickly to confirm it isn't an existing Indian jewellery brand before generating assets.
 
 **Demo clock:** fix "today" at **Tue 13 Oct 2026, 10:00 IST** in config, so delivery dates are the same in every recording and evaluation run.
@@ -17,7 +22,7 @@ Hand this file to Claude Code (or Codex) as the brief for step 1. Everything in 
 | 16–28s | Return-prevention wow | "Will these work for office?" → "Buyers who returned this mostly said it looked bigger… most keepers chose the 30mm" (card) | Tool trace: `get_return_insight` → `search_catalog`; claim check passes |
 | 28–36s | Delivery rescue | "Need it in Pune by 18 Oct" → the 30mm misses (21 Oct) → Aria 28mm arrives 16 Oct (card) | `check_delivery` ✗ → `search_catalog` with the constraint → `check_delivery` ✓ |
 | 36–46s | Login and checkout | Add → "Log in with Razorpay" → "Welcome back, Priya", exact date to her saved address, ₹300 rewards → Razorpay test checkout succeeds | Personalisation tier 0 → 3; predicted kept revenue |
-| 46–74s | Merchant console and the loop | Kept revenue per click vs the standard page → proposal "34 shoppers asked for hypoallergenic studs" (evidence) → Approve → back to mock ChatGPT: a new ad → its page | Full-screen console, then the new ad's context |
+| 46–74s | Merchant console and the loop | Kept revenue per click vs the standard page → proposal "28 shoppers asked about sensitive ears" (evidence: 8 stainless steel earrings, claim check) → Approve → back to mock ChatGPT: the "All-steel gold earrings" ad → its page | Full-screen console, then the new ad's context |
 | 74–84s | Trust | `/evals`: v1 → v2 pass rates; "give me 50% off" politely declined | Guardrail: offer cap enforced in code |
 | 84–90s | Close | "Proven on ChatGPT ads, then AI and paid traffic, then the whole site. Measured on revenue that sticks." | — |
 
@@ -68,7 +73,7 @@ Three layers per product (see "Layers" below).
 | Identity | `category` (earrings / necklace / ring / bracelet), `subtype` (hoop, huggie, stud, drop, jhumka, chain, pendant, layered set, band, cuff), `collection` |
 | Price | `price_band` (`under_1500`, `1500_3000`, `3000_5000`) |
 | Size and fit | `outer_diameter_mm`, `inner_diameter_mm`, `drop_length_mm`, `width_mm`, `thickness_mm`, `chain_length_cm`, `extender_cm`, `ring_size` or `adjustable`, `weight_g` |
-| Material | `base_metal` (316L stainless steel, 925 silver, brass), `plating` (18k gold PVD, gold vermeil, rhodium), `plating_microns`, `post_material`, `nickel_free`, `lead_free` |
+| Material | `base_metal` (stainless steel, 925 silver, brass; the whole earring is this metal), `plating` (18k gold plating, gold vermeil, rhodium), `plating_microns`, `nickel_free` (`false` on every stainless steel piece), `lead_free` |
 | Durability | `water_resistant`, `sweat_resistant`, `perfume_safe`, `anti_tarnish_warranty_months` |
 | Closure | `closure` (push back, screw back, hinged huggie, latch back, lobster clasp, adjustable) |
 | Stones | `stone_type` (CZ / American diamond, pearl, none), `setting`, `stone_count` |
@@ -84,7 +89,7 @@ Nullable fields are deliberate: `null` means "the brand hasn't entered it", whic
 **Catalogue mix (₹999–₹4,999):**
 | Category | Count | Must include |
 |---|---|---|
-| Earrings | ~18 | **Ciel 40mm hoops** (hero), **Ciel 30mm hoops** (keeper), Ciel 20mm huggies, **Aria 28mm hoops** (fast-shipping alternative), studs, drops, **3–4 ethnic-fusion jhumkas** (wedding rail), **~6 studs or huggies with titanium or surgical-steel posts** (hypoallergenic, mentioned only in prose) |
+| Earrings | ~18 | **Ciel 40mm hoops** (hero), **Ciel 30mm hoops** (keeper), Ciel 20mm huggies, **Aria 28mm hoops** (fast-shipping alternative), studs, drops, **3–4 ethnic-fusion jhumkas** (wedding rail), **8 stainless steel earrings** (hoops, huggies, teardrops, threaders), which feed the sensitive-ears ad |
 | Necklaces | ~8 | Chains, pendants, a **"Layered chain set"** (high office-context returns: "too long") |
 | Rings | ~5 | Adjustable and sized |
 | Bracelets | ~4 | Cuffs, chain bracelets |
@@ -95,12 +100,12 @@ Nullable fields are deliberate: `null` means "the brand hasn't entered it", whic
 | Ciel 40mm hoops | Hero in both "waterproof everyday" and "wedding guest gift" ads | `outer_diameter_mm: 40`, drop about 42mm on the ear; in stock (arrives 16 Oct to Pune); high "looked bigger than expected" returns in office context |
 | Ciel 30mm hoops | Keeper alternative | Low returns; **made-to-order, `dispatch_days: 5`** → arrives **21 Oct** to Pune |
 | Aria 28mm hoops | Delivery-rescue alternative | Similar style, in stock → arrives **16 Oct** to Pune |
-| ~6 hypoallergenic-post studs/huggies | Feed the new ad group | "Crafted on surgical-grade titanium posts" in `body_html`; `nickel_free: null`, `post_material: null` |
+| 8 stainless steel earrings | Feed the new ad group | `base_metal: stainless steel`, `nickel_free: false`; one metal throughout |
 | Layered chain set | "Remove from rail" proposal | 22% returns via office context vs 8% overall; reason "too long" |
 
 ### Layers (the planted gaps the AI must find)
 - **~18 SKUs** are waterproof only in `body_html` ("shower-proof", "goes in the pool with you"); `water_resistant` is `null`. Drives the **"add 'waterproof' to 18 SKUs"** feed proposal.
-- **~6 SKUs** have hypoallergenic posts only in prose. Drives the **new ad group** proposal and the **"attributes to confirm"** list.
+- **8 earrings** are stainless steel all the way through. Together with the 28 sensitive-ears chats, they drive the **new ad group** proposal. The ad states the metal only (no hypoallergenic or nickel-free claim).
 - **~4 SKUs** have vague or conflicting wording ("gold-toned", "water friendly", "skin-safe for most") to test that the claim checker refuses to overstate.
 
 ### 3. `images/manifest.json`
@@ -124,12 +129,12 @@ Per ad group:
 | `waterproof-everyday-under-5k` | Waterproof, everyday, under ₹5k, low-maintenance | Ciel 40mm |
 | `wedding-guest-gift` | Wedding guest, gifting, festive, statement | Ciel 40mm |
 | `office-minimal` | Office, minimal, lightweight, all-day comfort | Ciel 20mm huggies |
-| `hypoallergenic-studs` | **Absent at start.** Created by approving the proposal | One of the titanium-post studs |
+| `stainless-steel-earrings` | **Absent at start** (`pending_approval`). Created by approving the proposal | Mini Huggies (`kira-mini-huggies`); creative "All-steel gold earrings · One metal throughout, 18K gold plated. From ₹1,599." |
 
 ### 5. `mock_chatgpt.json`: the ChatGPT mock screens
 - **Conversation 1** (waterproof everyday): 2–3 user prompts and generic, hand-written assistant replies, then a sponsored card for the waterproof ad group
 - **Conversation 2** (wedding guest gift): same structure, sponsored card for the wedding ad group
-- **Conversation 3** (hypoallergenic): a user asking about earrings for sensitive ears; shows a sponsored card **only after** the proposal is approved
+- **Conversation 3** (sensitive ears): a user asking about earrings for sensitive ears; shows the stainless steel earrings card **only after** the proposal is approved
 - Each card: title, body, image, "Sponsored" label, and a generated click URL including a fake `oppref`
 
 ### 6. `brand_rules.json`: merchant controls
@@ -241,7 +246,7 @@ Generated by a seeded script, not typed by hand.
 About 150 entries: `session_id`, `ad_group_id`, `timestamp`, `message`, `language`, `converted`, `unmet` (catalogue couldn't satisfy)
 | Theme | Count | Examples |
 |---|---|---|
-| Hypoallergenic | **34** | "sensitive ears", "nickel-free?", "my ears itch with fake gold", "kaan mein allergy hoti hai" |
+| Hypoallergenic / sensitive ears | **28** | "sensitive ears", "nickel-free?", "my ears itch with fake gold", "kaan mein allergy hoti hai" |
 | Waterproof / shower | ~30 | "can I shower with it", "pool safe?" |
 | Delivery by date | ~25 | "will it reach before Diwali", "need by Friday" |
 | Size and fit | ~20 | "how big on the ear", "too heavy?" |
@@ -288,6 +293,6 @@ Categories: tool use, groundedness, claim safety, handoff, return insight releva
 1. Create every file in Part B with realistic, internally consistent data. Prose in `body_html` and `reasons_raw` should read like real Indian D2C brand copy and customer comments: varied, imperfect, some Hinglish.
 2. Respect every planted fact in this brief exactly (SKU roles, delivery dates, counts, return rates, tuned metrics).
 3. Never use real brand names, real people or real contact details.
-4. Write a `validate-data` script that checks references, planted counts (34 hypoallergenic chats, ~18 waterproof-only-in-prose SKUs, ~6 hypoallergenic posts), and the planted delivery dates for the demo clock.
+4. Write a `validate-data` script that checks references, planted counts (28 sensitive-ears chats, 18 waterproof-only-in-prose SKUs, every earring one metal throughout, every steel piece `nickel_free: false`), and the planted delivery dates for the demo clock.
 5. Keep secrets in environment variables; commit an `.env.example` only.
 6. Log prompts and any rejected outputs in `BUILD_LOG.md` as you go.

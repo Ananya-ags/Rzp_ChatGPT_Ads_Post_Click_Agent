@@ -182,17 +182,17 @@
       "ad_group": null,
       "pincode": null,
       "chip": null,
-      "narration": "Kept revenue per click vs standard page; approve the '34 shoppers asked for hypoallergenic studs' proposal.",
+      "narration": "Kept revenue per click vs standard page; approve the '28 shoppers asked about sensitive ears' proposal: launch an all-steel earrings ad (no hypoallergenic claim).",
       "expected_tools": [],
       "cached_response": null
     },
     {
       "id": "d8-loop",
       "surface": "mock_chatgpt",
-      "ad_group": "hypoallergenic-studs",
+      "ad_group": "stainless-steel-earrings",
       "pincode": null,
       "chip": null,
-      "narration": "Back in the mock: a new ad appears; its page shows a rail from the newly tagged studs.",
+      "narration": "Back in the mock: the sensitive-ears conversation now shows the steel earrings ad; its page shows a rail of stainless steel earrings and answers 'Is it nickel-free?' honestly.",
       "expected_tools": [],
       "cached_response": null
     },

@@ -51,7 +51,7 @@ body {
   touch-action: none;
 }
 
-/* "Ask Cosmos AI" sticky button: brushed-gold fill, slow shine sweep and a twinkling star */
+/* "Ask Cosmos AI" buttons: brushed-gold fill and a slow shine sweep (the star is CosmosStar) */
 .ai-cta {
   background: linear-gradient(135deg, #f6e2b0 0%, #e2bc6e 38%, #c99a45 62%, #e8c983 100%);
   box-shadow: 0 6px 18px -6px rgba(140, 101, 36, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.55);
@@ -66,20 +66,33 @@ body {
   animation: ai-cta-shine 3.6s ease-in-out 1.2s infinite;
   pointer-events: none;
 }
-.ai-cta-star {
-  display: inline-block;
-  animation: ai-cta-twinkle 3.6s ease-in-out 1.2s infinite;
-}
 @keyframes ai-cta-shine {
   0%, 55% { transform: translateX(-120%); }
   85%, 100% { transform: translateX(120%); }
 }
-@keyframes ai-cta-twinkle {
+/* Cosmos logo star (CosmosStar): slow twinkle plus a soft glint; still under reduced motion */
+.cosmos-star {
+  display: inline-block;
+  flex-shrink: 0;
+  overflow: visible;
+  transform-origin: 50% 50%;
+  animation: cosmos-star-twinkle 3.6s ease-in-out 1.2s infinite;
+  filter: drop-shadow(0 1px 1.5px rgba(140, 101, 36, 0.35));
+}
+.cosmos-star-glint {
+  opacity: 0.35;
+  animation: cosmos-star-glint 3.6s ease-in-out 1.2s infinite;
+}
+@keyframes cosmos-star-twinkle {
   0%, 60%, 100% { transform: scale(1) rotate(0deg); }
-  75% { transform: scale(1.35) rotate(20deg); }
+  75% { transform: scale(1.18) rotate(12deg); }
+}
+@keyframes cosmos-star-glint {
+  0%, 55%, 100% { opacity: 0.35; }
+  72% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ai-cta::after, .ai-cta-star { animation: none; }
+  .ai-cta::after, .cosmos-star, .cosmos-star-glint { animation: none; }
 }
 
 /* "Ask Cosmos AI" card in the page body: static, warm gold-cream panel (no motion) */

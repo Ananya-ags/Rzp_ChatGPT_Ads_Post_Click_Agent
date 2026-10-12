@@ -32,97 +32,16 @@
       "attributes": []
     },
     "tara-solitaire-studs": {
-      "attributes": [
-        {
-          "attribute": "post_material",
-          "value": "titanium",
-          "source": {
-            "type": "text",
-            "phrase": "Crafted on surgical-grade titanium posts so even sensitive lobes can wear them all day."
-          },
-          "confidence": 0.85,
-          "verified": false,
-          "vague": false
-        },
-        {
-          "attribute": "nickel_free",
-          "value": true,
-          "source": {
-            "type": "text",
-            "phrase": "Crafted on surgical-grade titanium posts so even sensitive lobes can wear them all day."
-          },
-          "confidence": 0.45,
-          "verified": false,
-          "vague": false
-        }
-      ]
+      "attributes": []
     },
     "tara-pearl-studs": {
-      "attributes": [
-        {
-          "attribute": "post_material",
-          "value": "titanium",
-          "source": {
-            "type": "text",
-            "phrase": "18K gold plated studs with a 7mm shell pearl, crafted on surgical-grade titanium posts."
-          },
-          "confidence": 0.85,
-          "verified": false,
-          "vague": false
-        }
-      ]
+      "attributes": []
     },
     "tara-heart-studs": {
-      "attributes": [
-        {
-          "attribute": "post_material",
-          "value": "titanium",
-          "source": {
-            "type": "text",
-            "phrase": "18K gold plated little hearts, 8mm, on titanium posts that are kind to sensitive ears."
-          },
-          "confidence": 0.85,
-          "verified": false,
-          "vague": false
-        },
-        {
-          "attribute": "nickel_free",
-          "value": true,
-          "source": {
-            "type": "text",
-            "phrase": "18K gold plated little hearts, 8mm, on titanium posts that are kind to sensitive ears."
-          },
-          "confidence": 0.45,
-          "verified": false,
-          "vague": false
-        }
-      ]
+      "attributes": []
     },
     "elle-bezel-studs": {
-      "attributes": [
-        {
-          "attribute": "post_material",
-          "value": "surgical steel",
-          "source": {
-            "type": "text",
-            "phrase": "Set on surgical-steel posts, friendly for sensitive ears."
-          },
-          "confidence": 0.85,
-          "verified": false,
-          "vague": false
-        },
-        {
-          "attribute": "nickel_free",
-          "value": true,
-          "source": {
-            "type": "text",
-            "phrase": "Set on surgical-steel posts, friendly for sensitive ears."
-          },
-          "confidence": 0.45,
-          "verified": false,
-          "vague": false
-        }
-      ]
+      "attributes": []
     },
     "kira-mini-huggies": {
       "attributes": [
@@ -134,17 +53,6 @@
             "phrase": "Waterproof and 18K gold plated stainless steel."
           },
           "confidence": 0.8,
-          "verified": false,
-          "vague": false
-        },
-        {
-          "attribute": "post_material",
-          "value": "titanium",
-          "source": {
-            "type": "text",
-            "phrase": "12mm huggies crafted on surgical-grade titanium posts."
-          },
-          "confidence": 0.85,
           "verified": false,
           "vague": false
         }
@@ -160,17 +68,6 @@
             "phrase": "Waterproof and 18K gold plated stainless steel."
           },
           "confidence": 0.8,
-          "verified": false,
-          "vague": false
-        },
-        {
-          "attribute": "post_material",
-          "value": "titanium",
-          "source": {
-            "type": "text",
-            "phrase": "A twisted rope texture on a 14mm huggie, set on titanium posts."
-          },
-          "confidence": 0.85,
           "verified": false,
           "vague": false
         }

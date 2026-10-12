@@ -8,54 +8,6 @@
   },
   "items": [
     {
-      "id": "atc-tara-solitaire-studs-post_material",
-      "sku": "tara-solitaire-studs",
-      "title": "Classic Solitaire Stud Earrings",
-      "attribute": "post_material",
-      "proposed_value": "titanium",
-      "source_phrase": "Crafted on surgical-grade titanium posts so even sensitive lobes can wear them all day.",
-      "confidence": 0.85,
-      "unlocks": [
-        "prop-new-ad-group-hypoallergenic"
-      ]
-    },
-    {
-      "id": "atc-tara-pearl-studs-post_material",
-      "sku": "tara-pearl-studs",
-      "title": "Classic Pearl Stud Earrings",
-      "attribute": "post_material",
-      "proposed_value": "titanium",
-      "source_phrase": "18K gold plated studs with a 7mm shell pearl, crafted on surgical-grade titanium posts.",
-      "confidence": 0.85,
-      "unlocks": [
-        "prop-new-ad-group-hypoallergenic"
-      ]
-    },
-    {
-      "id": "atc-tara-heart-studs-post_material",
-      "sku": "tara-heart-studs",
-      "title": "Heart Stud Earrings",
-      "attribute": "post_material",
-      "proposed_value": "titanium",
-      "source_phrase": "18K gold plated little hearts, 8mm, on titanium posts that are kind to sensitive ears.",
-      "confidence": 0.85,
-      "unlocks": [
-        "prop-new-ad-group-hypoallergenic"
-      ]
-    },
-    {
-      "id": "atc-elle-bezel-studs-post_material",
-      "sku": "elle-bezel-studs",
-      "title": "Mini Bezel Stud Earrings",
-      "attribute": "post_material",
-      "proposed_value": "surgical steel",
-      "source_phrase": "Set on surgical-steel posts, friendly for sensitive ears.",
-      "confidence": 0.85,
-      "unlocks": [
-        "prop-new-ad-group-hypoallergenic"
-      ]
-    },
-    {
       "id": "atc-kira-mini-huggies-water_resistant",
       "sku": "kira-mini-huggies",
       "title": "Mini Huggie Earrings",
@@ -68,18 +20,6 @@
       ]
     },
     {
-      "id": "atc-kira-mini-huggies-post_material",
-      "sku": "kira-mini-huggies",
-      "title": "Mini Huggie Earrings",
-      "attribute": "post_material",
-      "proposed_value": "titanium",
-      "source_phrase": "12mm huggies crafted on surgical-grade titanium posts.",
-      "confidence": 0.85,
-      "unlocks": [
-        "prop-new-ad-group-hypoallergenic"
-      ]
-    },
-    {
       "id": "atc-kira-twist-huggies-water_resistant",
       "sku": "kira-twist-huggies",
       "title": "Twisted Huggie Earrings",
@@ -89,18 +29,6 @@
       "confidence": 0.8,
       "unlocks": [
         "prop-feed-waterproof"
-      ]
-    },
-    {
-      "id": "atc-kira-twist-huggies-post_material",
-      "sku": "kira-twist-huggies",
-      "title": "Twisted Huggie Earrings",
-      "attribute": "post_material",
-      "proposed_value": "titanium",
-      "source_phrase": "A twisted rope texture on a 14mm huggie, set on titanium posts.",
-      "confidence": 0.85,
-      "unlocks": [
-        "prop-new-ad-group-hypoallergenic"
       ]
     },
     {

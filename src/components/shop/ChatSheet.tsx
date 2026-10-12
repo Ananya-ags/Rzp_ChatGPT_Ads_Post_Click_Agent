@@ -3,6 +3,7 @@
  * Agent chat in a vaul bottom sheet: pill (closed) → half → full. Full when the keyboard opens; in full,
  * a slim product strip and the cart count stay pinned. Heights are driven by our own state rather than vaul
  * snapPoints so the sheet behaves the same inside the desktop phone frame.
+ * Opened from a product page it carries that product (`hero`); from the store home or a category page, none.
  */
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
@@ -12,14 +13,15 @@ import { ToolCard } from "./ToolCards";
 import ProductImage from "./ProductImage";
 import { inr, type CardVM } from "@/lib/view";
 import { useDemoState } from "@/lib/state";
+import CosmosStar from "../brand/CosmosStar";
 
 type Props = {
   open: boolean;
   onOpenChange: (o: boolean) => void;
   pending: string | null; // chip text to send when opened
   clearPending: () => void;
-  context: { sku: string; adGroupId: string | null; pincode: string | null; tier: number };
-  hero: CardVM;
+  context: { sku: string | null; adGroupId: string | null; pincode: string | null; tier: number };
+  hero: CardVM | null;
   cards: Record<string, CardVM>;
   chips: string[];
   opener: string | null;
@@ -72,7 +74,9 @@ export default function ChatSheet({ open, onOpenChange, pending, clearPending, c
           <button onClick={() => setFull((f) => !f)} className="mx-auto mt-2 h-1.5 w-10 shrink-0 rounded-full bg-line" aria-label={full ? "Collapse" : "Expand"} />
           <div className="flex items-center justify-between px-4 pb-2 pt-2">
             <div>
-              <Drawer.Title className="font-display text-[17px]">Ask Cosmos AI</Drawer.Title>
+              <Drawer.Title className="flex items-center gap-1.5 font-display text-[17px]">
+                <CosmosStar className="size-[18px]" /> Ask Cosmos AI
+              </Drawer.Title>
               <p className="text-[11px] text-muted">AI assistant · answers from verified product facts</p>
             </div>
             <div className="flex items-center gap-2 text-[12px]">
@@ -80,7 +84,7 @@ export default function ChatSheet({ open, onOpenChange, pending, clearPending, c
               <Drawer.Close className="grid size-7 place-items-center rounded-full bg-sand text-[13px]" aria-label="Close">✕</Drawer.Close>
             </div>
           </div>
-          {full && (
+          {full && hero && (
             <div className="mx-4 mb-2 flex items-center gap-2 rounded-xl border border-line bg-white p-1.5 pr-3">
               <div className="size-9 overflow-hidden rounded-lg">
                 <ProductImage card={hero} />
@@ -132,7 +136,7 @@ export default function ChatSheet({ open, onOpenChange, pending, clearPending, c
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onFocus={() => setFull(true)}
-                placeholder="Ask about size, delivery, care…"
+                placeholder={hero ? "Ask about size, delivery, care…" : "Ask about gifts, budget, delivery…"}
                 className="h-11 flex-1 rounded-full border border-line bg-white px-4 text-[14px] outline-none focus:border-gold"
               />
               <button disabled={busy || !input.trim()} className="grid size-11 place-items-center rounded-full bg-ink text-ivory disabled:opacity-40" aria-label="Send">

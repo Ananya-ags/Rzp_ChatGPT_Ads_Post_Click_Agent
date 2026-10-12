@@ -1,14 +1,17 @@
 "use client";
 /**
- * Store header: ☰ menu (slide-in category panel, display only), logo, profile (→ login),
- * and the bag (links to the bag page, with a live count).
+ * Store header: ☰ menu (slide-in panel: "Shop all" + the catalogue's categories), logo (→ store home),
+ * profile (→ login), and the bag (links to the bag page, with a live count).
  */
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useDemoState } from "@/lib/state";
 import { useLinkQuery } from "./productLink";
+import { useStoreNav } from "./storeNav";
 
-const MENU = ["Earrings", "Rings", "Necklaces", "Bracelets", "FAQs"];
+/** Store home (the start page at "/" is the demo launcher). */
+export const STORE_HOME = "/shop";
 
 const Icon = ({ d, className = "size-[22px]" }: { d: React.ReactNode; className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -32,6 +35,14 @@ const BAG_ICON = (
 export default function SiteHeader({ user = null, loginHref = "/login" }: { user?: { firstName: string } | null; loginHref?: string }) {
   const [state] = useDemoState();
   const [menuOpen, setMenuOpen] = useState(false);
+  const categories = useStoreNav();
+  const pathname = usePathname();
+  // close the panel whenever the route changes (link tap, back button)
+  const [openedOn, setOpenedOn] = useState(pathname);
+  if (openedOn !== pathname) {
+    setOpenedOn(pathname);
+    setMenuOpen(false);
+  }
   const q = useLinkQuery();
   const count = state.cart.reduce((s, l) => s + l.qty, 0);
   // inside the in-app browser view, the menu opens below the browser bar (like a real webview)
@@ -47,7 +58,7 @@ export default function SiteHeader({ user = null, loginHref = "/login" }: { user
         <button onClick={openMenu} aria-label="Open menu" className="grid size-10 place-items-center rounded-full text-ink active:bg-sand">
           <Icon d={MENU_ICON} />
         </button>
-        <Link href="/" aria-label="Cosmos home" className="mr-auto">
+        <Link href={STORE_HOME} aria-label="Cosmos home" className="mr-auto">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/cosmos-logo-v4.png" alt="Cosmos" className="h-6 w-auto md:h-[30px]" />
         </Link>
@@ -68,8 +79,8 @@ export default function SiteHeader({ user = null, loginHref = "/login" }: { user
         </Link>
       </header>
 
-      {/* slide-in menu (display only for now) */}
-      <div className={`fixed inset-x-0 bottom-0 z-50 ${menuOpen ? "" : "pointer-events-none"}`} style={{ top: chromeH }} aria-hidden={!menuOpen}>
+      {/* slide-in category menu */}
+      <div className={`fixed inset-x-0 bottom-0 z-50 ${menuOpen ? "" : "pointer-events-none"}`} style={{ top: chromeH }} inert={!menuOpen}>
         <div onClick={() => setMenuOpen(false)} className={`absolute inset-0 bg-ink/30 transition-opacity duration-300 ${menuOpen ? "opacity-100" : "opacity-0"}`} />
         <nav
           aria-label="Shop categories"
@@ -82,13 +93,25 @@ export default function SiteHeader({ user = null, loginHref = "/login" }: { user
               ✕
             </button>
           </div>
-          <ul className="flex-1 px-2 py-2">
-            {MENU.map((m, i) => (
-              <li key={m} className={`flex items-center justify-between px-3 py-4 font-display text-[19px] ${i === MENU.length - 1 ? "mt-2 border-t border-line pt-5 font-sans text-[15px] text-muted" : "border-b border-line/60"}`}>
-                {m}
-                <Icon d={<path d="M9 6l6 6-6 6" />} className="size-4 text-muted" />
-              </li>
-            ))}
+          <ul className="flex-1 overflow-y-auto px-2 py-2">
+            {[{ href: STORE_HOME, label: "Shop all", count: categories.reduce((s, c) => s + c.count, 0) }, ...categories.map((c) => ({ href: `/c/${c.slug}`, label: c.label, count: c.count }))].map((m) => {
+              const current = pathname === m.href;
+              return (
+                <li key={m.href} className="border-b border-line/60">
+                  <Link
+                    href={m.href}
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={current ? "page" : undefined}
+                    className={`flex items-center justify-between rounded-lg px-3 py-4 font-display text-[19px] active:bg-sand ${current ? "text-gold-deep" : ""}`}
+                  >
+                    <span>
+                      {m.label} <span className="font-sans text-[12px] text-muted">({m.count})</span>
+                    </span>
+                    <Icon d={<path d="M9 6l6 6-6 6" />} className="size-4 text-muted" />
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
           <p className="px-5 pb-6 text-[11px] text-muted">Anti-tarnish demi-fine jewellery · Free shipping over ₹1,499</p>
         </nav>
