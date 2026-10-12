@@ -362,3 +362,21 @@ Running log of which AI tool did what, key prompts, rejected AI output and decis
   - The data spec's storyboard, material fields, planted sets, ad-group and conversation-3 rows, chat counts (34 → 28) and validator checks are all updated.
   - PRODUCT_CONTEXT's loop description and mock ChatGPT description are updated.
   - Each doc has a dated update note at the top. Old material names appear only in those notes.
+
+## 13 Oct 2026: One size per earring; "on the ear" removed (user request)
+- **Why:** simpler sizing, and one number the shopper can check with a ruler. Two numbers per hoop ("40mm across, about 42mm on the ear") confused more than they helped. This follows `sizing.earrings` in the policy KB.
+- **The rule:** hoops, huggies and studs are sized by **diameter** (`outer_diameter_mm`), and `drop_length_mm` is now null for them (11 SKUs). Drops and jhumkas are sized by **length** (`drop_length_mm`).
+- **Copy:** the 3 hoop descriptions now read "Size: 40mm diameter", "sized down to 30mm diameter" and "a 28mm diameter hoop". The brand-voice example is now "The 30mm diameter is smaller than the 40mm…".
+- **Where sizes show:**
+  - Rail reasons: "{n}mm diameter" or "{n}mm length".
+  - Product page: a "Diameter" or "Length" row replaces "Size" and "On the ear" for earrings; pendants keep "Size".
+  - Chat product cards follow the same rule.
+  - `get_return_insight`'s size note carries only the one size.
+- **Demo cache:** the return-prevention answer and its comparison card use diameter: "…most office keepers chose the Medium Classic Hoop Earrings, which are 30mm in diameter."
+- **Story kept:** return prevention still reads "8 of 9 said it looked bigger than expected; 64% of office keepers chose the 30mm". Orders and returns are byte-identical.
+- **Other updates:**
+  - Shopper message: "how big on the ear" → "how big is it".
+  - Eval `ground-04`: "How big are these?" → 40mm.
+  - Validator: new checks that every earring has exactly one size and that no copy says "on the ear"; the hero check is now 40mm diameter with no length. 76 passed, 0 errors.
+- **Docs:** the data spec and prototype plan have sizing notes and updated rows. Two stale Elle / "6 SKUs" lines in the plan are marked superseded.
+- **Verified:** `next build` and `eslint` are clean; click-through 39/39; loop 16/16. Only the doc notes and the validator guard mention "on the ear".

@@ -10,7 +10,7 @@ export const brand = {
     do: ["Lead with the answer", "Use exact numbers from tools", "Say 'I'm not sure' and offer support when unsure", "Describe unverified features as materials, not benefits"],
     dont: ["Exclamation-mark stacks", "Superlatives like 'best ever'", "Pressure tactics or fake scarcity", "Medical claims about skin"],
     examples: [
-      "The 30mm sits about 32mm on the ear, which most people find easier for long office days.",
+      "The 30mm diameter is smaller than the 40mm, which most people find easier for long office days.",
       "That one arrives Fri, 16 Oct in Pune if you order before 2pm today.",
       "I'm not certain about that. Want me to connect you with our care team on WhatsApp?",
     ],

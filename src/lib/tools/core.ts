@@ -241,7 +241,7 @@ export function getReturnInsight(db: Db, sku: string, context: string) {
     typical_quote: cls?.typical_quote ?? null,
     better_fit: relevant && cls?.better_fit_sku ? { sku: cls.better_fit_sku, title: findProduct(db, cls.better_fit_sku)?.title ?? cls.better_fit_sku, reason: cls.better_fit_reason } : null,
     keepers: keeper,
-    size_note: p.metafields.jewellery.outer_diameter_mm ? { outer_diameter_mm: p.metafields.jewellery.outer_diameter_mm, drop_length_mm: p.metafields.jewellery.drop_length_mm } : null,
+    size_note: p.metafields.jewellery.outer_diameter_mm ? { outer_diameter_mm: p.metafields.jewellery.outer_diameter_mm } : p.metafields.jewellery.drop_length_mm ? { drop_length_mm: p.metafields.jewellery.drop_length_mm } : null,
   };
 }
 

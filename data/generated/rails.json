@@ -12,19 +12,19 @@
         {
           "rank": 1,
           "sku": "ciel-hoops-30mm",
-          "reason": "Verified water-resistant · 30mm, ~32mm on the ear · made to order (5-day dispatch)",
+          "reason": "Verified water-resistant · 30mm diameter · made to order (5-day dispatch)",
           "pinned": false
         },
         {
           "rank": 2,
           "sku": "aria-hoops-28mm",
-          "reason": "Verified water-resistant · 28mm, ~30mm on the ear",
+          "reason": "Verified water-resistant · 28mm diameter",
           "pinned": false
         },
         {
           "rank": 3,
           "sku": "ciel-huggies-20mm",
-          "reason": "Verified water-resistant · 20mm",
+          "reason": "Verified water-resistant · 20mm diameter",
           "pinned": false
         },
         {
@@ -58,7 +58,7 @@
         {
           "rank": 1,
           "sku": "noor-kundan-jhumkas",
-          "reason": "48mm drop · handset kundan · gift-ready",
+          "reason": "48mm length · handset kundan · gift-ready",
           "pinned": true
         },
         {
@@ -70,13 +70,13 @@
         {
           "rank": 3,
           "sku": "noor-temple-jhumkas",
-          "reason": "55mm drop · 925 silver, gold vermeil",
+          "reason": "55mm length · 925 silver, gold vermeil",
           "pinned": false
         },
         {
           "rank": 4,
           "sku": "mira-pearl-drops",
-          "reason": "35mm drop · pearl · gift-ready",
+          "reason": "35mm length · pearl · gift-ready",
           "pinned": false
         },
         {
@@ -104,13 +104,13 @@
         {
           "rank": 1,
           "sku": "ciel-hoops-30mm",
-          "reason": "30mm, ~32mm on the ear · 4.6g the pair · made to order (5-day dispatch)",
+          "reason": "30mm diameter · 4.6g the pair · made to order (5-day dispatch)",
           "pinned": false
         },
         {
           "rank": 2,
           "sku": "elle-bezel-studs",
-          "reason": "5mm · 1.2g the pair",
+          "reason": "5mm diameter · 1.2g the pair",
           "pinned": false
         },
         {
@@ -122,7 +122,7 @@
         {
           "rank": 4,
           "sku": "mira-teardrop-drops",
-          "reason": "30mm drop · 3g the pair",
+          "reason": "30mm length · 3g the pair",
           "pinned": false
         },
         {
@@ -139,31 +139,31 @@
         {
           "rank": 1,
           "sku": "ciel-hoops-30mm",
-          "reason": "Stainless steel throughout · 30mm, ~32mm on the ear · made to order (5-day dispatch)",
+          "reason": "Stainless steel throughout · 30mm diameter · made to order (5-day dispatch)",
           "pinned": false
         },
         {
           "rank": 2,
           "sku": "ciel-huggies-20mm",
-          "reason": "Stainless steel throughout · 20mm",
+          "reason": "Stainless steel throughout · 20mm diameter",
           "pinned": false
         },
         {
           "rank": 3,
           "sku": "ciel-hoops-40mm",
-          "reason": "Stainless steel throughout · 40mm, ~42mm on the ear",
+          "reason": "Stainless steel throughout · 40mm diameter",
           "pinned": false
         },
         {
           "rank": 4,
           "sku": "aria-hoops-28mm",
-          "reason": "Stainless steel throughout · 28mm, ~30mm on the ear",
+          "reason": "Stainless steel throughout · 28mm diameter",
           "pinned": false
         },
         {
           "rank": 5,
           "sku": "mira-teardrop-drops",
-          "reason": "Stainless steel throughout · 30mm drop",
+          "reason": "Stainless steel throughout · 30mm length",
           "pinned": false
         }
       ],

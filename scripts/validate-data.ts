@@ -151,7 +151,12 @@ check(noStock.length === 0, "every SKU variant has a stock count", `missing/inva
 const outOfStock = products.filter((p) => !p.metafields.jewellery.made_to_order && p.variants.every((v) => v.inventory_quantity === 0));
 check(outOfStock.length === 0, "no ready-stock SKU is at 0 units", `0 units: ${outOfStock.map((p) => p.handle).join(", ")}`);
 const hero = P(planted.hero).metafields.jewellery;
-check(hero.outer_diameter_mm === 40 && hero.drop_length_mm === 42, "hero (large hoops): outer 40mm, drop 42mm");
+check(hero.outer_diameter_mm === 40 && hero.drop_length_mm === null, "hero (large hoops): 40mm diameter, no second size");
+// one size per earring: hoops, huggies and studs by diameter only; drops and danglers by length only
+const twoSizes = products.filter((p) => { const j = p.metafields.jewellery; if (j.category !== "earrings") return false; return ["hoop", "huggie", "stud"].includes(j.subtype) ? !j.outer_diameter_mm || j.drop_length_mm !== null : !j.drop_length_mm || j.outer_diameter_mm !== null; }).map((p) => p.handle);
+check(twoSizes.length === 0, "every earring has exactly one size (diameter or length)", `earrings with zero or two sizes: ${twoSizes.join(", ")}`);
+const onEar = products.filter((p) => /on the ear|on-ear/i.test(p.body_html)).map((p) => p.handle);
+check(onEar.length === 0, "no 'on the ear' sizing in product copy", `'on the ear' in: ${onEar.join(", ")}`);
 check(P(planted.hero).variants.every((v) => v.inventory_quantity > 0), "hero in stock");
 const keeper = P(planted.keeper).metafields.jewellery;
 check(keeper.made_to_order && keeper.dispatch_days === 5, "keeper (medium hoops) made-to-order, dispatch_days 5");

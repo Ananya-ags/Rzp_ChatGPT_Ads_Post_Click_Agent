@@ -60,7 +60,7 @@ export const THEMES: Record<string, M[]> = {
     ["agar aaj order karu toh kab milega", true, false, "w"],
   ],
   size_fit: [
-    ["how big on the ear", false, false, "w"], ["too heavy?", false, false, "wed"], ["40mm vs 30mm which is better for office", false, false, "w"],
+    ["how big is it", false, false, "w"], ["too heavy?", false, false, "wed"], ["40mm vs 30mm which is better for office", false, false, "w"],
     ["will 40mm look too big on a small face", false, false, "w"], ["how far does it hang", false, false, "w"], ["what's the inner diameter", false, false, "off"],
     ["size compare with a coin?", false, false, "w"], ["is 20mm too small", false, false, "off"], ["chain length for a high neck kurta", false, false, "off"],
     ["ring size chart?", false, false, "off"], ["adjustable ring fits size 9?", false, false, "w"], ["bahut bade toh nahi lagenge?", true, false, "w"],

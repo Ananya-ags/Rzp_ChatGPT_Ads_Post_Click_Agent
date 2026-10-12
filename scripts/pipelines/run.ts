@@ -214,8 +214,9 @@ function verifiedReason(p: Product, hints: string): string {
   const h = hints.toLowerCase();
   if (/waterproof|shower/.test(h) && j.water_resistant === true) bits.push("verified water-resistant");
   if (/stainless steel/.test(h) && j.base_metal === "stainless steel") bits.push("stainless steel throughout");
-  if (j.outer_diameter_mm && j.category === "earrings") bits.push(`${j.outer_diameter_mm}mm${j.drop_length_mm && j.drop_length_mm !== j.outer_diameter_mm ? `, ~${j.drop_length_mm}mm on the ear` : ""}`);
-  else if (j.drop_length_mm && j.category === "earrings") bits.push(`${j.drop_length_mm}mm drop`);
+  // one size per earring: hoops, huggies and studs by diameter; drops and danglers by length
+  if (j.outer_diameter_mm && j.category === "earrings") bits.push(`${j.outer_diameter_mm}mm diameter`);
+  else if (j.drop_length_mm && j.category === "earrings") bits.push(`${j.drop_length_mm}mm length`);
   if (j.chain_length_cm) bits.push(`${j.chain_length_cm}cm${j.extender_cm ? ` + ${j.extender_cm}cm` : ""}`);
   if (/office|light/.test(h) && j.category === "earrings" && j.weight_g && j.weight_g <= 5) bits.push(`${j.weight_g}g the pair`);
   if (/wedding|festive|statement/.test(h) && j.stone_type !== "none") bits.push(j.stone_type === "kundan" ? "handset kundan" : j.stone_type === "pearl" ? "pearl" : "CZ sparkle");

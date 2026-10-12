@@ -8,7 +8,8 @@ Companion doc: `docs/POLICY_KB_DRAFT.md` (the ground-truth content for Q2).
 > - "PVD" and "316L" are no longer used anywhere; steel pieces are "stainless steel" with "18K gold plating".
 > - **The approve → new ad → new page loop now uses the stainless steel earrings.** The AI groups 28 sensitive-ears questions and matches them to the 8 earrings that are stainless steel all the way through, and proposes an "All-steel gold earrings" ad that states the metal only. Steel contains some nickel, so nothing is ever called hypoallergenic or nickel-free.
 > - Approve → the ad appears in mock ChatGPT → its page shows a steel-earrings rail, and the agent answers "Is it nickel-free?" with an honest no plus the care team.
-> - Sections 0, 1.1, 1.2, 2.2, 2.4, 6.3, 6.6, 7, 10 and 13 below are updated to match.
+> - **Sizing (13 Oct):** each earring has one size: diameter for hoops, huggies and studs, length for drops and jhumkas. There's no "on the ear" measurement anywhere (copy, data, rail reasons, product page).
+> - Sections 0, 1.1, 1.2, 1.3, 2.2, 2.4, 6.3, 6.6, 7, 10 and 13 below are updated to match.
 
 ---
 
@@ -81,7 +82,7 @@ Every step writes a **decision entry**: `{step, sku, action, source: AI | rule |
 
 **In the browser:** when the chat extracts constraints (tool `update_preferences`), the page fetches `/api/rail` with them, and the rail updates with the label "Updated from your chat".
 
-**Shown to the shopper:** a reason under each rail item, for example "Verified water-resistant · 28mm, ~30mm on the ear".
+**Shown to the shopper:** a reason under each rail item, for example "Verified water-resistant · 28mm diameter".
 **Shown in the console:** the decision log with AI / rule / cookie / login / session badges.
 
 ---
@@ -289,7 +290,7 @@ Yes, if we define it honestly:
 
 | # | Intent | Example | Tool(s) | Output |
 |---|---|---|---|---|
-| 1 | Product question (current page) | "How big is it on the ear?" | `get_product_facts` / page facts | Text (+ size note) |
+| 1 | Product question (current page) | "How big is it?" | `get_product_facts` / page facts | Text (+ size note) |
 | 2 | Delivery | "Will it reach Pune by 18 Oct?" | `check_delivery` | Delivery card |
 | 3 | Fit / return prevention | "Will these work for office?" | `get_return_insight` → `search_catalog` | Fit-check card + alternative |
 | 4 | Discovery | "Show me something for a wedding under ₹3k" | `search_catalog` (constraints + visual tags) | Up to 3 product cards + "See more" |
@@ -558,7 +559,7 @@ Every check emits a `data-guard` event, so the AI console shows pass/fail live.
 
 Also one auto-handled log line (the out-of-stock removal).
 
-**Data fix:** `proposals.json` lists 6 SKUs including Elle; change to 5, with Elle excluded and the reason given.
+~~**Data fix:** `proposals.json` lists 6 SKUs including Elle.~~ **Superseded 13 Oct:** the sensitive-ears proposal now covers the 8 stainless steel earrings (see the materials update at the top).
 
 ---
 
@@ -627,7 +628,7 @@ Also one auto-handled log line (the out-of-stock removal).
 4. **Ad-session flag:** a `cosmos_session` cookie set on landing (ad group, `oppref`, arm), so context follows the shopper to the homepage and other products. The chat history lives in sessionStorage.
 5. **Homepage:** a light shell (hero, 4 category tiles linking to products, agent). Collection pages and search stay out.
 6. **Data fixes:**
-   - Elle exclusion
+   - ~~Elle exclusion~~ (superseded: one metal per earring, steel-earrings ad)
    - warranty 6/12 months in the policy text
    - rename the vision-test SKUs and null the `shape` field
    - add the `boost_skus` list

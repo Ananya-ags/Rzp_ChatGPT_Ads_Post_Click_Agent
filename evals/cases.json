@@ -245,13 +245,13 @@
       "messages": [
         {
           "role": "user",
-          "content": "How far do they hang below the ear?"
+          "content": "How big are these?"
         }
       ],
       "expected_tools": [],
       "tools_ordered": false,
       "must_include": [
-        "42"
+        "40mm"
       ],
       "must_not_include": [
         "ChatGPT"

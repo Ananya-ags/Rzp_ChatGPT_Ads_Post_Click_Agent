@@ -5,6 +5,7 @@ Hand this file to Claude Code (or Codex) as the brief for step 1. Everything in 
 > **Materials update, 13 Oct 2026 (built):**
 > - Every earring is **one metal throughout**; the titanium and surgical-steel parts, the `post_material` field, "PVD" and "316L" are gone. Steel pieces are "stainless steel" with "18k gold plating".
 > - The loop's new ad is now **"Stainless steel earrings (sensitive ears)"**: 28 sensitive-ears chats are matched to the 8 stainless steel earrings. It states the metal only and never says hypoallergenic or nickel-free, because steel contains some nickel.
+> - **Sizing (13 Oct):** each earring has exactly one size: `outer_diameter_mm` for hoops, huggies and studs (`drop_length_mm` is null), and `drop_length_mm` for drops and jhumkas. There's no "on the ear" measurement.
 > - The rows below are updated to match.
 
 **Brand name:** use a placeholder (e.g. "Lumi") and search the name quickly to confirm it isn't an existing Indian jewellery brand before generating assets.
@@ -72,7 +73,7 @@ Three layers per product (see "Layers" below).
 |---|---|
 | Identity | `category` (earrings / necklace / ring / bracelet), `subtype` (hoop, huggie, stud, drop, jhumka, chain, pendant, layered set, band, cuff), `collection` |
 | Price | `price_band` (`under_1500`, `1500_3000`, `3000_5000`) |
-| Size and fit | `outer_diameter_mm`, `inner_diameter_mm`, `drop_length_mm`, `width_mm`, `thickness_mm`, `chain_length_cm`, `extender_cm`, `ring_size` or `adjustable`, `weight_g` |
+| Size and fit | `outer_diameter_mm`, `inner_diameter_mm`, `drop_length_mm`, `width_mm`, `thickness_mm`, `chain_length_cm`, `extender_cm`, `ring_size` or `adjustable`, `weight_g`. **Earrings carry one size only:** diameter (`outer_diameter_mm`) for hoops, huggies and studs; length (`drop_length_mm`) for drops and jhumkas |
 | Material | `base_metal` (stainless steel, 925 silver, brass; the whole earring is this metal), `plating` (18k gold plating, gold vermeil, rhodium), `plating_microns`, `nickel_free` (`false` on every stainless steel piece), `lead_free` |
 | Durability | `water_resistant`, `sweat_resistant`, `perfume_safe`, `anti_tarnish_warranty_months` |
 | Closure | `closure` (push back, screw back, hinged huggie, latch back, lobster clasp, adjustable) |
@@ -97,7 +98,7 @@ Nullable fields are deliberate: `null` means "the brand hasn't entered it", whic
 **Hero and planted SKUs:**
 | SKU | Role | Key planted facts |
 |---|---|---|
-| Ciel 40mm hoops | Hero in both "waterproof everyday" and "wedding guest gift" ads | `outer_diameter_mm: 40`, drop about 42mm on the ear; in stock (arrives 16 Oct to Pune); high "looked bigger than expected" returns in office context |
+| Ciel 40mm hoops | Hero in both "waterproof everyday" and "wedding guest gift" ads | `outer_diameter_mm: 40` (40mm diameter, its one size); in stock (arrives 16 Oct to Pune); high "looked bigger than expected" returns in office context |
 | Ciel 30mm hoops | Keeper alternative | Low returns; **made-to-order, `dispatch_days: 5`** → arrives **21 Oct** to Pune |
 | Aria 28mm hoops | Delivery-rescue alternative | Similar style, in stock → arrives **16 Oct** to Pune |
 | 8 stainless steel earrings | Feed the new ad group | `base_metal: stainless steel`, `nickel_free: false`; one metal throughout |
@@ -109,7 +110,7 @@ Nullable fields are deliberate: `null` means "the brand hasn't entered it", whic
 - **~4 SKUs** have vague or conflicting wording ("gold-toned", "water friendly", "skin-safe for most") to test that the claim checker refuses to overstate.
 
 ### 3. `images/manifest.json`
-- Per SKU: `front`, `on_model`, `scale` (on-ear or on-hand, for size questions) file names
+- Per SKU: `front`, `on_model`, `scale` (on-model or on-hand, for size questions) file names
 - Per image: the generation prompt and model used (for the build log)
 - 2 lifestyle images (office, wedding) for the page header only, never altered product shots
 - One consistent style prompt prefix (background, lighting, angle) so the catalogue looks coherent
@@ -249,7 +250,7 @@ About 150 entries: `session_id`, `ad_group_id`, `timestamp`, `message`, `languag
 | Hypoallergenic / sensitive ears | **28** | "sensitive ears", "nickel-free?", "my ears itch with fake gold", "kaan mein allergy hoti hai" |
 | Waterproof / shower | ~30 | "can I shower with it", "pool safe?" |
 | Delivery by date | ~25 | "will it reach before Diwali", "need by Friday" |
-| Size and fit | ~20 | "how big on the ear", "too heavy?" |
+| Size and fit | ~20 | "how big is it", "too heavy?" |
 | Gifting | ~15 | "gift wrap?", "gift for my sister's wedding" |
 | Returns and trust | ~10 | "can I return if it tarnishes" |
 | Other / off-topic | ~16 | mixed |

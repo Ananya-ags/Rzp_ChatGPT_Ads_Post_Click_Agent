@@ -23,17 +23,17 @@ function returnPrevention(hinglish: boolean): Cached {
   const sharedOfKeepers = pct(keep.share_of_keepers);
   const keeperFacts = alt.results.find((r) => r.sku === keep.sku)!;
   const text = hinglish
-    ? `Sach bataun toh 40mm office ke liye thoda bada lagta hai. Office mein pehenne wale jo log return karte hain, unme se ${ins.top_reason.of} mein se ${ins.top_reason.count} ne kaha "looked bigger than expected". Office ke ${sharedOfKeepers} keepers ne ${keep.title} choose kiya, jo kaan pe ~${keeperFacts.drop_length_mm}mm baithte hain.`
-    : `Honest answer: the 40mm reads as a statement for office. Buyers who wore it to work and returned it mostly said it looked bigger than expected (${ins.top_reason.count} of ${ins.top_reason.of}), like "${ins.typical_quote}". ${sharedOfKeepers} of office keepers chose the ${keep.title}, which sit about ${keeperFacts.drop_length_mm}mm on the ear.`;
+    ? `Sach bataun toh 40mm office ke liye thoda bada lagta hai. Office mein pehenne wale jo log return karte hain, unme se ${ins.top_reason.of} mein se ${ins.top_reason.count} ne kaha "looked bigger than expected". Office ke ${sharedOfKeepers} keepers ne ${keep.title} choose kiya, jo ${keeperFacts.outer_diameter_mm}mm diameter ke hain.`
+    : `Honest answer: the 40mm reads as a statement for office. Buyers who wore it to work and returned it mostly said it looked bigger than expected (${ins.top_reason.count} of ${ins.top_reason.of}), like "${ins.typical_quote}". ${sharedOfKeepers} of office keepers chose the ${keep.title}, which are ${keeperFacts.outer_diameter_mm}mm in diameter.`;
   return {
     text,
     cards: [
-      { kind: "comparison", skus: ["ciel-hoops-40mm", keep.sku], data: { metric: "drop_length_mm", values: { "ciel-hoops-40mm": ins.size_note?.drop_length_mm, [keep.sku]: keeperFacts.drop_length_mm }, keepers_share: keep.share_of_keepers } },
+      { kind: "comparison", skus: ["ciel-hoops-40mm", keep.sku], data: { metric: "outer_diameter_mm", values: { "ciel-hoops-40mm": ins.size_note?.outer_diameter_mm, [keep.sku]: keeperFacts.outer_diameter_mm }, keepers_share: keep.share_of_keepers } },
       { kind: "product", skus: alt.results.slice(0, 2).map((r) => r.sku), data: {} },
     ],
     trace: [
       { tool: "get_return_insight", args: { sku: "ciel-hoops-40mm", context: "office" }, summary: `relevant · office returns ${pct(ins.context_return_rate ?? 0)} vs ${pct(ins.overall_return_rate)} overall · top reason "${ins.top_reason.label}" ${ins.top_reason.count}/${ins.top_reason.of} · keepers ${sharedOfKeepers} chose ${keep.sku}` },
-      { tool: "search_catalog", args: { query: "hoops office", similar_to: "ciel-hoops-40mm", category: "earrings", max_outer_diameter_mm: 30, limit: 3 }, summary: alt.results.map((r) => `${r.sku} (${r.outer_diameter_mm}mm, drop ${r.drop_length_mm}mm, ${inr(r.price_inr)})`).join(" · ") },
+      { tool: "search_catalog", args: { query: "hoops office", similar_to: "ciel-hoops-40mm", category: "earrings", max_outer_diameter_mm: 30, limit: 3 }, summary: alt.results.map((r) => `${r.sku} (${r.outer_diameter_mm}mm diameter, ${inr(r.price_inr)})`).join(" · ") },
     ],
   };
 }
