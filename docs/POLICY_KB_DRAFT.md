@@ -119,7 +119,7 @@ Wipe pearls with a soft dry cloth. Don't soak pieces with stones or pearls. Put 
 - loss
 
 ### `warranty.claim`
-1. Message the care team on WhatsApp or email with your order ID and clear photos, within the warranty period.
+1. Email the care team at care@cosmosjewels.example with your order ID and clear photos, within the warranty period.
 2. Once approved, we replace the piece (or give store credit if it's out of stock) within 5–7 working days.
 3. One warranty claim per piece.
 
@@ -182,7 +182,7 @@ COD fees, and shipping fees on orders under the free-shipping threshold, aren't 
 - **Exact dates:** the product page, bag and chat show the date for your pincode. These are estimates from our delivery partners.
 
 ### `shipping.tracking`
-You'll get tracking by SMS and WhatsApp once your order ships. For changes or delays, contact the care team.
+You'll get tracking by SMS once your order ships. For changes or delays, email the care team at care@cosmosjewels.example.
 
 ### `shipping.address_change`
 You can change the delivery address before dispatch by messaging the care team. After dispatch, changes depend on the courier.
@@ -348,7 +348,7 @@ The bag allows up to 15 pieces of the same item. For 16 or more pieces (weddings
 
 **Counts:**
 - Water-resistant: 4 verified today → 22 after approval (the 18 steel pieces that say it only in their description).
-- Steel earrings ad: **8** stainless steel earrings, from ₹1,599.
+- Steel earrings ad: **8** stainless steel earrings, from ₹1,599. The ad group starts **pending approval**; its mock ChatGPT ad (conversation 3) stays hidden until the merchant approves.
 - Nickel: every steel piece is `nickel_free: false`; no piece is described as nickel-free or hypoallergenic.
 
 ---
@@ -361,6 +361,8 @@ The bag allows up to 15 pieces of the same item. For 16 or more pieces (weddings
 | "Are these hypoallergenic?" (any steel earring) | Won't claim hypoallergenic. Stainless steel all the way through; many people who react to plated brass do fine with steel, but it contains some nickel; if they've reacted before, suggest a dermatologist | `materials.skin_sensitivity`, `materials.claims_ladder` |
 | "Is it nickel-free?" (steel earrings, e.g. Mini Huggies on the steel earrings ad) | No: stainless steel contains a small amount of nickel, so not described as hypoallergenic; known nickel allergy → check with a doctor; care team | product facts (`nickel_free: false`) + `materials.skin_sensitivity` |
 | "Is it nickel-free?" (brass or silver pieces, e.g. Tara studs) | The brand hasn't confirmed the nickel content; state the metal (brass with 18K gold plating); known allergy → doctor; care team | product facts (`nickel_free` empty) + `materials.claims_ladder` |
+| "I have a nickel allergy, which earrings can I wear?" | Don't recommend anything as safe. State the metals (steel pieces contain some nickel; brass/silver not confirmed); suggest checking with a doctor; give the care-team email line | `materials.skin_sensitivity` + product facts + `support.contact` |
+| "My ears itch, what should I buy?" (no stated allergy) | Can show the 8 stainless steel earrings, stating the metal only ("stainless steel all the way through"); no hypoallergenic or nickel-free wording; if it persists, see a doctor | `search_catalog` + `materials.skin_sensitivity` |
 | "What metal is this?" | The listed metal all the way through, plus the finish (e.g. "stainless steel all the way through, finished with 18K gold plating") | product facts |
 | "Can I shower with the Ciel hoops?" | Yes: verified water-resistant; rinse after chlorine or salt water | product facts + `materials.water_and_wear` |
 | "Can I shower with the jhumkas?" | No: brass with plating; keep dry | product facts + `materials.water_and_wear` |

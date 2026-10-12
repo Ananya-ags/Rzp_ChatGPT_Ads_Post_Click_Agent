@@ -10,7 +10,7 @@ Companion doc: `docs/POLICY_KB_DRAFT.md` (the ground-truth content for Q2).
 > - Approve → the ad appears in mock ChatGPT → its page shows a steel-earrings rail, and the agent answers "Is it nickel-free?" with an honest no plus the care team.
 > - **Sizing (13 Oct):** each earring has one size: diameter for hoops, huggies and studs, length for drops and jhumkas. There's no "on the ear" measurement anywhere (copy, data, rail reasons, product page).
 > - **Units (13 Oct):** every size is in cm, in the data, copy, product page and chat ("3cm across"); the agent quotes a size string computed in code.
-> - Sections 0, 1.1, 1.2, 1.3, 2.2, 2.4, 6.3, 6.6, 7, 10 and 13 below are updated to match.
+> - Sections 0, 1.1, 1.2, 1.3, 2.2, 2.4, 2.5 (full sensitive-ears track), 6.3, 6.6, 7, 10 and 13 below are updated to match.
 
 ---
 
@@ -148,11 +148,48 @@ You're right that a judge can't tell AI tags from hard-coded ones unless two thi
   - (b) **Visual tags** from photos (shape, motif, texture), used for discovery only, never as claims.
 - **Provenance on every tag:** model, prompt version, run time, source (the exact phrase, or the photo file), confidence, verified flag. Shown in the merchant console's "Attributes to confirm" and in the AI console.
 - **Live proof (P1, cheap):** a "Re-check with AI" button on one attribute row. It calls Gemini live on that SKU's text and photo and streams the result, so judges can see it isn't hard-coded.
-- **Visible effect:** approving it makes the badge appear on the product page, lets the agent state the claim, activates the ad group, and sends the attribute to the Engage feed (better ChatGPT matching).
+- **Visible effect** (two separate approvals):
+  - **Waterproof ×18:** approving it adds the "Water-resistant" badge on those 18 steel pieces, lets the agent state the claim, and sends the attribute to the Engage feed (better ChatGPT matching).
+  - **Sensitive-ears ad group:** approving it activates the steel-earrings ad (conversation 3 appears in mock ChatGPT) and its rail. It adds **no badge**: there is no sensitive-ears, nickel-free or hypoallergenic badge anywhere.
 - **In the 90-second video:** no separate shot. It sits inside the approve moment. The proposal card says "28 shoppers asked about sensitive ears; 8 earrings are stainless steel all the way through; claim check: no hypoallergenic or nickel-free". Approve, and the ad appears in mock ChatGPT. About 8 seconds.
 - **On GitHub:** `docs/AI_PIPELINES.md` with the prompts, an input and output sample, and **accuracy against the planted ground truth**. We know the truth: 18 waterproof-in-prose, 4 vague phrases, every steel piece not nickel-free, the shapes. So we can report, for example, "precision 1.0, recall 0.94 on 35 SKUs". That's objective evidence a judge can check.
 
 ---
+
+### 2.5 The sensitive-ears track (replaces the old hypoallergenic track; built 13 Oct)
+
+This is the approve → new ad → new page loop. It used to sell "hypoallergenic" studs on titanium posts. Every earring is now one metal throughout and steel contains some nickel, so the track sells what is true: **earrings that are stainless steel all the way through**, with no hypoallergenic or nickel-free claim anywhere.
+
+**Data**
+- **New ad group** `stainless-steel-earrings` ("Stainless steel earrings (sensitive ears)") in `ad_groups.json`:
+  - Starts as `status: "pending_approval"`, `created_by: "engage_campaign_agent"`, linked to proposal `prop-new-ad-group-steel-earrings`.
+  - IDs: `campaign_id cmp_7f3a9c21d84e`, `ad_group_id adg_c47f18e2d6b9`, `ad_id ad_7d05e2c9b4f1`. Daily budget ₹1,500.
+  - Context hints: sensitive ears · earrings that don't itch · stainless steel · one metal throughout · everyday earrings.
+  - Hero SKU: `kira-mini-huggies`. Candidates: only the **8 steel earrings**: Ciel 40mm, Ciel 30mm, Ciel huggies 20mm, Aria 28mm, Kira mini huggies, Kira twist huggies, Mira teardrop drops, Sana chain threaders.
+  - Ad creative: **"All-steel gold earrings · One metal throughout, 18K gold plated. From ₹1,599."** CTA "Shop steel earrings".
+- **Mock ChatGPT conversation 3** (`conv-sensitive`, "Earrings for sensitive ears") is back in `mock_chatgpt.json`. Its sponsored card carries the full URL macros plus `oppref`, and stays **hidden until the ad group is approved** (`requires_approval_of: stainless-steel-earrings`).
+- **All 22 stainless steel pieces** (earrings, necklaces, rings, bracelets) are `nickel_free: false`, so the honest answer is the same every time. Brass and silver pieces leave `nickel_free` empty ("the brand hasn't confirmed").
+- Brass was deliberately left out of the ad: plated fashion brass is a common trigger for people with nickel sensitivity.
+
+**AI pipelines** (`npm run pipelines`; currently heuristic mode, to be re-run with Gemini)
+- **Intent clustering** groups the sensitive-ears / itching / allergy / nickel messages (including Hinglish, e.g. "sensitive ears wale ke liye kya acha hai") into one cluster.
+- **Gap analysis → proposal** "**28 shoppers asked about sensitive ears**". Evidence on the card:
+  - Shoppers who asked: 28 (28 messages, 4 in Hinglish)
+  - Unmet by the catalogue: 96% · conversion when asked: 4%
+  - The 8 stainless steel earrings (from ₹1,599)
+  - **Claim check:** the ad states the metal only; no "hypoallergenic" or "nickel-free"
+  - Confidence 0.78. Apply action: `activate_ad_group` → sent to the Engage campaign agent.
+- **Rail curation** builds the steel rail with reasons from verified data only, e.g. "Stainless steel throughout · 3cm diameter".
+- **Openers and chips** for the ad: context chip "Sensitive ears · stainless steel"; opener "Mini Huggie Earrings are stainless steel all the way through, with 18k gold plating. Ask me anything about the metal."; chips "What metal is this?", "Is it nickel-free?", "When will it be delivered?".
+
+**Agent**
+- **Rule 9** (system prompt): for sensitive ears, itching, allergies or nickel, state the verified metal (each earring is one metal throughout). Stainless steel contains some nickel (`nickel_free: false`), so never call a piece hypoallergenic or nickel-free. For a **known allergy**, suggest checking with a doctor and call `handoff` (the care-team email line).
+- **Offline answers for the two new chips** come straight from product data in the fast path, with no LLM call:
+  - "What metal is this?" → "They're stainless steel all the way through, with 18K gold plating."
+  - "Is it nickel-free?" → steel: "No. They're stainless steel, which has a little nickel, so we don't call them hypoallergenic. If you have a nickel allergy, please check with your doctor first. Our care team can help too." Brass/silver: "The brand hasn't confirmed this…" + the same doctor and care-team line.
+- Output guardrail G12 still blocks "hypoallergenic" / "nickel-free" unless a verified flag backs it (none does).
+
+**The demo moment:** proposal card → Approve → conversation 3's ad appears in mock ChatGPT → click → Mini Huggies page with the steel rail and chips → tap "Is it nickel-free?" → honest no + doctor + care team. The video line: *"The AI found the demand and the products, and refused to write the claim the brand can't back."*
 
 ## 3. Gemini settings that help it stay grounded
 
