@@ -1,6 +1,6 @@
 "use client";
 /**
- * Store header: ☰ menu (slide-in category panel, display only), logo, search (display only), profile (→ login),
+ * Store header: ☰ menu (slide-in category panel, display only), logo, profile (→ login),
  * and the bag (links to the bag page, with a live count).
  */
 import Link from "next/link";
@@ -16,12 +16,6 @@ const Icon = ({ d, className = "size-[22px]" }: { d: React.ReactNode; className?
   </svg>
 );
 const MENU_ICON = <path d="M4 7h16M4 12h16M4 17h16" />;
-const SEARCH_ICON = (
-  <>
-    <circle cx="11" cy="11" r="6.5" />
-    <path d="M16 16l4 4" />
-  </>
-);
 const USER_ICON = (
   <>
     <circle cx="12" cy="8.5" r="3.8" />
@@ -57,9 +51,6 @@ export default function SiteHeader({ user = null, loginHref = "/login" }: { user
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/cosmos-logo-v4.png" alt="Cosmos" className="h-6 w-auto md:h-[30px]" />
         </Link>
-        <span className="grid size-10 place-items-center text-ink" title="Search (coming soon)">
-          <Icon d={SEARCH_ICON} />
-        </span>
         <Link href={loginHref} aria-label={user ? "Your account" : "Log in"} className="grid size-10 place-items-center rounded-full text-ink active:bg-sand">
           {user ? (
             <span className="ai-badge grid size-7 place-items-center rounded-full text-[13px] font-semibold text-[#3a2a10]">{user.firstName[0]}</span>
