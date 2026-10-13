@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1052" width="1280" height="1052">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#64748B"/></marker><marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2B6CEB"/></marker></defs>
+<rect width="1280" height="1052" rx="18" fill="#FFFFFF"/>
+<text x="40" y="44" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="22" font-weight="800" fill="#0B1D3A" text-anchor="start">Cosmos AI · agentic architecture</text>
+<text x="40" y="66" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="400" fill="#5B6475" text-anchor="start">Post-click agent for ChatGPT Ads inside Razorpay Engage. The model decides and explains; code computes every number.</text>
+<rect x="900" y="30" width="14" height="14" rx="3" fill="#F1F0FF" stroke="#7C6CF2" stroke-width="1.4"/>
+<text x="922" y="42" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#1F2937" text-anchor="start">AI (Gemini)</text>
+<rect x="900" y="52" width="14" height="14" rx="3" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.4"/>
+<text x="922" y="64" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#1F2937" text-anchor="start">Code (deterministic)</text>
+<rect x="1075" y="30" width="14" height="14" rx="3" fill="#F4F5F7" stroke="#9AA3B2" stroke-width="1.4"/>
+<text x="1097" y="42" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#1F2937" text-anchor="start">Guardrail / rule</text>
+<rect x="1075" y="52" width="14" height="14" rx="3" fill="#EAF2FF" stroke="#2B6CEB" stroke-width="1.4"/>
+<text x="1097" y="64" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#1F2937" text-anchor="start">Razorpay (simulated)</text>
+<text x="40" y="98" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" font-weight="700" fill="#2B6CEB" text-anchor="start">SHOPPER JOURNEY</text>
+<rect x="40" y="110" width="210" height="92" rx="10" fill="#EAF2FF" stroke="#2B6CEB" stroke-width="1.4"/>
+<text x="54" y="134" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#1D4FB8" text-anchor="start">ChatGPT ad click</text>
+<text x="54" y="154" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">campaign_id · ad_group_id</text>
+<text x="54" y="170" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">ad_id · oppref (no query data)</text>
+<rect x="290" y="110" width="300" height="92" rx="10" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.4"/>
+<text x="304" y="134" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#1E7444" text-anchor="start">Adaptive product page</text>
+<text x="304" y="154" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Context chip, AI-curated rail with reasons,</text>
+<text x="304" y="170" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">opener: precomputed JSON, never waits</text>
+<text x="304" y="186" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">on the LLM</text>
+<rect x="630" y="110" width="220" height="92" rx="10" fill="#F1F0FF" stroke="#7C6CF2" stroke-width="1.4"/>
+<text x="644" y="134" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#4B3FC4" text-anchor="start">Cosmos AI chat</text>
+<text x="644" y="154" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Bottom sheet · chips match</text>
+<text x="644" y="170" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">the ad · cards + text replies</text>
+<rect x="890" y="110" width="350" height="92" rx="10" fill="#EAF2FF" stroke="#2B6CEB" stroke-width="1.4"/>
+<text x="904" y="134" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#1D4FB8" text-anchor="start">Checkout</text>
+<text x="904" y="154" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Magic Checkout-style steps (simulated) →</text>
+<text x="904" y="170" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Razorpay Standard Checkout, Test Mode</text>
+<text x="904" y="186" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">(Orders API + signature verify)</text>
+<path d="M250,156 L288,156" fill="none" stroke="#64748B" stroke-width="1.8" marker-end="url(#ah)"/>
+<path d="M590,156 L628,156" fill="none" stroke="#64748B" stroke-width="1.8" marker-end="url(#ah)"/>
+<path d="M850,156 L888,156" fill="none" stroke="#64748B" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="40" y="250" width="1200" height="370" rx="14" fill="#FAFBFD" stroke="#CBD2DC" stroke-width="1.4"/>
+<text x="60" y="278" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="15" font-weight="800" fill="#0B1D3A" text-anchor="start">Runtime agent  ·  /api/chat  (streams to the shop and to the AI console as a structured trace)</text>
+<path d="M740,202 L740,248" fill="none" stroke="#64748B" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="748" y="234" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" font-weight="600" fill="#64748B" text-anchor="start">every message</text>
+<rect x="60" y="296" width="212" height="140" rx="10" fill="#F4F5F7" stroke="#9AA3B2" stroke-width="1.4"/>
+<text x="74" y="320" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#4B5563" text-anchor="start">1 · Input guards</text>
+<text x="74" y="340" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Text only, ≤500 chars</text>
+<text x="74" y="356" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Abuse filter, 3 strikes</text>
+<text x="74" y="372" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Injection patterns</text>
+<text x="74" y="388" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Rate limit + daily $ cap</text>
+<text x="74" y="404" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">PII redacted from logs</text>
+<rect x="296" y="296" width="212" height="140" rx="10" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.4"/>
+<text x="310" y="320" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#1E7444" text-anchor="start">2 · Intent router</text>
+<text x="310" y="340" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Lookup chips → fast path:</text>
+<text x="310" y="356" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">answered by tools, $0</text>
+<text x="310" y="372" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Routed intents → forced</text>
+<text x="310" y="388" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">first tool (offers, delivery,</text>
+<text x="310" y="404" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">fit, policy, handoff)</text>
+<rect x="532" y="296" width="212" height="140" rx="10" fill="#F1F0FF" stroke="#7C6CF2" stroke-width="1.4"/>
+<rect x="712.8" y="306" width="21.2" height="18" rx="9" fill="#7C6CF2"/>
+<text x="723.4" y="319" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#FFFFFF" text-anchor="middle">AI</text>
+<text x="546" y="320" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#4B3FC4" text-anchor="start">3 · Gemini agent</text>
+<text x="546" y="340" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">gemini-3.1-flash-lite</text>
+<text x="546" y="356" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">fallback gemini-3.8-flash</text>
+<text x="546" y="372" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">≤5 tool steps · 8s/step</text>
+<text x="546" y="388" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Hinglish in, Hinglish out</text>
+<rect x="768" y="296" width="212" height="140" rx="10" fill="#F4F5F7" stroke="#9AA3B2" stroke-width="1.4"/>
+<text x="782" y="320" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#4B5563" text-anchor="start">4 · Output guardrails</text>
+<text x="782" y="340" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Numbers grounded in tools</text>
+<text x="782" y="356" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Verified claims only</text>
+<text x="782" y="372" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Banned phrases · sizes in cm</text>
+<text x="782" y="388" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Honest lead · policy grounded</text>
+<text x="782" y="404" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Fail → safe line / handoff</text>
+<rect x="1004" y="296" width="212" height="140" rx="10" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.4"/>
+<text x="1018" y="320" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#1E7444" text-anchor="start">5 · Reply + trace</text>
+<text x="1018" y="340" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Product cards / text</text>
+<text x="1018" y="356" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Add to bag → checkout</text>
+<text x="1018" y="372" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Trace: tool, args, result,</text>
+<text x="1018" y="388" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">checks, tokens, cost</text>
+<text x="1018" y="404" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">No model → tool-built answer</text>
+<path d="M272,366.0 L294,366.0" fill="none" stroke="#64748B" stroke-width="1.8" marker-end="url(#ah)"/>
+<path d="M508,366.0 L530,366.0" fill="none" stroke="#64748B" stroke-width="1.8" marker-end="url(#ah)"/>
+<path d="M744,366.0 L766,366.0" fill="none" stroke="#64748B" stroke-width="1.8" marker-end="url(#ah)"/>
+<path d="M980,366.0 L1002,366.0" fill="none" stroke="#64748B" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="60" y="470" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" font-weight="700" fill="#1E7444" text-anchor="start">10 tools: deterministic code over verified data; the model chooses and explains, never computes</text>
+<path d="M638.0,436 L638.0,454" fill="none" stroke="#64748B" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="646.0" y="452" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" font-weight="600" fill="#64748B" text-anchor="start">calls</text>
+<rect x="60" y="482" width="212" height="34" rx="8" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.2"/>
+<text x="166.0" y="504" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="13" font-weight="600" fill="#1E7444" text-anchor="middle">search_catalog()</text>
+<rect x="296" y="482" width="212" height="34" rx="8" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.2"/>
+<text x="402.0" y="504" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="13" font-weight="600" fill="#1E7444" text-anchor="middle">check_delivery()</text>
+<rect x="532" y="482" width="212" height="34" rx="8" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.2"/>
+<text x="638.0" y="504" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="13" font-weight="600" fill="#1E7444" text-anchor="middle">get_offer()</text>
+<rect x="768" y="482" width="212" height="34" rx="8" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.2"/>
+<text x="874.0" y="504" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="13" font-weight="600" fill="#1E7444" text-anchor="middle">get_return_insight()</text>
+<rect x="1004" y="482" width="212" height="34" rx="8" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.2"/>
+<text x="1110.0" y="504" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="13" font-weight="600" fill="#1E7444" text-anchor="middle">get_product_facts()</text>
+<rect x="60" y="526" width="212" height="34" rx="8" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.2"/>
+<text x="166.0" y="548" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="13" font-weight="600" fill="#1E7444" text-anchor="middle">lookup_policy()</text>
+<rect x="296" y="526" width="212" height="34" rx="8" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.2"/>
+<text x="402.0" y="548" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="13" font-weight="600" fill="#1E7444" text-anchor="middle">add_to_bag()</text>
+<rect x="532" y="526" width="212" height="34" rx="8" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.2"/>
+<text x="638.0" y="548" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="13" font-weight="600" fill="#1E7444" text-anchor="middle">update_preferences()</text>
+<rect x="768" y="526" width="212" height="34" rx="8" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.2"/>
+<text x="874.0" y="548" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="13" font-weight="600" fill="#1E7444" text-anchor="middle">suggest_login()</text>
+<rect x="1004" y="526" width="212" height="34" rx="8" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.2"/>
+<text x="1110.0" y="548" font-family="SFMono-Regular,Menlo,Consolas,monospace" font-size="13" font-weight="600" fill="#1E7444" text-anchor="middle">handoff()</text>
+<rect x="40" y="680" width="370" height="230" rx="10" fill="#EAF2FF" stroke="#2B6CEB" stroke-width="1.4"/>
+<text x="54" y="704" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#1D4FB8" text-anchor="start">Data + Razorpay inputs</text>
+<text x="54" y="724" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Catalogue: 35 SKUs, attributes carry</text>
+<text x="54" y="740" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">   verified: true/false + source phrase</text>
+<text x="54" y="756" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Offers Engine: offers, caps, bank offers</text>
+<text x="54" y="772" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Magic Checkout RTO risk by pincode</text>
+<text x="54" y="788" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">   → prepaid nudge, predicted kept revenue</text>
+<text x="54" y="804" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Login with Razorpay: address, ₹300 wallet</text>
+<text x="54" y="820" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Policies KB · logistics · orders · returns</text>
+<text x="54" y="836" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">(all simulated for a fictional brand)</text>
+<rect x="455" y="680" width="370" height="230" rx="10" fill="#F1F0FF" stroke="#7C6CF2" stroke-width="1.4"/>
+<rect x="793.8" y="690" width="21.2" height="18" rx="9" fill="#7C6CF2"/>
+<text x="804.4" y="703" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="10" font-weight="700" fill="#FFFFFF" text-anchor="middle">AI</text>
+<text x="469" y="704" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#4B3FC4" text-anchor="start">Offline AI pipelines</text>
+<text x="469" y="724" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">gemini-3.8-flash (fallback 3.5-flash-lite)</text>
+<text x="469" y="740" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">1. Catalogue understanding (text + images)</text>
+<text x="469" y="756" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">2. Reading free-text return reasons</text>
+<text x="469" y="772" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">3. Clustering shopper questions</text>
+<text x="469" y="788" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">4. Rail + opener per ad group</text>
+<text x="469" y="804" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">5. Proposals for the merchant → (numbers in code)</text>
+<text x="469" y="820" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">→ data/generated/*.json, cached, re-runnable</text>
+<rect x="870" y="680" width="370" height="230" rx="10" fill="#ECF8F1" stroke="#2E9E5B" stroke-width="1.4"/>
+<text x="884" y="704" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#1E7444" text-anchor="start">Merchant console  ·  /merchant</text>
+<text x="884" y="724" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Ad-click-to-order funnel, kept revenue</text>
+<text x="884" y="740" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">   (paid − refunds − RTO)</text>
+<text x="884" y="756" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">What shoppers asked, by theme</text>
+<text x="884" y="772" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Proposals inbox with evidence:</text>
+<text x="884" y="788" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">   Approve / Dismiss / Undo</text>
+<text x="884" y="804" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Approvals act in code, never via the model:</text>
+<text x="884" y="820" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">   attribute, rail rule, pause, new ad group</text>
+<text x="884" y="836" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Site-wide pause · reset</text>
+<path d="M225,680 L225,622" fill="none" stroke="#64748B" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="233" y="656" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" font-weight="600" fill="#64748B" text-anchor="start">facts, offers, RTO risk</text>
+<path d="M640,680 L640,622" fill="none" stroke="#64748B" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="648" y="656" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" font-weight="600" fill="#64748B" text-anchor="start">enriched catalogue, return insights</text>
+<path d="M825,805 L868,805" fill="none" stroke="#64748B" stroke-width="1.8" marker-end="url(#ah)"/>
+<path d="M1240,156 L1262,156 L1262,740 L1242,740" fill="none" stroke="#64748B" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="1270" y="395.0" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" font-weight="600" fill="#64748B" transform="rotate(90 1270 395.0)" text-anchor="middle">test-mode orders</text>
+<path d="M1050,910 L1050,928 L20,928 L20,156 L38,156" fill="none" stroke="#2B6CEB" stroke-width="2.2" stroke-dasharray="7 5" marker-end="url(#ahb)"/>
+<text x="640" y="948" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#2B6CEB" text-anchor="middle">Closed loop: approved proposal → new ad group / feed attribute → Engage campaign agent → new ChatGPT ad → new page</text>
+<rect x="40" y="964" width="1200" height="64" rx="10" fill="#F4F5F7" stroke="#9AA3B2" stroke-width="1.4"/>
+<text x="54" y="988" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#4B5563" text-anchor="start">Evals  ·  npm run evals</text>
+<text x="54" y="1008" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">70 cases across 13 categories (tool use, groundedness, claim safety, handoff, Hinglish, injection, offer-cap abuse…) · rule checks + a separate Gemini Pro judge</text>
+<text x="54" y="1024" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" font-weight="400" fill="#5B6475" text-anchor="start">Safety gate: claim safety, groundedness and no-ChatGPT-mention must pass 100% of rule checks or the run exits 1</text>
+</svg>
