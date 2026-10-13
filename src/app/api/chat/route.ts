@@ -4,7 +4,7 @@ import { buildTools, systemPrompt, type ChatContext } from "@/lib/agent/agent";
 import { AGENT, estimateCostUsd, llmSettings, pickFallbackLlm, pickLlm, type Llm } from "@/lib/ai/model";
 import { addSpend, overDailyBudget, spendToday } from "@/lib/ai/spend";
 import { inputCheck, outputChecks, redact } from "@/lib/agent/guardrails";
-import { ALLERGY, MAX_MESSAGE_CHARS, TEXT_ONLY_REPLY, TOO_LONG_REPLY, forcedTool, isFastPath, norm, parseDeadline } from "@/lib/agent/intents";
+import { ALLERGY, MAX_MESSAGE_CHARS, TEXT_ONLY_REPLY, TOO_LONG_REPLY, forcedTool, isFastPath, norm, parseDeadline, parseQty } from "@/lib/agent/intents";
 import { allowMessage, hasDemoBypass, visitorKey, VISITOR_COOKIE } from "@/lib/agent/rateLimit";
 import * as core from "@/lib/tools/core";
 import { userFromRequest } from "@/lib/user";
@@ -51,11 +51,16 @@ export async function POST(req: Request) {
     pincode: user?.address.pincode ?? null,
     rtoRisk: user?.rtoRisk,
     ownedTitles: user ? user.ownedSkus.map((s) => core.findProduct(db, s)?.title ?? s) : [],
+    cart: Array.isArray(clientCtx.cart) ? clientCtx.cart.filter((l) => l && typeof l.sku === "string" && Number.isFinite(l.qty)).slice(0, 50) : [],
+    loginOffered: !!clientCtx.loginOffered,
+    path: typeof clientCtx.path === "string" && clientCtx.path.startsWith("/") ? clientCtx.path.slice(0, 300) : "/",
+    preferences: readPrefsCookie(req),
   };
   // the product page the chat was opened on; null when opened from the store home or a category page
   const page = context.sku ? core.findProduct(db, context.sku) : null;
   const group = context.adGroupId ? resolveAdGroup({ ad_group: context.adGroupId }) : null;
   const userText = lastUserText(messages);
+  context.userText = userText;
   const input = inputCheck(userText);
   const started = Date.now();
   const inputGuard = { type: "data-guard" as const, data: { stage: "input", name: "injection patterns", pass: !input.injection, detail: input.injection ? input.patterns.join(", ") : "none", text: redact(userText) } };
@@ -75,7 +80,7 @@ export async function POST(req: Request) {
       }),
     });
   type OfflineReason = "fast_path" | "no_api_key" | "llm_unavailable" | "rate_limited" | "daily_cap";
-  const offline = (writer: Writer, reason: OfflineReason, attempts: unknown[] = [], intent: ReturnType<typeof forcedTool> = null) => {
+  const offline = (writer: Writer, reason: OfflineReason, attempts: unknown[] = [], intent: QuickIntent = null) => {
     const o = offlineWriter(userText, page?.handle ?? null, context, intent);
     const busy = reason === "rate_limited" || reason === "daily_cap";
     if (!busy || o.answered) o.write(writer); // busy with nothing quick to say: just the friendly note
@@ -105,12 +110,15 @@ export async function POST(req: Request) {
       writer.write({ type: "finish" });
     });
 
+  // routed intent (rules in code). For quick answers without a model, simple product-fact questions count too (B9).
+  const routed = forcedTool(userText, !!page);
+  const quickIntent: QuickIntent = routed ?? (page && FACTS_Q.test(userText) ? "get_product_facts" : null);
   const llm = pickLlm("agent");
   if (!llm)
     return respond((writer) => {
       writer.write({ type: "start" });
       writer.write(inputGuard);
-      offline(writer, "no_api_key");
+      offline(writer, "no_api_key", [], quickIntent);
       writer.write({ type: "finish" });
     });
 
@@ -118,13 +126,12 @@ export async function POST(req: Request) {
   // daily spend cap. Either one → quick answers with a friendly note instead of a model call.
   const overRate = !allowMessage(key) && !(await hasDemoBypass(req));
   const overCap = overDailyBudget();
-  const routed = forcedTool(userText, !!page);
   if (overRate || overCap)
     return respond((writer) => {
       writer.write({ type: "start" });
       writer.write(inputGuard);
       writer.write({ type: "data-guard", data: { stage: "input", name: overRate ? "rate limit" : "daily spend cap", pass: false, detail: overRate ? "over 40 messages in 10 minutes" : `estimated spend today ≥ $${spendToday().budget_usd}` } });
-      offline(writer, overRate ? "rate_limited" : "daily_cap", [], routed);
+      offline(writer, overRate ? "rate_limited" : "daily_cap", [], quickIntent);
       writer.write({ type: "finish" });
     });
 
@@ -168,7 +175,7 @@ export async function POST(req: Request) {
           stepStart = Date.now();
         },
       });
-      const piped = await pipeUntilFirstOutput(r, tools, writer, started);
+      const piped = await pipeUntilFirstOutput(r, tools, writer, started, forced);
       if (!piped.started) {
         // blocked by safety settings → polite decline, never an error, and no point trying another model
         const finish = await settle(r.finishReason, null);
@@ -201,6 +208,12 @@ export async function POST(req: Request) {
         writeText(writer, "tail", text);
         writer.write({ type: "data-guard", data: { stage: "output", name: "safe template", pass: true, detail: `model gave no text${piped.error ? ` (${piped.error})` : ""}; answer built from tool results` } });
       }
+      // delivery checked without a known pincode: the estimate line is required, so code adds it if the reply left it out
+      if (!context.pincode && toolLog.some((x) => x.tool === "check_delivery") && !/pincode/i.test(text)) {
+        const note = "That's an estimate for Pune; share your pincode for an exact date.";
+        writeText(writer, "estimate", note);
+        text = `${text} ${note}`;
+      }
       const sources = JSON.stringify(toolLog.map((t) => t.output)) + JSON.stringify(page ? core.verifiedFacts(page) : null) + JSON.stringify(db.brand.policies) + JSON.stringify(db.rules.offer_caps) + JSON.stringify(db.rules.escalation);
       for (const c of outputChecks(text, sources, db.rules, page)) writer.write({ type: "data-guard", data: { stage: "output", ...c } });
       if (finishReason === "length") writer.write({ type: "data-guard", data: { stage: "output", name: "length", pass: false, detail: `finishReason length at ${AGENT.maxOutputTokens} max output tokens` } });
@@ -231,9 +244,53 @@ export async function POST(req: Request) {
 
     // every model failed (timeout, 429/quota, 503, empty) → quick answer (for a routed intent, answered from code)
     // + limited-mode note
-    offline(writer, "llm_unavailable", attempts, forced);
+    offline(writer, "llm_unavailable", attempts, quickIntent);
     writer.write({ type: "finish" });
   });
+}
+
+export const PREFS_COOKIE = "cosmos_prefs";
+/** Shopper preferences saved by update_preferences (session cookie, set by the browser from a data part). */
+function readPrefsCookie(req: Request): core.Preferences {
+  const raw = (req.headers.get("cookie") ?? "").match(new RegExp(`(?:^|;\\s*)${PREFS_COOKIE}=([^;]+)`))?.[1];
+  if (!raw) return {};
+  try {
+    const p = JSON.parse(decodeURIComponent(raw)) as core.Preferences;
+    return { budget_max_inr: Number(p.budget_max_inr) || undefined, occasion: p.occasion, category: p.category, style: typeof p.style === "string" ? p.style.slice(0, 40) : undefined, deadline: typeof p.deadline === "string" && /^\d{4}-\d{2}-\d{2}$/.test(p.deadline) ? p.deadline : undefined };
+  } catch {
+    return {};
+  }
+}
+
+/** One line for the AI console describing a tool result. */
+function summarizeTool(tool: string, o: Record<string, unknown> | null): string {
+  if (!o) return "no result";
+  if ("error" in o && o.error) return `error: ${o.error}`;
+  const list = (xs: unknown) => (Array.isArray(xs) ? xs : []) as Record<string, unknown>[];
+  switch (tool) {
+    case "search_catalog": return `${list(o.results).length} result(s): ${list(o.results).map((r) => r.sku).join(", ")}`;
+    case "check_delivery": return `${o.title} arrives ${o.arrives_label}${o.meets_deadline === false ? " (misses the deadline)" : ""}${list(o.alternatives).length ? `; alternatives: ${list(o.alternatives).map((a) => `${a.sku} ${a.arrives_label}`).join(", ")}` : ""}`;
+    case "get_offer": return `pay ₹${o.total_inr}; applied: ${list(o.applied).map((a) => a.id).join(", ") || "none"}`;
+    case "get_return_insight": return o.relevant ? `relevant: ${(o.top_reason as Record<string, unknown>)?.label} ${(o.top_reason as Record<string, unknown>)?.count}/${(o.top_reason as Record<string, unknown>)?.of}` : "not relevant";
+    case "handoff": return "care line";
+    case "lookup_policy": return o.found ? `${o.id} ${o.version}` : "no match → care line";
+    case "get_product_facts": return o.found ? `${o.title} · ${o.size ?? "size n/a"}` : "not found";
+    case "add_to_bag": return o.added ? `added ${o.qty} × ${o.title} (bag ${o.bag_count})` : `not added: ${o.reason}`;
+    case "update_preferences": return `preferences ${JSON.stringify(o.preferences)}`;
+    case "suggest_login": return o.show ? "login card shown" : String(o.why);
+    default: return "done";
+  }
+}
+
+/**
+ * After a tool result: the console part (B8) and, where the browser must act, a client part:
+ * data-cart (new bag → header count + toast) and data-preferences (saved to the session cookie).
+ */
+function writeToolParts(writer: Writer, tool: string, args: unknown, output: unknown, latencyMs: number, source: "code" | "ai") {
+  const o = (output ?? null) as Record<string, unknown> | null;
+  writer.write({ type: "data-tool", data: { tool, args, why: String(o?.why ?? ""), result_summary: summarizeTool(tool, o), latency_ms: latencyMs, source } });
+  if (tool === "add_to_bag" && o?.added) writer.write({ type: "data-cart", data: { cart: o.cart, added: { sku: o.sku, title: o.title, qty: o.qty } } });
+  if (tool === "update_preferences" && o?.preferences) writer.write({ type: "data-preferences", data: { preferences: o.preferences } });
 }
 
 /** Short, key-free reason for a failed model call, e.g. "429 quota", "503 high demand", "timeout". */
@@ -248,7 +305,7 @@ function describeError(e: unknown): string {
 }
 
 /** G17: a templated answer for a routed intent when no model is available (computed by the same tools). */
-function routedAnswer(intent: NonNullable<ReturnType<typeof forcedTool>>, page: NonNullable<ReturnType<typeof core.findProduct>>, userText: string, ctx: ChatContext) {
+function routedAnswer(intent: NonNullable<QuickIntent>, page: NonNullable<ReturnType<typeof core.findProduct>>, userText: string, ctx: ChatContext) {
   const db = getDb();
   const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
   const t = (tool: string, args: Record<string, unknown>, text: string) => ({ cached_response: { text, cards: [], trace: [{ tool, args }] } });
@@ -265,6 +322,24 @@ function routedAnswer(intent: NonNullable<ReturnType<typeof forcedTool>>, page: 
     if ("error" in d) return null;
     return t("check_delivery", { sku: page.handle, pincode: pin, ...(deadline ? { deadline } : {}) }, deliveryText(d, !!ctx.pincode));
   }
+  if (intent === "lookup_policy") {
+    const r = core.lookupPolicy(db, userText);
+    return t("lookup_policy", { topic: userText }, r.found ? shortPolicy(r.text) : db.rules.escalation.text);
+  }
+  if (intent === "get_product_facts") {
+    // a product named in the question ("the Pearl Drop Earrings") wins over the page product
+    const named = db.products.find((x) => {
+      const core_ = x.title.toLowerCase().replace(/ (earrings?|necklace|ring|bracelet)$/, "");
+      return core_.length > 3 && userText.toLowerCase().includes(core_);
+    });
+    const sku = named?.handle ?? page.handle;
+    const f = core.getProductFacts(db, sku);
+    return f.found ? t("get_product_facts", { sku }, factsText(f)) : null;
+  }
+  if (intent === "add_to_bag") {
+    const r = core.addToBag(db, ctx.cart ?? [], page.handle, parseQty(userText));
+    return t("add_to_bag", { sku: page.handle, qty: parseQty(userText) }, bagText(r));
+  }
   if (intent === "handoff") return t("handoff", { reason: "routed: care question" }, ALLERGY.test(userText) ? `${nickelAnswer(page)} ${carePointer()}` : db.rules.escalation.text);
   return null; // get_return_insight needs the model to judge fit
 }
@@ -274,6 +349,30 @@ type DeliveryResult = Exclude<ReturnType<typeof core.checkDelivery>, { error: st
 /** Delivery answer from check_delivery's code-written summary (incl. in-time alternatives), plus the estimate note. */
 function deliveryText(d: DeliveryResult, knownPincode: boolean): string {
   return `${d.summary}${knownPincode ? "" : " That's an estimate for Pune; share your pincode for an exact date."}`;
+}
+
+type QuickIntent = ReturnType<typeof forcedTool> | "get_product_facts";
+/** Simple product-fact questions, answered from verified facts when no model is available. */
+const FACTS_Q = /\b(how (big|long|heavy|wide)|what size|size of|dimensions?|diameter|length|weight|made of|material|what metal)\b/i;
+type Facts = Extract<ReturnType<typeof core.getProductFacts>, { found: true }>;
+
+/** A policy section shortened for chat: its first two sentences (the full text stays in the tool result). */
+function shortPolicy(text: string) {
+  const parts = text.match(/[^.!?]+[.!?]+/g) ?? [text];
+  return parts.slice(0, 2).join(" ").trim();
+}
+/** Product facts as one plain line: size, metal and finish, weight (verified fields only). */
+function factsText(f: Facts) {
+  const metal = { "stainless steel": "stainless steel", "925 silver": "sterling silver", brass: "brass" }[f.base_metal] ?? f.base_metal;
+  const plural = /s$/i.test(f.title);
+  return `The ${f.title} ${plural ? "are" : "is"} ${f.size ?? "listed without a size"}, ${metal}${f.plating ? ` with ${f.plating === "18k gold plating" ? "18K gold plating" : f.plating}` : ""}${f.weight_g ? `, ${f.weight_g}g${f.category === "earrings" ? " the pair" : ""}` : ""}.`;
+}
+/** add_to_bag result as one line. */
+function bagText(r: ReturnType<typeof core.addToBag>) {
+  if (r.added) return `Added ${r.qty} × ${r.title} to your bag.`;
+  if (r.reason === "bulk_order") return r.message ?? "";
+  if (r.reason === "stock") return `Only ${r.available} of the ${r.title} ${r.available === 1 ? "is" : "are"} left to add.`;
+  return "I couldn't add that one. Which piece would you like?";
 }
 
 /** "Our care team can help…" with the support email and reply time (for answers that aren't a dead end). */
@@ -306,6 +405,9 @@ function answerFromTools(log: { tool: string; output: unknown }[], knownPincode:
       return `I can't create discounts; the store caps offers at ${cap.max_pct}% or ${inr(cap.max_flat_inr)}.${best ? ` What you do get: ${best.label.charAt(0).toLowerCase() + best.label.slice(1)}, so you'd pay ${inr(o.total_inr)}.` : ""}`;
     }
     if (tool === "check_delivery") return deliveryText(o as unknown as DeliveryResult, knownPincode);
+    if (tool === "lookup_policy") return o.found ? shortPolicy(String(o.text)) : db.rules.escalation.text;
+    if (tool === "get_product_facts" && o.found) return factsText(o as unknown as Facts);
+    if (tool === "add_to_bag") return bagText(o as unknown as ReturnType<typeof core.addToBag>);
     if (tool === "handoff") return page && ALLERGY.test(userText) ? `${nickelAnswer(page)} ${carePointer()}` : db.rules.escalation.text;
     if (tool === "get_return_insight") {
       const ri = output as unknown as { relevant: boolean; title: string; top_reason: { count: number; of: number; label: string } | null; keepers: { title: string; share_of_keepers: number } | null; context: string };
@@ -323,7 +425,22 @@ const OUTPUT_PARTS = new Set(["text-start", "text-delta", "tool-input-start", "t
  * ends before any output, nothing is forwarded (started: false) so the caller can try the next model. Errors after
  * output has started are swallowed (never shown raw) and reported back.
  */
-async function pipeUntilFirstOutput(result: { stream: Parameters<typeof toUIMessageStream>[0]["stream"] }, tools: Parameters<typeof toUIMessageStream>[0]["tools"], writer: Writer, requestStart: number) {
+async function pipeUntilFirstOutput(result: { stream: Parameters<typeof toUIMessageStream>[0]["stream"] }, tools: Parameters<typeof toUIMessageStream>[0]["tools"], writer: Writer, requestStart: number, forced: string | null = null) {
+  // B8: a console part per tool result; the first tool is "code"-chosen when it was forced, otherwise the model chose it
+  const calls = new Map<string, { tool: string; args: unknown; t0: number }>();
+  let first = true;
+  const forward = (part: Parameters<Writer["write"]>[0]) => {
+    writer.write(part);
+    if (part.type === "tool-input-available") {
+      calls.set(part.toolCallId, { tool: part.toolName, args: part.input, t0: Date.now() });
+    } else if (part.type === "tool-output-available") {
+      const c = calls.get(part.toolCallId);
+      if (!c) return;
+      const source = first && forced === c.tool ? "code" : "ai";
+      first = false;
+      writeToolParts(writer, c.tool, c.args, part.output, Date.now() - c.t0, source);
+    }
+  };
   // onError: keep the real reason (429 quota, 503, timeout) for the attempt log; it is never shown to the shopper
   const reader = toUIMessageStream({ stream: result.stream, tools, sendStart: false, sendFinish: false, onError: (e) => describeError(e) }).getReader();
   const held: Parameters<Writer["write"]>[0][] = [];
@@ -353,14 +470,14 @@ async function pipeUntilFirstOutput(result: { stream: Parameters<typeof toUIMess
     }
     if (value.type === "text-delta") text += value.delta;
     if (started) {
-      writer.write(value);
+      forward(value);
       continue;
     }
     held.push(value);
     if (OUTPUT_PARTS.has(value.type)) {
       started = true;
       firstOutputMs = Date.now() - requestStart;
-      held.forEach((part) => writer.write(part));
+      held.forEach((part) => forward(part));
     }
   }
   return { started, text, error, firstOutputMs };
@@ -382,7 +499,7 @@ const STORE_CHIPS: Record<string, (db: ReturnType<typeof getDb>) => { text: stri
  * Quick answers from tools + templates (fast path, no API key, or every model failed): a templated lookup or the
  * guided-demo answer, with real tool outputs; else a pointer to the care team. `matched` says whether one applied.
  */
-function offlineWriter(userText: string, pageSku: string | null, ctx: ChatContext, intent: ReturnType<typeof forcedTool> = null) {
+function offlineWriter(userText: string, pageSku: string | null, ctx: ChatContext, intent: QuickIntent = null) {
   const db = getDb();
   // a cached guided-demo answer applies only on the product it's about (its first tool's SKU), never on another page
   const cachedFor = (c: { trace: { args: Record<string, unknown> }[] }) => {
@@ -456,6 +573,9 @@ function offlineWriter(userText: string, pageSku: string | null, ctx: ChatContex
       case "search_catalog": { const { query, ...f } = a; return core.searchCatalog(db, query, f); }
       case "check_delivery": return core.checkDelivery(db, a.sku, a.pincode, a.deadline);
       case "handoff": return core.handoff(db, a.reason);
+      case "lookup_policy": return core.lookupPolicy(db, a.topic);
+      case "get_product_facts": return core.getProductFacts(db, a.sku);
+      case "add_to_bag": return core.addToBag(db, ctx.cart ?? [], a.sku, a.qty);
       case "get_offer": { const { cart, ...o } = a; return core.getOffer(db, cart, { ...(o as object), logged_in: !!ctx.loggedIn, rto_risk: ctx.rtoRisk }); }
       default: return null;
     }
@@ -466,8 +586,11 @@ function offlineWriter(userText: string, pageSku: string | null, ctx: ChatContex
       if (finalStep?.cached_response) {
         finalStep.cached_response.trace.forEach((t, i) => {
           const toolCallId = `cached-${i}`;
+          const t0 = Date.now();
+          const output = run(t);
           writer.write({ type: "tool-input-available", toolCallId, toolName: t.tool, input: t.args });
-          writer.write({ type: "tool-output-available", toolCallId, output: run(t) });
+          writer.write({ type: "tool-output-available", toolCallId, output });
+          writeToolParts(writer, t.tool, t.args, output, Date.now() - t0, "code");
         });
         writer.write({ type: "text-start", id });
         writer.write({ type: "text-delta", id, delta: finalStep.cached_response.text });

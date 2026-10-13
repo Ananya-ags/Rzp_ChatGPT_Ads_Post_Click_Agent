@@ -545,3 +545,39 @@ Running log of which AI tool did what, key prompts, rejected AI output and decis
   5. Layered set kept out of Office minimal.
   6. Wedding pause.
 - **Verified:** validator 77 passed, 0 errors; `next build` clean; click-through 42/42; loop 17/17.
+
+## 13 Oct 2026: Policies KB, lookup_policy and new agent tools
+- **Policies:**
+  - `scripts/build-policies.ts` turns `docs/POLICY_KB_DRAFT.md` into `data/policies.json`: 44 sections with id, title, group, text, version "v1" and `last_updated` (the doc's last commit date).
+  - It runs first in `npm run pipelines` (no LLM).
+  - The inline policy summary is gone from the system prompt; the agent must call `lookup_policy`.
+- **New tools** (all computed in `tools/core.ts`, zod schemas, each returns a `why` line):
+  - `lookup_policy(topic)`: rules map topic words to a section (or an exact id). No match → `{ found: false }` → care line, never a guess.
+  - `get_product_facts(sku or name)`: verified facts plus the size text, for any product, including ones not on the page.
+  - `add_to_bag(sku, qty)`:
+    - Code-gated: it only acts when the shopper's message clearly asks (rule `ADD_TO_BAG`).
+    - Checks stock and the 15-per-item cap; above 15 it returns the `services.bulk_orders` line.
+    - The bag lives in the browser: the client sends it, and a `data-cart` part updates the shared state (header count + toast), with no reload.
+  - `update_preferences`: budget, occasion, category, style and deadline. Saved in a session cookie via a `data-preferences` part; `search_catalog` uses them as default filters. The page rail re-rank comes later.
+  - `suggest_login(reason)`: code decides whether it's shown: once per session, only when not logged in, and only at the planned triggers (a delivery question without a pincode, "what goes with what I own", add to bag). The card has Log in / Not now, and "Not now" hides it for the session.
+- **System prompt rules (B6):** product facts via `get_product_facts`; policy via `lookup_policy` (else the care line); `add_to_bag` only on a clear ask, with a one-line confirmation; `update_preferences` silently; `suggest_login` only at triggers.
+- **Forced first tool** (rules in `intents.ts`), in this order: offers → care triggers (handoff) → add to bag → store policy (`lookup_policy`) → delivery → fit.
+  - Fixed: "How long are the Pearl Drop Earrings?" used to force `check_delivery`. "How long" now counts as delivery only with a delivery word nearby.
+- **Claims gate:**
+  - `get_product_facts` and `search_catalog` return verified fields as facts; AI-extracted attributes come under `unverified`, labelled "from the description, not verified" or "vague wording: unknown".
+  - G12 now also blocks real/solid/pure gold, hallmark/BIS and certified unless negated; hypoallergenic, nickel-free and waterproof still need a verified flag (page or tool result).
+- **AI console data (B8):** every tool result streams `data-tool` = `{ tool, args, why, result_summary, latency_ms, source }`. `source` is "code" when code chose the tool (forced first tool, fast path, offline), "ai" when the model chose it.
+- **Delivery estimate:** with no pincode, `check_delivery`'s summary carries "That's an estimate for Pune; share your pincode for an exact date." If the reply still leaves it out, code appends it.
+- **No key / limited mode (B9):** policy questions, product-fact questions (including a product named in the question) and clear add-to-bag asks are answered in code, with no LLM. Anything else falls back as before.
+- **UI (B7):**
+  - "Added to bag · View bag" in the chat, a toast on the page, and the header count updates at once.
+  - The login card is compact.
+  - Policy answers are plain text; the policy id goes only to the console part.
+  - Everything stays inside the phone frame at 390px.
+- **Evals:** 8 new cases (pol-01, pol-02 no-match → care line, facts-01, bag-01, bag-02 above 15, pref-01, login-01, login-02); 52 in total.
+- **Verified:**
+  - New tools, live (Flash-Lite): 8/8, each with full console parts; the cart and preference parts arrive.
+  - No key: policy, facts and bag answered in code.
+  - Matrix (a, b, b2, c, c2, d, e, f): 8/8.
+  - Browser at 390px: add to bag (chat card + toast + header 0→1), login card + "Not now" (never re-offered): 7/7.
+  - Click-through 42/42 and loop 17/17, with and without a key; validator 77 passed; `tsc`, `eslint` and `next build` clean.

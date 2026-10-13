@@ -40,10 +40,15 @@ export function outputChecks(reply: string, sources: string, rules: BrandRules, 
   const banned = rules.banned_phrases.filter((b) => reply.toLowerCase().includes(b.toLowerCase()));
   checks.push({ name: "banned phrases", pass: banned.length === 0, detail: banned.length ? banned.join(", ") : "none" });
 
+  // G12 regulated claims: allowed only when a verified flag (page facts or a tool result) backs them, or when negated
   const j = pageProduct?.metafields.jewellery;
   const claims: string[] = [];
-  if (/\b(is|are|it's|they're)\s+(fully\s+)?(hypoallergenic|nickel[- ]free)/i.test(reply) && j?.nickel_free !== true) claims.push("hypoallergenic/nickel-free");
-  if (/\b(is|are|it's|they're)\s+(fully\s+)?(waterproof|water-resistant|shower-proof)/i.test(reply) && j?.water_resistant !== true && !/not verified|isn't verified|unverified/i.test(reply)) claims.push("waterproof");
+  const verifiedIn = (field: string) => new RegExp(`"${field}":true`).test(sources.replace(/\s/g, ""));
+  const negated = (re: RegExp) => [...reply.matchAll(new RegExp(re.source, "gi"))].every((m) => /\b(not|no|never|isn't|aren't|don't|doesn't|can't|cannot|won't)\b[^.]{0,30}$/i.test(reply.slice(Math.max(0, (m.index ?? 0) - 40), m.index)));
+  if (/\b(is|are|it's|they're)\s+(fully\s+|100%\s+)?(hypoallergenic|nickel[- ]free)/i.test(reply) && j?.nickel_free !== true && !verifiedIn("nickel_free")) claims.push("hypoallergenic/nickel-free");
+  if (/\b(is|are|it's|they're)\s+(fully\s+|100%\s+)?(waterproof|water-resistant|shower-proof)/i.test(reply) && j?.water_resistant !== true && !verifiedIn("water_resistant") && !/not verified|isn't verified|unverified/i.test(reply)) claims.push("waterproof");
+  for (const [name, re] of [["real/solid gold", /\b(real|solid|pure)\s+gold\b/], ["hallmark", /\b(hallmark(ed)?|BIS)\b/], ["certified", /\bcertified\b/]] as const)
+    if (re.test(reply) && !negated(re)) claims.push(name); // no Cosmos piece is solid gold, hallmarked or certified
   checks.push({ name: "verified claims only", pass: claims.length === 0, detail: claims.length ? `unverified claim: ${claims.join(", ")}` : "ok" });
   return checks;
 }

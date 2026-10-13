@@ -13,13 +13,14 @@ export type DemoState = {
   returningVisitor: boolean;
   loggedIn: boolean;
   loginOffered: boolean;
+  loginDismissed: boolean; // "Not now" on the login card: hidden for the rest of the session
 };
 
 const KEY = "cosmos-demo-state-v1";
 let snapshot: DemoState | null = null; // cached for useSyncExternalStore (must be a stable object)
 let memory: DemoState | null = null; // fallback when localStorage is unavailable
 let storageBlocked = false;
-const DEFAULT: DemoState = { cart: [], approvedProposals: [], agentPaused: false, returningVisitor: false, loggedIn: false, loginOffered: false };
+const DEFAULT: DemoState = { cart: [], approvedProposals: [], agentPaused: false, returningVisitor: false, loggedIn: false, loginOffered: false, loginDismissed: false };
 const EVENT = "cosmos-demo-state";
 
 export function readState(): DemoState {

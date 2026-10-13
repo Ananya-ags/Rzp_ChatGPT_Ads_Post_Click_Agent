@@ -21,5 +21,7 @@ export function loadDb(): Db {
     shoppers: S.ShoppersSchema.parse(readJson("data/shoppers.json")),
     returnsClassified: readJsonIf<ReturnsClassified>("data/generated/returns_classified.json"),
     now: demoNow(),
+    policies: readJsonIf<{ policies: S.Policy[] }>("data/policies.json")?.policies ?? [],
+    enriched: readJsonIf<S.Enriched>("data/generated/enriched_catalogue.json"),
   };
 }

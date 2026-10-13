@@ -251,7 +251,7 @@ check(shoppers.tier3_demo.demo_login_phone === "9999999999", "demo login uses th
 
 /* ───────── demo script & evals ───────── */
 const cats = new Set(evals.cases.map((c) => c.category));
-check(evals.cases.length >= 38 && evals.cases.length <= 45, `~40 eval cases (${evals.cases.length})`);
+check(evals.cases.length >= 40 && evals.cases.length <= 70, `40–70 eval cases (${evals.cases.length})`);
 check(S.EvalCategory.options.every((c) => cats.has(c)), "every eval category covered");
 check(demo.try_it_chips.some((c) => /office mein/i.test(c.text)) && demo.try_it_chips.some((c) => /50% off/.test(c.text)), "Hinglish + 50%-off chips present");
 for (const s of demo.steps) {

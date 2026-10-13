@@ -455,6 +455,11 @@ export const ExtractedAttribute = z.object({
   verified: z.literal(false),
   vague: z.boolean(),
 });
+/** data/policies.json: the knowledge base sections, built from docs/POLICY_KB_DRAFT.md (no LLM). */
+export const PolicySchema = z.object({ id: z.string(), title: z.string(), group: z.string(), text: z.string(), version: z.string(), last_updated: z.string() });
+export const PoliciesFileSchema = z.object({ source: z.string(), version: z.string(), last_updated: z.string(), policies: z.array(PolicySchema).min(1) });
+export type Policy = z.infer<typeof PolicySchema>;
+
 /** Tags read from the product photo by the vision model: for discovery only, never shown as claims. */
 export const VisualTag = z.object({ tag: z.string(), kind: z.enum(["shape", "motif", "texture", "stone", "tone", "silhouette", "style"]), confidence: z.number().min(0).max(1), source: z.object({ type: z.literal("image"), file: z.string() }) });
 export const EnrichedSchema = z.object({ producer: ProducerSchema, skus: z.record(z.string(), z.object({ attributes: z.array(ExtractedAttribute), visual_tags: z.array(VisualTag).optional() })) });

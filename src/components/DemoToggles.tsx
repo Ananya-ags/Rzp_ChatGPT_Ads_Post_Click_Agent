@@ -22,7 +22,7 @@ export default function DemoToggles({ proposals = [] }: { proposals?: { id: stri
       ))}
       <button
         onClick={() => {
-          write({ cart: [], approvedProposals: [], loggedIn: false, loginOffered: false, agentPaused: false, returningVisitor: false });
+          write({ cart: [], approvedProposals: [], loggedIn: false, loginOffered: false, loginDismissed: false, agentPaused: false, returningVisitor: false });
           try {
             document.cookie = "cosmos_user=; path=/; max-age=0; samesite=lax";
           } catch {}

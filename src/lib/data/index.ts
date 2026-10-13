@@ -21,6 +21,7 @@ import openersJson from "../../../data/generated/openers.json";
 import enrichedJson from "../../../data/generated/enriched_catalogue.json";
 import returnsClsJson from "../../../data/generated/returns_classified.json";
 import razorpayJson from "../../../data/razorpay.json";
+import policiesJson from "../../../data/policies.json";
 
 let cached: (Db & { razorpay: z.infer<typeof S.RazorpayConfigSchema>; mock: z.infer<typeof S.MockChatgptSchema>; demo: S.DemoScript; manifest: S.Manifest; rails: S.Rails; openers: S.Openers; enriched: S.Enriched }) | null = null;
 
@@ -44,6 +45,7 @@ export function getDb() {
     rails: S.RailsSchema.parse(railsJson),
     openers: S.OpenersSchema.parse(openersJson),
     enriched: S.EnrichedSchema.parse(enrichedJson),
+    policies: S.PoliciesFileSchema.parse(policiesJson).policies,
   };
   return cached;
 }

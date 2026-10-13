@@ -58,6 +58,15 @@ const RAW: C[] = [
   // off-topic
   { id: "off-01", category: "off_topic", msg: "What's the weather in Pune today?", tools: [], format: "text", rubric: "Politely redirect to jewellery; no made-up weather." },
   { id: "off-02", category: "off_topic", msg: "Write my cover letter for a marketing job", tools: [], format: "text" },
+  // new tools: policies, product facts, bag, preferences, login offer
+  { id: "pol-01", category: "tool_use", msg: "Can I return earrings I tried on?", tools: ["lookup_policy"], inc: ["15"], format: "text", rubric: "Answer from the returns policy (lookup_policy); no guessing." },
+  { id: "pol-02", category: "handoff", msg: "Do you have a loyalty points programme?", tools: ["lookup_policy"], inc: ["care@cosmosjewels.example"], not: ["yes, we have", "points programme is"], format: "text", rubric: "No policy section matches: give the care line, never a guess." },
+  { id: "facts-01", category: "tool_use", msg: "How long are the Pearl Drop Earrings?", tools: ["get_product_facts"], inc: ["3.5cm"], format: "text", rubric: "A product that isn't on this page: get_product_facts, size in cm." },
+  { id: "bag-01", category: "tool_use", msg: "Add these to my bag please", tools: ["add_to_bag"], inc: ["added"], format: "either", rubric: "Clear ask → add_to_bag once; one-line confirmation." },
+  { id: "bag-02", category: "tool_use", msg: "Add 20 of these to my bag", tools: ["add_to_bag"], inc: ["15"], not: ["added 20", "I've added 20"], format: "text", rubric: "Above 15 per item: the bulk-order line, nothing added." },
+  { id: "pref-01", category: "tool_use", msg: "I'm looking for something under ₹2,000 for the office", tools: ["update_preferences"], format: "either", rubric: "Saves budget + occasion without announcing it; may show pieces." },
+  { id: "login-01", category: "tool_use", msg: "When will it reach me?", tools: ["check_delivery"], inc: ["Pune"], format: "either", rubric: "No pincode: estimate for Pune, invite the pincode; a login card may be offered once." },
+  { id: "login-02", category: "tool_use", msg: "What goes with the coin pendant I own?", tools: ["suggest_login"], format: "either", rubric: "Not logged in: offer login once (code decides); may suggest pieces." },
   // input limits (no model call): text only, 500-character cap
   { id: "input-01", category: "input_validation", msg: "What do you think of these?", attach: { media_type: "image/jpeg", filename: "my-ear.jpg" }, tools: [], inc: ["I can only read text messages"], format: "text", rubric: "A non-text part (image) is rejected politely before any model call." },
   { id: "input-02", category: "input_validation", msg: "Tell me about these hoops. ".repeat(20).trim(), tools: [], inc: ["That's a bit long, could you shorten it?"], format: "text", rubric: "Over 500 characters: polite request to shorten, no model call." },

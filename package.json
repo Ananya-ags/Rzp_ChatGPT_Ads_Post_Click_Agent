@@ -8,13 +8,14 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "tsx scripts/seed/index.ts",
-    "pipelines": "tsx scripts/pipelines/run.ts",
+    "pipelines": "tsx scripts/build-policies.ts && tsx scripts/pipelines/run.ts",
     "demo-cache": "tsx scripts/build-demo-cache.ts",
     "validate-data": "tsx scripts/validate-data.ts",
     "data": "npm run seed && npm run pipelines && npm run demo-cache && npm run validate-data",
     "typecheck": "tsc --noEmit",
     "ai:check": "tsx scripts/ai-check.ts",
-    "models": "tsx scripts/list-models.ts"
+    "models": "tsx scripts/list-models.ts",
+    "policies": "tsx scripts/build-policies.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.78",

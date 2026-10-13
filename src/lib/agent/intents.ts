@@ -3,7 +3,8 @@
  * - Fast path: exact suggested-chip text (normalised) is answered from tools + templates with zero LLM calls.
  *   Free text always goes to the model.
  * - Forced tool: for routed intents the model must call the tool on step 1, so its first answer rests on a tool
- *   result. Order: offers (so "cash on delivery" is an offer question), delivery, allergy, fit for an occasion.
+ *   result. Order: offers (so "cash on delivery" is an offer question), care triggers (handoff), add to bag,
+ *   store policy, delivery, fit for an occasion.
  * - Input limits: text only, at most MAX_MESSAGE_CHARS characters.
  */
 export const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim();
@@ -34,9 +35,9 @@ export const FAST_PATH_CHIPS = new Set(
 );
 export const isFastPath = (text: string) => FAST_PATH_CHIPS.has(norm(text));
 
-const OFFER = /\b(offers?|discounts?|coupons?|promo|codes?|deals?|sale|cheaper|price ?match|cashback|emi|cod|cash on delivery)\b|\d+\s?%|% ?off|\bpercent\b/i;
-const DELIVERY =
-  /\b(deliver(y|ed|s)?|arriv(e|es|al|ing)|reach(es)?|ship(s|ping|ped)?|dispatch(es|ed)?|pincode|when will|how (soon|long|many days)|kab|milega|aayega|tak aa)\b|\bby\s+(\d{1,2}(st|nd|rd|th)?\b|mon|tue|wed|thu|fri|sat|sun|tomorrow|next)|\b\d{1,2}\s?(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b|\b\d{6}\b/i;
+export const OFFER = /\b(offers?|discounts?|coupons?|promo|codes?|deals?|sale|cheaper|price ?match|cashback|emi|cod|cash on delivery)\b|\d+\s?%|% ?off|\bpercent\b/i;
+export const DELIVERY =
+  /\b(deliver(y|ed|s)?|arriv(e|es|al|ing)|reach(es)?|ship(s|ping|ped)?|dispatch(es|ed)?|pincode|when will|how soon|how many days|how long (will|does|would|to)[^?]{0,25}\b(take|deliver|arrive|ship|reach|come|get here)|kab|milega|aayega|tak aa)\b|\bby\s+(\d{1,2}(st|nd|rd|th)?\b|mon|tue|wed|thu|fri|sat|sun|tomorrow|next)|\b\d{1,2}\s?(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b|\b\d{6}\b/i;
 
 // G16 care triggers → handoff first: nickel/allergy (medical-adjacent), customisation, order status, a person
 export const ALLERGY = /\b(nickel|allerg(y|ic|ies)|hypo-?allergenic|sensitive (ears?|skin)|itch(y|ing)?|rash|irritat(e|ion)|react(ion)?s?)\b/i;
@@ -55,14 +56,29 @@ export function parseDeadline(text: string, now: Date): string | null {
   return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
-export type ForcedTool = "get_offer" | "check_delivery" | "handoff" | "get_return_insight";
+// store policy questions → lookup_policy (returns, refunds, exchanges, shipping costs/abroad, warranty, care, gold, gifting)
+export const POLICY = /\b(return(s|ed|ing)?|refund(s|ed)?|exchange|warranty|guarantee|care for|clean(ing)?|polish|real gold|solid gold|pure gold|hallmark(ed)?|international|abroad|outside india|overseas|ship(ping)? (to|outside|abroad)|shipping (charges?|fees?|cost)|delivery charges?|free shipping|gift ?wrap|gift (box|note|message)|gifting|cancel(lation)?|ring size|size chart|bulk|wholesale|corporate)\b/i;
+// a clear request to add something to the bag (never inferred)
+export const ADD_TO_BAG = /\b(add|put)\b[^?]*\b(bag|cart|basket)\b|\b(i'?ll take|i will take|buy (it|this|these|them|the)|order (it|this|these|them))\b/i;
+// "what goes with what I own" (a login trigger)
+export const OWNED = /\bwhat (goes|would go|matches) with\b|\b(pair|match) (it |them )?with (my|what i)\b|\bwhat i (own|have|bought)\b/i;
+/** Quantity in "add two of these", "add 20 to my bag"; defaults to 1. */
+export function parseQty(text: string): number {
+  const words: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, ten: 10, a: 1, another: 1 };
+  const m = text.match(/\b(\d{1,3}|one|two|three|four|five|six|ten)\b(?=\s*(x\s*)?(of|pairs?|pieces?|more|sets?|units?)?\b)/i);
+  return m ? (Number(m[1]) || words[m[1].toLowerCase()] || 1) : 1;
+}
+
+export type ForcedTool = "get_offer" | "check_delivery" | "handoff" | "get_return_insight" | "lookup_policy" | "add_to_bag";
 
 /** The tool the model must call first, or null. Needs a page product (the tools take or concern its SKU). */
 export function forcedTool(text: string, hasPageProduct: boolean): ForcedTool | null {
   if (!hasPageProduct) return null;
   if (OFFER.test(text)) return "get_offer";
-  if (DELIVERY.test(text)) return "check_delivery";
   if (ALLERGY.test(text) || CARE.test(text)) return "handoff";
+  if (ADD_TO_BAG.test(text)) return "add_to_bag";
+  if (POLICY.test(text)) return "lookup_policy";
+  if (DELIVERY.test(text)) return "check_delivery";
   if (FIT.test(text)) return "get_return_insight";
   return null;
 }

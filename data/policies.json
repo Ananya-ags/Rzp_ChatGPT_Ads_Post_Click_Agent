@@ -1,0 +1,359 @@
+{
+  "source": "docs/POLICY_KB_DRAFT.md",
+  "version": "v1",
+  "last_updated": "2026-10-13",
+  "policies": [
+    {
+      "id": "company.about",
+      "title": "Company about",
+      "group": "Company and product basics",
+      "text": "Cosmos is an online-only Indian jewellery brand making modern, anti-tarnish demi-fine pieces for everyday wear. Orders ship from our studio in Jaipur. We don't have physical stores yet.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "product.authenticity",
+      "title": "Product authenticity",
+      "group": "Company and product basics",
+      "text": "- **Plated, not solid gold:** Cosmos pieces are gold plated or gold vermeil. They are not solid gold, so they aren't hallmarked.\n- **Gold vermeil:** a thick layer of gold over sterling silver.\n- **No resale value:** our pieces aren't sold by weight of gold and don't carry gold resale value.\n- **What the agent says if asked \"is it real gold?\":** \"It's 18K gold plating over [base metal], not solid gold.\"",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "product.demi_fine",
+      "title": "Product demi fine",
+      "group": "Company and product basics",
+      "text": "\"Demi-fine\" means a durable base metal (stainless steel, sterling silver or brass) with a gold finish. Pieces are made to be worn daily, priced well below fine jewellery.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "product.stones",
+      "title": "Product stones",
+      "group": "Company and product basics",
+      "text": "- **Sparkle:** our sparkling stones are cubic zirconia (American diamond).\n- **Pearls:** shell pearls or freshwater-style pearls, as stated on each product.\n- **Not precious:** none are diamonds or precious gemstones, and none come with a certificate.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "materials.overview",
+      "title": "Materials overview",
+      "group": "Materials, skin and water",
+      "text": "| Material (as on the product page) | What it is | Notes |\n|---|---|---|\n| **Stainless steel + 18K gold plating** | Stainless steel with an 18K gold finish | Most durable finish; 12-month anti-tarnish warranty |\n| **Brass + 18K gold plating** | Brass base with gold electroplating | Keep dry; 6-month anti-tarnish warranty |\n| **Sterling silver + gold vermeil** | 925 silver with a thick gold layer | Keep dry; silver can darken if exposed to moisture; 6-month warranty |\n| **Gold-toned** | Brass with a gold-coloured finish (plating details not specified) | No anti-tarnish warranty |\n\n**One metal throughout:** every earring is made entirely of its listed metal, including the part that goes through the piercing.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "materials.skin_sensitivity",
+      "title": "Materials skin sensitivity",
+      "group": "Materials, skin and water",
+      "text": "- **Consistency on sensitive skin:** we can't promise that any piece suits every skin. Reactions depend on the person.\n- **Stainless steel:** each steel earring is stainless steel all the way through. Many people who react to plated brass do fine with steel, but steel contains some nickel. So we never call it nickel-free or hypoallergenic, and every steel piece carries `nickel_free: false`.\n- **Brass and gold-toned pieces:** not recommended for people who react to metals.\n- **If you've had a reaction before:** talk to a dermatologist before buying. Stop wearing a piece if your skin gets irritated.\n- **Medical questions:** the agent never gives medical advice and hands off to the care team.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "materials.claims_ladder",
+      "title": "Materials claims ladder (how the agent may talk about materials)",
+      "group": "Materials, skin and water",
+      "text": "| Level | When allowed | Example wording |\n|---|---|---|\n| 0. Don't mention | The shopper didn't ask, and it doesn't matter | — |\n| 1. Describe the material | Always, from verified fields or the product description | \"These are stainless steel all the way through, with 18K gold plating.\" |\n| 2. State a verified attribute | Only when the field is verified (`water_resistant: true`; `nickel_free: true` if the brand ever verifies it, and no current piece is) | \"These are verified water-resistant.\" |\n| 3. Medical or guarantee claims | **Never** | ✗ \"hypoallergenic\", \"safe for all skin\", \"won't cause allergies\", \"cures\" |",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "materials.water_and_wear",
+      "title": "Materials water and wear",
+      "group": "Materials, skin and water",
+      "text": "- **Verified water-resistant pieces** (gold-plated stainless steel, marked on the product page):\n  - fine in the shower, pool and sea, and at the gym\n  - fine to sleep in\n  - rinse after salt water or chlorine and pat dry\n- **Everything else** (brass, silver, gold-toned):\n  - keep dry; take off before showering, swimming or working out\n  - put perfume, lotion and hairspray on first, then the jewellery\n- **Nothing is \"waterproof forever\".** Harsh chemicals (cleaning products, bleach) can damage any finish.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "materials.vague_claims",
+      "title": "Materials vague claims",
+      "group": "Materials, skin and water",
+      "text": "If a product description uses vague wording (\"water friendly\", \"skin-safe for most\", \"gold-toned\"), the agent treats it as unverified. It doesn't repeat it as a claim, and it suggests keeping the piece dry.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "care.steel",
+      "title": "Care steel",
+      "group": "Care",
+      "text": "Rinse with water, pat dry with a soft cloth, done. Avoid abrasive cleaners. Store pieces separately to avoid scratches.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "care.brass_silver",
+      "title": "Care brass silver",
+      "group": "Care",
+      "text": "- Keep dry, and wipe with a soft cloth after wearing.\n- Store in the Cosmos pouch, away from humidity.\n- Skip perfume on the metal.\n- No dips or jewellery cleaners on plated pieces.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "care.stones_pearls",
+      "title": "Care stones pearls",
+      "group": "Care",
+      "text": "Wipe pearls with a soft dry cloth. Don't soak pieces with stones or pearls. Put them on last and take them off first.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "warranty.anti_tarnish",
+      "title": "Warranty anti tarnish",
+      "group": "Warranty",
+      "text": "| Pieces | Anti-tarnish warranty |\n|---|---|\n| Stainless steel + 18K gold plating | **12 months** from delivery |\n| Brass + 18K gold plating; sterling silver + gold vermeil | **6 months** from delivery |\n| Gold-toned pieces (e.g. Lia studs, CZ solitaire ring) | No anti-tarnish warranty |\n\n**Covered:** the gold finish fading, discolouring or tarnishing under normal wear and care.\n**Not covered:**\n- scratches, dents or bending\n- stones lost through impact\n- damage from chemicals, or from water on pieces that aren't water-resistant\n- normal wear on clasps\n- loss",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "warranty.claim",
+      "title": "Warranty claim",
+      "group": "Warranty",
+      "text": "1. Email the care team at care@cosmosjewels.example with your order ID and clear photos, within the warranty period.\n2. Once approved, we replace the piece (or give store credit if it's out of stock) within 5–7 working days.\n3. One warranty claim per piece.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "returns.window",
+      "title": "Returns window",
+      "group": "Returns, exchanges, refunds, cancellations",
+      "text": "- **Window:** 15 days from delivery.\n- **Condition:** unused, in original packaging, with the tags and Cosmos pouch.\n- **Starting a return:** message the care team.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "returns.non_returnable",
+      "title": "Returns non returnable",
+      "group": "Returns, exchanges, refunds, cancellations",
+      "text": "- Clearance items (marked \"Clearance\"; e.g. the tennis bracelet): exchange or store credit only\n- Gift cards",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "returns.pickup",
+      "title": "Returns pickup",
+      "group": "Returns, exchanges, refunds, cancellations",
+      "text": "- **Pickup:** we arrange a free reverse pickup from any valid 6-digit Indian pincode. Every pincode is serviceable in this demo.\n- **Inspection:** pieces are checked when they reach us (2–3 working days).",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "refunds.timeline",
+      "title": "Refunds timeline",
+      "group": "Returns, exchanges, refunds, cancellations",
+      "text": "| How you paid | Refund goes to | Timeline |\n|---|---|---|\n| UPI, card, netbanking, wallet | Original payment method | 5–7 working days after the return passes inspection |\n| Cash on delivery | Your UPI ID or bank account (or Cosmos store credit) | 5–7 working days after inspection |\n| Cosmos wallet | Back to your Cosmos wallet | Instantly after inspection |\n\nCOD fees, and shipping fees on orders under the free-shipping threshold, aren't refunded unless the item was defective.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "exchanges",
+      "title": "Exchanges",
+      "group": "Returns, exchanges, refunds, cancellations",
+      "text": "- **Window and limit:** within 15 days of delivery, once per order.\n- **Price difference:** pay the difference if the new piece costs more; the rest comes back as store credit if it costs less.\n- **Rings:** size exchanges are free.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "cancellation",
+      "title": "Cancellation",
+      "group": "Returns, exchanges, refunds, cancellations",
+      "text": "| When | What happens |\n|---|---|\n| Before dispatch | Cancel anytime for a full refund. In-stock orders placed before 2pm dispatch the same day. |\n| Made-to-order pieces | Can be cancelled within 24 hours of ordering |\n| After dispatch | Can't be cancelled; you can refuse delivery or return within the return window |",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "shipping.fees",
+      "title": "Shipping fees",
+      "group": "Shipping and delivery",
+      "text": "- **Free shipping** on orders of ₹1,499 and above.\n- **Below that:** ₹79.\n- **Cash on delivery** adds ₹49.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "shipping.dispatch",
+      "title": "Shipping dispatch",
+      "group": "Shipping and delivery",
+      "text": "- **In-stock pieces:** ship from Jaipur the same day if you order before 2pm IST (Mon–Sat).\n- **Made-to-order pieces** (e.g. Medium Classic Hoops 3cm): dispatch 5 days after you order.\n- **Exact dates:** the agent always uses the delivery tool for your pincode.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "shipping.delivery_times",
+      "title": "Shipping delivery times",
+      "group": "Shipping and delivery",
+      "text": "- **Metros:** 2–3 days after dispatch.\n- **Most other cities:** 3–5 days.\n- **Remote areas:** up to 6–7 days.\n- **Exact dates:** the product page, bag and chat show the date for your pincode. These are estimates from our delivery partners.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "shipping.tracking",
+      "title": "Shipping tracking",
+      "group": "Shipping and delivery",
+      "text": "You'll get tracking by SMS once your order ships. For changes or delays, email the care team at care@cosmosjewels.example.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "shipping.address_change",
+      "title": "Shipping address change",
+      "group": "Shipping and delivery",
+      "text": "You can change the delivery address before dispatch by messaging the care team. After dispatch, changes depend on the courier.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "shipping.international",
+      "title": "Shipping international",
+      "group": "Shipping and delivery",
+      "text": "We ship within India only for now.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "shipping.damaged_or_lost",
+      "title": "Shipping damaged or lost",
+      "group": "Shipping and delivery",
+      "text": "- **Damaged, wrong or missing:** tell us within 48 hours of delivery, with photos (an unboxing video helps), and we'll replace it or refund you.\n- **Lost in transit:** we replace it or refund you after the courier confirms.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "shipping.festive",
+      "title": "Shipping festive",
+      "group": "Shipping and delivery",
+      "text": "Around festivals, delivery partners can be slower. The agent checks your exact date for your pincode; don't rely on general timelines for a deadline.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "payments.methods",
+      "title": "Payments methods",
+      "group": "Payments, COD, offers",
+      "text": "- **Accepted:** UPI, debit and credit cards, netbanking, wallets.\n- **EMI and Pay Later:** on bags above ₹3,000.\n- **Security:** payments are processed securely by Razorpay (in this prototype: Razorpay Test Mode, no real money).",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "payments.cod",
+      "title": "Payments cod",
+      "group": "Payments, COD, offers",
+      "text": "- **Limit and fee:** available on orders up to ₹5,000, for a ₹49 fee.\n- **Offers:** online-only offers don't apply.\n- **Availability:** COD may not be available at every pincode.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "offers.terms",
+      "title": "Offers terms",
+      "group": "Payments, COD, offers",
+      "text": "- **Current offers:**\n  - first order: 10% off, up to ₹300\n  - prepaid orders over ₹1,999: ₹100 off\n  - select bank cards on bags over ₹2,499: ₹200 off\n  - selected customers paying online: an extra 5% off\n- **The cap:** the combined promotional discount on an order is capped at **10% of the bag or ₹300, whichever is lower**. The best eligible combination is applied automatically.\n- **Codes:** can't be combined unless stated.\n- **The agent can't create, change or promise discounts.**",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "offers.wallet",
+      "title": "Offers wallet",
+      "group": "Payments, COD, offers",
+      "text": "- **What it is:** the Cosmos wallet holds store credit (refunds, rewards). It's stored value, not a discount, so it doesn't count toward the offer cap.\n- **Limit:** you can use it for up to 20% of a bag when logged in.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "gifting",
+      "title": "Gifting",
+      "group": "Gifting and packaging",
+      "text": "- **Gift wrap:** ₹99, with a free handwritten note (up to 200 characters).\n- **Price-free packing slip:** we can ship to a different address with no prices on the slip.\n- **Exchanges for the recipient:** within 15 days with the order ID.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "packaging",
+      "title": "Packaging",
+      "group": "Gifting and packaging",
+      "text": "Every piece comes in a Cosmos pouch inside a recyclable box.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "sizing.earrings",
+      "title": "Sizing earrings",
+      "group": "Sizing",
+      "text": "- **One size per earring:** hoops and huggies are sized by **diameter** (outer, in cm); studs by **diameter** (width of the stud face); drops and danglers by **length** (top of the earring to the bottom). We give only that one number, e.g. \"Diameter: 3cm\" or \"Length: 4.5cm\".\n- **Huggies:** sit close to the lobe and suit second piercings. 1.4cm and under is a common choice.\n- **Hoops by look:**\n  - 2cm: subtle\n  - 2.8–3cm: everyday\n  - 4cm: a statement",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "sizing.rings",
+      "title": "Sizing rings",
+      "group": "Sizing",
+      "text": "| Our size | Inner diameter (approx.) |\n|---|---|\n| 6 | 1.65cm |\n| 7 | 1.73cm |\n| 8 | 1.82cm |\n\n- **Adjustable rings:** fit roughly sizes 5 to 9.\n- **Not sure of your size:** measure a ring you own, or choose an adjustable style. Ring size exchanges are free.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "sizing.necklaces",
+      "title": "Sizing necklaces",
+      "group": "Sizing",
+      "text": "| Length | Sits |\n|---|---|\n| 35cm | Choker, at the base of the neck |\n| 40cm | At the collarbone |\n| 45cm | Just below the collarbone |\n| 50cm | Mid-chest |\n\nMost chains include a 5cm extender.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "sizing.bracelets",
+      "title": "Sizing bracelets",
+      "group": "Sizing",
+      "text": "Chain bracelets are 16cm with a 3cm extender (fits most wrists of about 14–18cm). Cuffs are open and have a little give.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "services.customisation",
+      "title": "Services customisation",
+      "group": "Services we don't offer",
+      "text": "We don't offer engraving, resizing, custom designs or repairs right now.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "services.bulk_orders",
+      "title": "Services bulk orders",
+      "group": "Services we don't offer",
+      "text": "The bag allows up to 15 pieces of the same item. For 16 or more pieces (weddings, corporate gifting), contact the care team at care@cosmosjewels.example for availability.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "account.login",
+      "title": "Account login",
+      "group": "Account, privacy, assistant",
+      "text": "- **Optional:** you don't need an account to shop.\n- **Logging in with your mobile number and OTP shows:**\n  - your saved address\n  - your exact delivery dates\n  - your Cosmos wallet\n  - your past orders",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "privacy.personalisation",
+      "title": "Privacy personalisation",
+      "group": "Account, privacy, assistant",
+      "text": "- **What we use** to suggest pieces:\n  - the ad you came from\n  - what you look at and ask in this visit\n  - if you've visited before on this device, our own cookie\n  - if you log in, your Cosmos order history\n- **What we don't do:**\n  - we don't sell your data\n  - we don't use other stores' data about you\n- **Opting out:** you can ask us to stop personalising your experience at any time.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "assistant.disclosure",
+      "title": "Assistant disclosure",
+      "group": "Account, privacy, assistant",
+      "text": "- **What Cosmos AI is:** an AI assistant. It answers from our verified product details and these policies, and it can make mistakes.\n- **What it can't do:** see your payment details, take payments or change orders.\n- **Talking to a person:** email the care team at care@cosmosjewels.example; we reply within 24 hours.\n- **Chat logs:** reviewed with personal details masked, to improve answers.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    },
+    {
+      "id": "support.contact",
+      "title": "Support contact",
+      "group": "Account, privacy, assistant",
+      "text": "- **Contact:** care@cosmosjewels.example (fictional; email only, no phone or WhatsApp)\n- **Response:** we reply within 24 hours.\n- **Care line (used verbatim by the agent):** \"I don't have that information right now. Please write to our care team at care@cosmosjewels.example and we'll get back to you within 24 hours.\"\n- **When to use it:** only for genuine product or policy questions the tools and this file can't answer (e.g. \"Can I get this engraved in Tamil?\", \"Do you ship to Nepal?\"), order-status questions, medical questions (after the no-medical-advice line), and requests to talk to a person.\n- **When not to use it:** off-topic (weather, homework, politics, other brands) and abusive or objectionable messages. Those get a polite decline and a steer back to Cosmos jewellery.",
+      "version": "v1",
+      "last_updated": "2026-10-13"
+    }
+  ]
+}

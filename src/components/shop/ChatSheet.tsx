@@ -8,11 +8,13 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { Drawer } from "vaul";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useLinkQuery } from "./productLink";
 import { ToolCard } from "./ToolCards";
 import ProductImage from "./ProductImage";
 import { inr, type CardVM } from "@/lib/view";
-import { useDemoState } from "@/lib/state";
+import { readState, useDemoState, writeState, type CartLine } from "@/lib/state";
 import CosmosStar from "../brand/CosmosStar";
 
 type Props = {
@@ -37,20 +39,42 @@ export default function ChatSheet({ open, onOpenChange, pending, clearPending, c
   );
   const endRef = useRef<HTMLDivElement>(null);
   const [transport] = useState(() => new DefaultChatTransport({ api: "/api/chat" }));
-  const { messages, sendMessage, status } = useChat({ transport });
+  const [toast, setToast] = useState<string | null>(null);
+  // data parts from the agent: a new bag (header count updates at once, plus a toast) and saved preferences
+  const { messages, sendMessage, status } = useChat({
+    transport,
+    onData: (part) => {
+      if (part.type === "data-cart") {
+        const d = part.data as { cart: CartLine[]; added: { title: string; qty: number } };
+        writeState({ cart: d.cart });
+        setToast(`Added ${d.added.qty} × ${d.added.title} to your bag`);
+        setTimeout(() => setToast(null), 2600);
+      }
+      if (part.type === "data-preferences") {
+        try {
+          document.cookie = `cosmos_prefs=${encodeURIComponent(JSON.stringify((part.data as { preferences: unknown }).preferences))}; path=/; samesite=lax`; // session cookie
+        } catch {}
+      }
+    },
+  });
   const busy = status === "submitted" || status === "streaming";
   // keep the typing indicator up until the reply's first words arrive (tool cards may come first)
   const lastMsg = messages[messages.length - 1];
   const replying = lastMsg?.role === "assistant" && lastMsg.parts.some((x) => x.type === "text" && x.text.trim());
-  const chatContext = { ...context, tier: state.loggedIn ? 3 : context.tier };
-  const ask = (text: string) => sendMessage({ text }, { body: { context: chatContext } });
+  // read at send time so the bag and login flag are current (they live in the browser)
+  const fullContext = useCallback(() => {
+    const st = readState();
+    return { ...context, tier: st.loggedIn ? 3 : context.tier, cart: st.cart, loginOffered: st.loginOffered, path: `${location.pathname}${location.search}` };
+  }, [context]);
+  const linkQuery = useLinkQuery();
+  const ask = (text: string) => sendMessage({ text }, { body: { context: fullContext() } });
 
   useEffect(() => {
     if (open && pending) {
-      sendMessage({ text: pending }, { body: { context: { ...context, tier: context.tier } } });
+      sendMessage({ text: pending }, { body: { context: fullContext() } });
       clearPending();
     }
-  }, [open, pending, sendMessage, clearPending, context]);
+  }, [open, pending, sendMessage, clearPending, fullContext]);
 
   // keep the latest question + its answer in view (the answer sits above its cards)
   const lastUserId = [...messages].reverse().find((m) => m.role === "user")?.id;
@@ -67,6 +91,13 @@ export default function ChatSheet({ open, onOpenChange, pending, clearPending, c
   const cartCount = state.cart.reduce((s, l) => s + l.qty, 0);
 
   return (
+    <>
+    {toast && (
+      <div role="status" aria-live="polite" className="fixed inset-x-4 bottom-24 z-[70] mx-auto flex max-w-[358px] items-center justify-between gap-3 rounded-full bg-ink px-4 py-2.5 text-[12.5px] text-ivory shadow-lg">
+        <span className="truncate">✓ {toast}</span>
+        <Link href={`/cart${linkQuery}`} className="shrink-0 font-medium text-[#e8c983] underline underline-offset-2">View bag</Link>
+      </div>
+    )}
     <Drawer.Root open={open} onOpenChange={(o) => { onOpenChange(o); if (!o) setFull(false); }} container={container} repositionInputs={false}>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-40 bg-ink/25" />
@@ -158,6 +189,7 @@ export default function ChatSheet({ open, onOpenChange, pending, clearPending, c
         </Drawer.Content>
       </Drawer.Portal>
     </Drawer.Root>
+    </>
   );
 }
 

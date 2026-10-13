@@ -1121,6 +1121,236 @@
       "judge_rubric": null
     },
     {
+      "id": "pol-01",
+      "category": "tool_use",
+      "setup": {
+        "ad_group": "waterproof-everyday-under-5k",
+        "tier": 0,
+        "pincode": null,
+        "demo_time": "2026-10-13T10:00:00+05:30",
+        "page_sku": "ciel-hoops-40mm"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "content": "Can I return earrings I tried on?"
+        }
+      ],
+      "expected_tools": [
+        "lookup_policy"
+      ],
+      "tools_ordered": false,
+      "must_include": [
+        "15"
+      ],
+      "must_not_include": [
+        "ChatGPT"
+      ],
+      "expected_format": "text",
+      "judge_rubric": "Answer from the returns policy (lookup_policy); no guessing."
+    },
+    {
+      "id": "pol-02",
+      "category": "handoff",
+      "setup": {
+        "ad_group": "waterproof-everyday-under-5k",
+        "tier": 0,
+        "pincode": null,
+        "demo_time": "2026-10-13T10:00:00+05:30",
+        "page_sku": "ciel-hoops-40mm"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "content": "Do you have a loyalty points programme?"
+        }
+      ],
+      "expected_tools": [
+        "lookup_policy"
+      ],
+      "tools_ordered": false,
+      "must_include": [
+        "care@cosmosjewels.example"
+      ],
+      "must_not_include": [
+        "yes, we have",
+        "points programme is"
+      ],
+      "expected_format": "text",
+      "judge_rubric": "No policy section matches: give the care line, never a guess."
+    },
+    {
+      "id": "facts-01",
+      "category": "tool_use",
+      "setup": {
+        "ad_group": "waterproof-everyday-under-5k",
+        "tier": 0,
+        "pincode": null,
+        "demo_time": "2026-10-13T10:00:00+05:30",
+        "page_sku": "ciel-hoops-40mm"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "content": "How long are the Pearl Drop Earrings?"
+        }
+      ],
+      "expected_tools": [
+        "get_product_facts"
+      ],
+      "tools_ordered": false,
+      "must_include": [
+        "3.5cm"
+      ],
+      "must_not_include": [
+        "ChatGPT"
+      ],
+      "expected_format": "text",
+      "judge_rubric": "A product that isn't on this page: get_product_facts, size in cm."
+    },
+    {
+      "id": "bag-01",
+      "category": "tool_use",
+      "setup": {
+        "ad_group": "waterproof-everyday-under-5k",
+        "tier": 0,
+        "pincode": null,
+        "demo_time": "2026-10-13T10:00:00+05:30",
+        "page_sku": "ciel-hoops-40mm"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "content": "Add these to my bag please"
+        }
+      ],
+      "expected_tools": [
+        "add_to_bag"
+      ],
+      "tools_ordered": false,
+      "must_include": [
+        "added"
+      ],
+      "must_not_include": [
+        "ChatGPT"
+      ],
+      "expected_format": "either",
+      "judge_rubric": "Clear ask → add_to_bag once; one-line confirmation."
+    },
+    {
+      "id": "bag-02",
+      "category": "tool_use",
+      "setup": {
+        "ad_group": "waterproof-everyday-under-5k",
+        "tier": 0,
+        "pincode": null,
+        "demo_time": "2026-10-13T10:00:00+05:30",
+        "page_sku": "ciel-hoops-40mm"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "content": "Add 20 of these to my bag"
+        }
+      ],
+      "expected_tools": [
+        "add_to_bag"
+      ],
+      "tools_ordered": false,
+      "must_include": [
+        "15"
+      ],
+      "must_not_include": [
+        "added 20",
+        "I've added 20"
+      ],
+      "expected_format": "text",
+      "judge_rubric": "Above 15 per item: the bulk-order line, nothing added."
+    },
+    {
+      "id": "pref-01",
+      "category": "tool_use",
+      "setup": {
+        "ad_group": "waterproof-everyday-under-5k",
+        "tier": 0,
+        "pincode": null,
+        "demo_time": "2026-10-13T10:00:00+05:30",
+        "page_sku": "ciel-hoops-40mm"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "content": "I'm looking for something under ₹2,000 for the office"
+        }
+      ],
+      "expected_tools": [
+        "update_preferences"
+      ],
+      "tools_ordered": false,
+      "must_include": [],
+      "must_not_include": [
+        "ChatGPT"
+      ],
+      "expected_format": "either",
+      "judge_rubric": "Saves budget + occasion without announcing it; may show pieces."
+    },
+    {
+      "id": "login-01",
+      "category": "tool_use",
+      "setup": {
+        "ad_group": "waterproof-everyday-under-5k",
+        "tier": 0,
+        "pincode": null,
+        "demo_time": "2026-10-13T10:00:00+05:30",
+        "page_sku": "ciel-hoops-40mm"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "content": "When will it reach me?"
+        }
+      ],
+      "expected_tools": [
+        "check_delivery"
+      ],
+      "tools_ordered": false,
+      "must_include": [
+        "Pune"
+      ],
+      "must_not_include": [
+        "ChatGPT"
+      ],
+      "expected_format": "either",
+      "judge_rubric": "No pincode: estimate for Pune, invite the pincode; a login card may be offered once."
+    },
+    {
+      "id": "login-02",
+      "category": "tool_use",
+      "setup": {
+        "ad_group": "waterproof-everyday-under-5k",
+        "tier": 0,
+        "pincode": null,
+        "demo_time": "2026-10-13T10:00:00+05:30",
+        "page_sku": "ciel-hoops-40mm"
+      },
+      "messages": [
+        {
+          "role": "user",
+          "content": "What goes with the coin pendant I own?"
+        }
+      ],
+      "expected_tools": [
+        "suggest_login"
+      ],
+      "tools_ordered": false,
+      "must_include": [],
+      "must_not_include": [
+        "ChatGPT"
+      ],
+      "expected_format": "either",
+      "judge_rubric": "Not logged in: offer login once (code decides); may suggest pieces."
+    },
+    {
       "id": "input-01",
       "category": "input_validation",
       "setup": {
