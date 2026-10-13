@@ -35,12 +35,24 @@ export const FAST_PATH_CHIPS = new Set(
 );
 export const isFastPath = (text: string) => FAST_PATH_CHIPS.has(norm(text));
 
-export const OFFER = /\b(offers?|discounts?|coupons?|promo|codes?|deals?|sale|cheaper|price ?match|cashback|emi|cod|cash on delivery)\b|\d+\s?%|% ?off|\bpercent\b/i;
+export const OFFER = /\b(offers?|discounts?|coupons?|promo|codes?|deals?|sale|cheaper|price ?match|cashback|cod|cash on delivery)\b|\d+\s?%|% ?off|\bpercent\b/i;
 export const DELIVERY =
   /\b(deliver(y|ed|s)?|arriv(e|es|al|ing)|reach(es)?|ship(s|ping|ped)?|dispatch(es|ed)?|pincode|when will|how soon|how many days|how long (will|does|would|to)[^?]{0,25}\b(take|deliver|arrive|ship|reach|come|get here)|kab|milega|aayega|tak aa)\b|\bby\s+(\d{1,2}(st|nd|rd|th)?\b|mon|tue|wed|thu|fri|sat|sun|tomorrow|next)|\b\d{1,2}\s?(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b|\b\d{6}\b/i;
 
 // G16 care triggers → handoff first: nickel/allergy (medical-adjacent), customisation, order status, a person
-export const ALLERGY = /\b(nickel|allerg(y|ic|ies)|hypo-?allergenic|sensitive (ears?|skin)|itch(y|ing)?|rash|irritat(e|ion)|react(ion)?s?)\b/i;
+export const ALLERGY = /\b(nickel|allerg(y|ic|ies)|hypo-?allergenic|sensitive|itch(y|ing)?|khujli|rash|irritat(e|ion)|react(ion)?s?)\b/i;
+// a person, not the bot → handoff with a direct way to reach the team
+export const HUMAN = /\b(talk|speak|chat) (to|with) (a |an |someone|somebody|a real |the )?(person|human|agent|someone|somebody|team|executive)|\breal person\b|\bhuman\b|\bcall me\b|\bcall back\b|\bcustomer (care|service)\b|\bkisi (insaan|aadmi) se baat\b/i;
+// medical questions → handoff: no medical advice, a doctor, then the care team
+export const MEDICAL = /\b(pregnan\w*|allerg\w*|rash\w*|persistent itch\w*|itch\w* (that )?(persists|won'?t stop|for days)|infect\w*|swell\w*|swollen|surgery|surgical|mri|x-?rays?|skin condition|eczema|dermatitis|psoriasis|doctor|medicine|medication)\b/i;
+/** Which care message the handoff gives: allergy words (nickel, sensitive ears) win over general medical ones. */
+export function handoffKind(text: string): "human" | "medical" | "allergy" | "unknown" {
+  if (HUMAN.test(text)) return "human";
+  if (/\b(nickel|hypo-?allergenic|sensitive|khujli|itch(y|ing)?)\b/i.test(text)) return "allergy";
+  if (MEDICAL.test(text)) return "medical";
+  if (ALLERGY.test(text)) return "allergy";
+  return "unknown";
+}
 const CARE = /\b(engrav(e|ing)|customi[sz](e|ed|ation)|personali[sz](e|ed)|monogram|initials|my order|order (status|id)|track(ing)?|where is my|refund status|cancel my|talk to (a |an )?(person|human|agent|someone)|speak to|real person|customer (care|service)|call me)\b/i;
 // "will these work for office / a wedding?" → return insight decides if the fit is right (return prevention)
 const FIT = /\b(work|wear|suit(able|s)?|good|ok(ay)?|fine|right|appropriate|chalega|pehen)\b[^?]*\b(office|work|wedding|party|interview|college|daily|everyday|festive)\b|\b(office|wedding)\b[^?]*\b(work|suit|ok(ay)?|fine|good|chalega|pehen)/i;
@@ -57,7 +69,7 @@ export function parseDeadline(text: string, now: Date): string | null {
 }
 
 // store policy questions → lookup_policy (returns, refunds, exchanges, shipping costs/abroad, warranty, care, gold, gifting)
-export const POLICY = /\b(return(s|ed|ing)?|refund(s|ed)?|exchange|warranty|guarantee|care for|clean(ing)?|polish|real gold|solid gold|pure gold|hallmark(ed)?|international|abroad|outside india|overseas|ship(ping)? (to|outside|abroad)|shipping (charges?|fees?|cost)|delivery charges?|free shipping|gift ?wrap|gift (box|note|message)|gifting|cancel(lation)?|ring size|size chart|bulk|wholesale|corporate)\b/i;
+export const POLICY = /\b(return(s|ed|ing)?|refund(s|ed)?|exchange|warranty|guarantee|care for|clean(ing)?|polish|real gold|solid gold|pure gold|hallmark(ed)?|international|abroad|outside india|overseas|ship(ping)? (to|outside|abroad)|shipping (charges?|fees?|cost)|delivery charges?|free shipping|gift ?wrap|gift (box|note|message)|gifting|cancel(lation)?|ring size|size chart|bulk|wholesale|corporate|loyalty|points|rewards?|subscription|subscribe|membership|stores?|showroom|outlet|visit (you|your)|emi|instal+ments?|pay later|resiz\w*|wapas|wapsi)\b/i;
 // a clear request to add something to the bag (never inferred)
 export const ADD_TO_BAG = /\b(add|put)\b[^?]*\b(bag|cart|basket)\b|\b(i'?ll take|i will take|buy (it|this|these|them|the)|order (it|this|these|them))\b/i;
 // "what goes with what I own" (a login trigger)
@@ -75,10 +87,28 @@ export type ForcedTool = "get_offer" | "check_delivery" | "handoff" | "get_retur
 export function forcedTool(text: string, hasPageProduct: boolean): ForcedTool | null {
   if (!hasPageProduct) return null;
   if (OFFER.test(text)) return "get_offer";
-  if (ALLERGY.test(text) || CARE.test(text)) return "handoff";
+  if (ALLERGY.test(text) || MEDICAL.test(text) || HUMAN.test(text) || CARE.test(text)) return "handoff";
   if (ADD_TO_BAG.test(text)) return "add_to_bag";
   if (POLICY.test(text)) return "lookup_policy";
   if (DELIVERY.test(text)) return "check_delivery";
   if (FIT.test(text)) return "get_return_insight";
   return null;
 }
+
+/** A 6-digit pincode the shopper typed in any of their messages (so delivery isn't an "estimate for Pune"). */
+export const typedPincode = (texts: string[]) => texts.map((t) => t.match(/\b[1-9]\d{5}\b/)?.[0]).filter(Boolean).at(-1) ?? null;
+
+/** Hinglish (Hindi in Latin script): the agent replies in the same language. */
+const HINGLISH_WORDS = /\b(hai|hain|kya|mein|ke|ki|ka|liye|aap|nahi|toh|ye|yeh|haan|bhi|wale|sakte|chalega|kab|tak|aayega|milega|koi|kitne|kaan|pehen|accha|acche|batao|chahiye)\b/gi;
+export const isHinglish = (text: string) => (text.match(HINGLISH_WORDS) ?? []).length >= 2;
+
+/** Stated preferences for quick answers without a model: "under ₹2,000", "for office", "by 18 Oct". */
+export const PREFS = /\b(under|below|less than|within|up ?to|upto)\s*(₹|rs\.?|inr)?\s*\d[\d,]*|\bbudget\b|\bfor (the )?(office|work|wedding|a gift|gift|gifting|festive|diwali|everyday)\b/i;
+export function parsePrefs(text: string, now: Date) {
+  const budget = Number(text.match(/\b(?:under|below|less than|within|up ?to|upto|budget(?: of| is)?)\s*(?:₹|rs\.?|inr)?\s*(\d[\d,]*)/i)?.[1]?.replace(/,/g, "")) || undefined;
+  const occ = text.match(/\bfor (?:the |a )?(office|work|wedding|gift|gifting|festive|diwali|everyday)\b/i)?.[1]?.toLowerCase();
+  const occasion = occ ? ({ office: "office", work: "office", wedding: "wedding guest", gift: "gifting", gifting: "gifting", festive: "festive", diwali: "festive", everyday: "everyday" } as const)[occ as "office"] : undefined;
+  const deadline = parseDeadline(text, now) ?? undefined;
+  return Object.fromEntries(Object.entries({ budget_max_inr: budget, occasion, deadline }).filter(([, v]) => v !== undefined)) as { budget_max_inr?: number; occasion?: "office" | "wedding guest" | "gifting" | "festive" | "everyday"; deadline?: string };
+}
+

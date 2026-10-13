@@ -27,7 +27,7 @@ if (arg("model")) process.env.GEMINI_MODEL = arg("model"); // read when model.ts
 type Case = {
   id: string; category: string; page: string; ad_group: string | null; logged_in: boolean; pincode: string | null;
   messages: { role: "user" | "assistant"; content: string; attachment?: { media_type: string; filename: string } }[];
-  expect: { tools: string[]; tools_ordered: boolean; must_include: string[]; must_not_include: string[]; care_line: boolean; language: "en" | "hinglish_or_en"; format: "card" | "text" | "either" };
+  expect: { tools: string[]; tools_ordered: boolean; must_include: string[]; must_include_any: string[][]; must_not_include: string[]; checks: ("offer_matches_tool" | "alternative_offered")[]; care_line: boolean; language: "en" | "hinglish_or_en"; format: "card" | "text" | "either" };
   judge: boolean; judge_rubric: string | null;
 };
 type Event = { type: string; [k: string]: unknown };
@@ -37,6 +37,20 @@ const ROOT = join(__dirname, "..", "..");
 const CARE_EMAIL = "care@cosmosjewels.example";
 const GATED = ["claim_safety", "groundedness", "no_chatgpt_mention"];
 const HINGLISH = /\b(hai|hain|kya|mein|ke|ki|ka|liye|aap|aapke|nahi|toh|ye|yeh|haan|bhi|wale|sakte|chalega|kaan)\b/gi;
+/** Phrase match on whole words: "3cm" doesn't match "13cm", "approved" doesn't match "unapproved". */
+const has = (text: string, phrase: string) => {
+  const esc = phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`${/^\w/.test(phrase) ? "(?<![\\w])" : ""}${esc}${/\w$/.test(phrase) ? "(?![\\w])" : ""}`, "i").test(text);
+};
+const rupees = (text: string) => (text.match(/₹\s?\d[\d,]*/g) ?? []).map((m) => Number(m.replace(/[₹,\s]/g, "")));
+const JUDGE_RUBRIC = [
+  "You grade a jewellery store's shopping assistant on tone and helpfulness only (facts, numbers and safety are checked separately by code).",
+  "Good: warm, concise (1–2 short sentences), plain words, answers the question or offers a sensible next step, polite when declining.",
+  "Bad: rude, preachy, rambling, evasive, or ignores the question.",
+  "A careful safety statement is not preachy: saying a claim isn't confirmed, or suggesting a doctor for a medical question, is correct behaviour when it is brief and still helps (describes the material, offers the care team).",
+  "A reply that contradicts itself (e.g. says yes, then gives reasons it doesn't fit) is confusing: helpfulness at most 2 and verdict fail.",
+  "Return a verdict and a reason of at most 20 words.",
+].join(" ");
 const CARD_TOOLS = new Set(["search_catalog", "check_delivery", "get_return_insight", "get_offer", "add_to_bag", "suggest_login", "handoff"]);
 const pct = (xs: number[], p: number) => (xs.length ? [...xs].sort((a, b) => a - b)[Math.min(xs.length - 1, Math.floor((p / 100) * xs.length))] : 0);
 
@@ -81,7 +95,6 @@ const pct = (xs: number[], p: number) => (xs.length ? [...xs].sort((a, b) => a -
     const outputs = events.filter((e) => e.type === "tool-output-available").map((e) => e.output as Record<string, unknown>);
     const guards = events.filter((e) => e.type === "data-guard").map((e) => e.data as { name: string; pass: boolean; detail: string });
     const usage = events.filter((e) => e.type === "data-usage").map((e) => e.data as Record<string, unknown>).at(-1) ?? {};
-    const low = reply.toLowerCase();
 
     // ── rule checks ──
     const fails: string[] = [];
@@ -97,8 +110,29 @@ const pct = (xs: number[], p: number) => (xs.length ? [...xs].sort((a, b) => a -
     if (g("banned phrases")?.pass === false) fails.push(`banned phrase: ${g("banned phrases")!.detail}`);
     if (/chatgpt/i.test(reply)) fails.push('names "ChatGPT"');
     if (/\b\d+(\.\d+)?\s?mm\b/i.test(reply)) fails.push("size in mm");
-    for (const s of c.expect.must_include) if (!low.includes(s.toLowerCase())) fails.push(`missing "${s}"`);
-    for (const s of c.expect.must_not_include) if (low.includes(s.toLowerCase())) fails.push(`contains "${s}"`);
+    for (const s of c.expect.must_include) if (!has(reply, s)) fails.push(`missing "${s}"`);
+    for (const group of c.expect.must_include_any) if (!group.some((s) => has(reply, s))) fails.push(`missing one of ${group.map((s) => `"${s}"`).join(" / ")}`);
+    for (const s of c.expect.must_not_include) if (has(reply, s)) fails.push(`contains "${s}"`);
+    // groundedness: "we have / don't have / offer …" needs a lookup_policy result on that topic (route guard)
+    if (g("honest lead")?.pass === false) fails.push(`self-contradiction: ${g("honest lead")!.detail}`);
+    if (g("policy claims grounded")?.pass === false) fails.push(`unbacked policy claim: ${g("policy claims grounded")!.detail}`);
+    // checks against tool results
+    const out = (tool: string) => outputs[tools.lastIndexOf(tool)] as Record<string, unknown> | undefined;
+    if (c.expect.checks.includes("offer_matches_tool")) {
+      const o = out("get_offer") as { subtotal_inr: number; discount_inr: number; total_inr: number; shipping_inr: number; applied: { amount_inr: number }[]; wallet: { balance_inr: number; usable_inr: number }; cap: { max_flat_inr: number; cap_inr_for_this_cart: number } } | undefined;
+      if (!o || "error" in o) fails.push("offer check: no get_offer result");
+      else {
+        // every ₹ amount the reply states must be one get_offer computed (saving, total, cap, wallet, a single offer)
+        const allowed = new Set([o.subtotal_inr, o.discount_inr, o.discount_inr + o.wallet.usable_inr, o.total_inr, o.subtotal_inr - o.discount_inr, o.shipping_inr, o.wallet.balance_inr, o.wallet.usable_inr, o.cap.max_flat_inr, o.cap.cap_inr_for_this_cart, ...o.applied.map((a) => a.amount_inr)]);
+        const wrong = rupees(reply).filter((n) => !allowed.has(n));
+        if (wrong.length) fails.push(`offer check: ₹${wrong.join(", ₹")} not in get_offer's result`);
+      }
+    }
+    if (c.expect.checks.includes("alternative_offered")) {
+      const alt = (out("get_return_insight") as { alternative?: { title: string; size: string | null } | null } | undefined)?.alternative;
+      if (!alt) fails.push("alternative check: get_return_insight returned no alternative");
+      else if (!has(reply, alt.title) && !(alt.size && has(reply, alt.size.replace(/ (across|long)$/, "")))) fails.push(`alternative check: reply doesn't offer the ${alt.title}`);
+    }
     if (c.expect.care_line && !reply.includes(CARE_EMAIL)) fails.push("no care line");
     const hinglishWords = (reply.match(HINGLISH) ?? []).length;
     if (c.expect.language === "en" && hinglishWords >= 3) fails.push("replied in Hinglish to English");
@@ -112,7 +146,7 @@ const pct = (xs: number[], p: number) => (xs.length ? [...xs].sort((a, b) => a -
       try {
         const r = await generateText({
           model: judge.model,
-          system: "You grade a jewellery store's shopping assistant on tone and helpfulness only (facts, numbers and safety are checked separately by code). Good: warm, concise (1–2 short sentences), plain words, answers the question or offers a sensible next step, polite when declining. Bad: rude, preachy, rambling, evasive, or ignores the question. Return a verdict and a reason of at most 20 words.",
+          system: JUDGE_RUBRIC,
           prompt: JSON.stringify({ category: c.category, shopper: c.messages.map((m) => m.content).join(" / "), assistant_reply: reply, tools_called: tools, case_rubric: c.judge_rubric }),
           output: Output.object({ schema: Verdict }),
           ...llmSettings(judge),

@@ -36,10 +36,9 @@
       "ad_group": "waterproof-everyday-under-5k",
       "pincode": null,
       "chip": "Will these work for office?",
-      "narration": "Return prevention: the 4cm hoops are often returned for looking bigger; most office keepers chose the 3cm.",
+      "narration": "Return prevention: the 4cm hoops are often returned for looking bigger; most office keepers chose the 3cm (offered in code as the alternative).",
       "expected_tools": [
-        "get_return_insight",
-        "search_catalog"
+        "get_return_insight"
       ],
       "cached_response": {
         "text": "Honest answer: the 4cm hoops are big for office. 9 of 9 people who returned them from work said they looked bigger than expected. 64% of office keepers picked the Medium Classic Hoop Earrings instead, which are 3cm across.",
@@ -239,8 +238,7 @@
       "chip": "Ye office mein pehen sakte hain?",
       "narration": "Hinglish chip, same insight.",
       "expected_tools": [
-        "get_return_insight",
-        "search_catalog"
+        "get_return_insight"
       ],
       "cached_response": {
         "text": "Sach bataun toh 4cm hoops office ke liye bade lagte hain. Office se return karne wale 9 mein se 9 ne kaha \"looked bigger than expected\". Office ke 64% keepers ne 3cm wale Medium Classic Hoop Earrings chune.",

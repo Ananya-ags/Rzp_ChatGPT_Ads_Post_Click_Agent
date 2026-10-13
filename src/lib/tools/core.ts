@@ -278,6 +278,8 @@ export function getReturnInsight(db: Db, sku: string, context: string) {
     title: p.title,
     context: ctx,
     relevant,
+    // the verdict is computed here, not by the model: "not_ideal" means the reply must not open with yes / haan
+    fit: relevant ? ("not_ideal" as const) : ("good" as const),
     overall_return_rate: overall,
     context_return_rate: ctxRate === null ? null : Math.round(ctxRate * 1000) / 1000,
     context_units: uc?.units ?? 0,
@@ -285,6 +287,14 @@ export function getReturnInsight(db: Db, sku: string, context: string) {
     typical_quote: cls?.typical_quote ?? null,
     better_fit: relevant && cls?.better_fit_sku ? { sku: cls.better_fit_sku, title: findProduct(db, cls.better_fit_sku)?.title ?? cls.better_fit_sku, reason: cls.better_fit_reason } : null,
     keepers: keeper,
+    // the better-fit product, computed here: the agent leads with the honest answer, then offers this
+    alternative: (() => {
+      const altSku = keeper?.sku ?? (relevant ? cls?.better_fit_sku : null);
+      const a = altSku ? findProduct(db, altSku) : null;
+      if (!a) return null;
+      const aj = a.metafields.jewellery;
+      return { sku: a.handle, title: a.title, size: sizeText(aj), price_inr: price(a), base_metal: aj.base_metal, plating: aj.plating, weight_g: aj.weight_g, water_resistant: aj.water_resistant, made_to_order: aj.made_to_order, why: keeper ? `${Math.round(keeper.share_of_keepers * 100)}% of ${ctx} buyers who kept this style chose it` : cls?.better_fit_reason ?? "Better fit for this use" };
+    })(),
     size_note: p.metafields.jewellery.outer_diameter_cm ? { outer_diameter_cm: p.metafields.jewellery.outer_diameter_cm, size: sizeText(p.metafields.jewellery) } : p.metafields.jewellery.drop_length_cm ? { drop_length_cm: p.metafields.jewellery.drop_length_cm, size: sizeText(p.metafields.jewellery) } : null,
   };
 }
@@ -300,8 +310,39 @@ export function getRtoRisk(db: Db, pincode: string) {
 
 /* ───────────────────────── handoff ───────────────────────── */
 
-export function handoff(db: Db, reason: string) {
-  return { routed: true, reason, message: db.rules.escalation.text, contact: db.brand.support.email, reply: db.brand.support.reply, why: `Care line (${reason})` };
+export type HandoffKind = "human" | "medical" | "allergy" | "unknown";
+
+/** "You can reach our care team at …" (for a person request, and after medical / allergy answers). */
+export function careReach(db: Db) {
+  return `You can reach our care team at ${db.brand.support.email}, and we'll get back to you within ${db.brand.support.reply.replace(/^within /, "")}.`;
+}
+
+/** Honest nickel answer from verified metafields (no hypoallergenic / nickel-free claims). */
+export function nickelAnswer(page: Product): string {
+  const j = page.metafields.jewellery;
+  const metal = { "stainless steel": "stainless steel", "925 silver": "sterling silver", brass: "brass" }[j.base_metal];
+  const finish = j.plating === "18k gold plating" ? "18K gold plating" : j.plating === "gold vermeil" ? "gold vermeil" : j.plating ?? "a gold-toned finish";
+  const plural = /s$/i.test(page.title);
+  return j.nickel_free === false
+    ? `No. ${plural ? "They're" : "It's"} ${metal}, which has a little nickel, so we don't call ${plural ? "them" : "it"} hypoallergenic. If you have a nickel allergy, please check with your doctor first.`
+    : `The brand hasn't confirmed this. ${plural ? "They're" : "It's"} ${metal} with ${finish}. If you have a nickel allergy, please check with your doctor first.`;
+}
+
+/**
+ * Care routing. `message` is what the agent gives as written:
+ * - human: a direct way to reach the team (not "I don't have that information")
+ * - medical: no medical advice, the metal if a product is open, a doctor, then the care team
+ * - allergy: the honest nickel answer, then the care team
+ * - unknown: the care line for facts the tools can't answer
+ */
+export function handoff(db: Db, reason: string, kind: HandoffKind = "unknown", page: Product | null = null) {
+  const metal = page ? `${page.title} ${/s$/i.test(page.title) ? "are" : "is"} ${({ "stainless steel": "stainless steel", "925 silver": "sterling silver", brass: "brass" } as Record<string, string>)[page.metafields.jewellery.base_metal]} with ${page.metafields.jewellery.plating === "18k gold plating" ? "18K gold plating" : page.metafields.jewellery.plating ?? "a gold-toned finish"}. ` : "";
+  const message =
+    kind === "human" ? careReach(db)
+    : kind === "medical" ? `I can't give medical advice. ${metal ? `The ${metal}` : ""}Please check with your doctor first. ${careReach(db)}`
+    : kind === "allergy" && page ? `${nickelAnswer(page)} ${careReach(db)}`
+    : db.rules.escalation.text;
+  return { routed: true, reason, kind, message, contact: db.brand.support.email, reply: db.brand.support.reply, why: `Care routing (${kind}): ${reason}` };
 }
 
 /* ───────────────────────── create_checkout (totals; the order itself is created server-side) ───────────────────────── */
@@ -374,7 +415,7 @@ const POLICY_RULES: [RegExp, string][] = [
   [/\b(offer|discount|coupon|promo)/, "offers.terms"],
   [/\bwallet/, "offers.wallet"],
   [/\b(gift|wrap|note|message card)/, "gifting"],
-  [/\b(packag|box|pouch)/, "packaging"],
+  [/\b(packag|(?<!subscription )box|pouch)/, "packaging"],
   [/\b(real gold|solid gold|pure gold|hallmark|bis\b|resale|karat|carat)/, "product.authenticity"],
   [/\bdemi[- ]?fine/, "product.demi_fine"],
   [/\b(stone|diamond|zirconia|\bcz\b|pearl)/, "product.stones"],
@@ -394,7 +435,7 @@ const POLICY_RULES: [RegExp, string][] = [
   [/\b(water|shower|swim|sweat|perfume)/, "materials.water_and_wear"],
   [/\b(allerg|sensitive|nickel|skin)/, "materials.skin_sensitivity"],
   [/\b(material|metal|steel|brass|silver|vermeil|plating)/, "materials.overview"],
-  [/\b(store in|offline store|physical store|showroom|about cosmos|who are you)/, "company.about"],
+  [/\b(store in|stores?\b|offline store|physical store|showroom|outlet|visit|in person|about cosmos|who are you)/, "company.about"],
 ];
 
 /** Markdown section → plain text for the chat (no bold, bullets become sentences, table rows become "a: b"). */

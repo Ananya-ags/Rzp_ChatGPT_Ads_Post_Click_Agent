@@ -429,7 +429,11 @@ export const EvalCaseSchema = z.object({
     tools: z.array(z.string()),
     tools_ordered: z.boolean(),
     must_include: z.array(z.string()),
+    // each group: at least one phrase must appear (whole words)
+    must_include_any: z.array(z.array(z.string()).min(1)),
     must_not_include: z.array(z.string()),
+    // checks against tool results, computed by the runner
+    checks: z.array(z.enum(["offer_matches_tool", "alternative_offered"])),
     care_line: z.boolean(),
     language: z.enum(["en", "hinglish_or_en"]),
     format: z.enum(["card", "text", "either"]),

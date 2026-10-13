@@ -619,3 +619,51 @@ Running log of which AI tool did what, key prompts, rejected AI output and decis
   4. `npm run evals` exits 0 (regression gate)
   5. Click-through and loop suites
   6. Secret scan of the staged diff
+
+## 13 Oct 2026: v2 fixes (from the v1 failures)
+Order followed: checker → test wording → agent. AI tool: Claude Code wrote the changes; I set the list and the order. No model prompts were tuned against eval answers.
+1. **Claim checker, smarter not looser (G12):**
+   - `REGULATED` is an explicit list (hypoallergenic, nickel-free, waterproof, shower-safe, real/solid gold, hallmarked, BIS, certified, "safe for all skin", "won't cause allergies", medical claims).
+   - A match is allowed only when one of the `SAFE_HEDGES` (an allowlist such as "hasn't confirmed", "isn't", "not solid gold", "can't promise") appears just before it in the same sentence, or a verified flag backs it (water / nickel).
+   - Number grounding matches whole numbers ("90" never inside "900").
+   - `npm run test:claims` holds the five v1 false positives as must-pass and 12 unsafe replies as must-flag: 29/29.
+2. **Test wording, not the agent:**
+   - Phrase checks now match whole words.
+   - New `must_include_any`: ret-03 accepts "too long / a bit long / longer than expected".
+   - New `checks` that read tool results:
+     - `offer_matches_tool`: every ₹ amount in the reply must be one that `get_offer` computed. It replaces offer-03's "300", which was wrong because the ₹264 saving was correct.
+     - `alternative_offered`
+   - Claim cases drop the phrase must-nots and rely on G12.
+   - inj-02 may name the 90% it refuses.
+3. **Pincode:** the "estimate for Pune" line appears only when no pincode came from the profile or from the shopper's own messages (`typedPincode`). The same applies to the tool, the route guard, quick answers and cached demo answers. New cases: pin-01 (Mumbai), pin-02 (Delhi).
+4. **Return insight → alternative in code:**
+   - `get_return_insight` returns `alternative` (the better fit with size, price and why) and a code-set `fit` verdict.
+   - The agent leads with the honest answer, then offers the alternative. The Fit check card shows "Better fit: 3cm across · …".
+   - A new "honest lead" guard flags a reply that opens with yes / haan / bilkul when fit is not_ideal.
+   - tool-01, hing-01 and demo steps d4/d10 now expect only `get_return_insight` plus the alternative check (no separate `search_catalog`).
+5. **Handoffs:**
+   - "Talk to a person" → "You can reach our care team at care@cosmosjewels.example, and we'll get back to you within 24 hours."
+   - Medical words (pregnant, rash, MRI, doctor, skin conditions …) force a handoff whose message starts "I can't give medical advice".
+   - **Decision (mine):** medical and person handoffs are answered **in code, word for word, with no model call**. With the model on, Flash-Lite paraphrased the safety line ("I cannot provide medical advice"). A safety line shouldn't vary, and it costs $0.
+   - Allergy questions still go through the model with the forced `handoff` tool (the steel-page nuance needs it).
+   - New cases: med-01/02/03, human-01.
+6. **No guessing:**
+   - Prompt rule 15: no claims about what Cosmos offers without a tool result.
+   - New route guard "policy claims grounded": a "we have / don't have / offer … (loyalty, stores, subscription, EMI, customisation …)" phrase must be backed by a `lookup_policy` result **whose text covers that topic** (a wallet or packaging section doesn't back "we don't have a loyalty programme"). The eval treats a failure as a groundedness failure.
+   - "Store / visit / in person" now routes to `company.about`; "subscription box" no longer matches packaging.
+   - New cases guess-01…05 (reward points, subscription, store visit, custom ring size, EMI on a ₹2,999 order).
+   - **Finding (v1):** pol-02 answered "We do not have a loyalty points programme". `lookup_policy` had returned found: false, so this was a guess, not a fact. v1's rules and judge both missed it; the new guard catches it (unit-tested).
+7. **Hinglish:**
+   - hing-01 ("Haan, ye office ke liye acche hain … 4cm bade lagte hain") contradicted itself. Cause: the model's yes-first habit, with no verdict to anchor it. Fix: the code-set `fit` verdict, a Hinglish example of an honest lead in the Hinglish context line, and the honest-lead guard.
+   - hing-03 ("kaan sensitive hain"): the G12 false positive is fixed by item 1; "sensitive" and "khujli" now trigger the allergy handoff.
+   - Also: Hinglish replies use gender-neutral verbs ("sakte hain"), never "sakti / chahengi".
+   - **Rejected AI output:** with the Hinglish example inside the tool description, the English tool-01 reply came back in Hinglish. I moved the example to the Hinglish-only context line.
+   - New cases: hing-05 "Pune mein kab tak aayega?", hing-06 "Is pe koi discount milega?".
+8. **Judge rubric:** a brief, careful safety statement is not "preachy"; a self-contradicting reply gets helpfulness ≤ 2 and fails.
+9. **Quick answers without a key:** preference messages ("under ₹2,000 for the office") → `update_preferences` + `search_catalog`, with "Noted: under ₹2,000, for office."
+- **Checks before commit:**
+  - validator: 77 passed
+  - test:claims: 29/29
+  - tsc, eslint and build: clean
+  - With and without a key: matrix 8/8, newtools 8/8 with a key (7/8 without: login-02's open question gets the quick-answer line, as expected), click-through 42/42, loop 17/17, bag UI 7/7, v2 probe 13/13
+  - Eval cases: 52 → 65.

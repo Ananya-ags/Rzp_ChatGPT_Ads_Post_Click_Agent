@@ -86,7 +86,8 @@ export function ToolCard({ name, output, cards }: { name: string; output: Any; c
     case "get_return_insight": {
       if (!output.relevant) return null;
       const keeper = output.keepers;
-      const kc = keeper ? cards[keeper.sku] : null;
+      const alt = output.alternative; // computed in code: the better fit, with its size
+      const kc = alt ? cards[alt.sku] : keeper ? cards[keeper.sku] : null;
       return (
         <div className="overflow-hidden rounded-2xl border border-line bg-white">
           <div className="flex gap-3 p-3">
@@ -106,7 +107,7 @@ export function ToolCard({ name, output, cards }: { name: string; output: Any; c
           {kc && (
             <div className="flex items-center justify-between border-t border-line bg-sand/50 px-3 py-2 text-[12px]">
               <Link href={href(kc.handle)} className="underline underline-offset-2">
-                {kc.title} · {inr(kc.price)}
+                Better fit: {alt?.size ? `${alt.size} · ` : ""}{kc.title} · {inr(kc.price)}
               </Link>
               <CartButton sku={kc.handle} max={kc.maxQty} limitReason={kc.limitReason} size="md" />
             </div>

@@ -16,7 +16,8 @@
     "ai:check": "tsx scripts/ai-check.ts",
     "models": "tsx scripts/list-models.ts",
     "policies": "tsx scripts/build-policies.ts",
-    "evals": "tsx --conditions=react-server scripts/evals/run.ts"
+    "evals": "tsx --conditions=react-server scripts/evals/run.ts",
+    "test:claims": "tsx scripts/tests/claims.test.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.78",

@@ -3,8 +3,8 @@ import { getDb, resolveAdGroup } from "@/lib/data";
 import { buildTools, systemPrompt, type ChatContext } from "@/lib/agent/agent";
 import { AGENT, estimateCostUsd, llmSettings, pickFallbackLlm, pickLlm, type Llm } from "@/lib/ai/model";
 import { addSpend, overDailyBudget, spendToday } from "@/lib/ai/spend";
-import { inputCheck, outputChecks, redact } from "@/lib/agent/guardrails";
-import { ALLERGY, MAX_MESSAGE_CHARS, TEXT_ONLY_REPLY, TOO_LONG_REPLY, forcedTool, isFastPath, norm, parseDeadline, parseQty } from "@/lib/agent/intents";
+import { inputCheck, opensWithYes, outputChecks, policyAssertion, policyCovers, redact } from "@/lib/agent/guardrails";
+import { MAX_MESSAGE_CHARS, PREFS, TEXT_ONLY_REPLY, TOO_LONG_REPLY, forcedTool, handoffKind, isFastPath, isHinglish, norm, parseDeadline, parsePrefs, parseQty, typedPincode } from "@/lib/agent/intents";
 import { allowMessage, hasDemoBypass, visitorKey, VISITOR_COOKIE } from "@/lib/agent/rateLimit";
 import * as core from "@/lib/tools/core";
 import { userFromRequest } from "@/lib/user";
@@ -61,6 +61,9 @@ export async function POST(req: Request) {
   const group = context.adGroupId ? resolveAdGroup({ ad_group: context.adGroupId }) : null;
   const userText = lastUserText(messages);
   context.userText = userText;
+  // a pincode the shopper typed (any turn) counts as theirs; Hinglish in → Hinglish out
+  context.typedPincode = typedPincode(messages.filter((m) => m.role === "user").map((m) => m.parts.map((p) => (p.type === "text" ? p.text : "")).join(" ")));
+  context.hinglish = isHinglish(userText);
   const input = inputCheck(userText);
   const started = Date.now();
   const inputGuard = { type: "data-guard" as const, data: { stage: "input", name: "injection patterns", pass: !input.injection, detail: input.injection ? input.patterns.join(", ") : "none", text: redact(userText) } };
@@ -79,14 +82,15 @@ export async function POST(req: Request) {
         },
       }),
     });
-  type OfflineReason = "fast_path" | "no_api_key" | "llm_unavailable" | "rate_limited" | "daily_cap";
+  type OfflineReason = "fast_path" | "safety_handoff" | "no_api_key" | "llm_unavailable" | "rate_limited" | "daily_cap";
   const offline = (writer: Writer, reason: OfflineReason, attempts: unknown[] = [], intent: QuickIntent = null) => {
     const o = offlineWriter(userText, page?.handle ?? null, context, intent);
     const busy = reason === "rate_limited" || reason === "daily_cap";
     if (!busy || o.answered) o.write(writer); // busy with nothing quick to say: just the friendly note
     if (busy) writeText(writer, "note", BUSY_NOTE);
-    else if (reason !== "fast_path") writeText(writer, "note", LIMITED_NOTE);
-    writer.write({ type: "data-usage", data: { model: reason === "fast_path" ? "fast-path" : "cached", tokens_in: 0, tokens_out: 0, cost_usd: 0, latency_ms: Date.now() - started, first_output_ms: Date.now() - started, tools: o.trace, fallback: reason, attempts, mode: reason === "fast_path" ? "fast_path" : "limited", ...spendToday() } });
+    else if (reason !== "fast_path" && reason !== "safety_handoff") writeText(writer, "note", LIMITED_NOTE);
+    const code = reason === "fast_path" || reason === "safety_handoff";
+    writer.write({ type: "data-usage", data: { model: code ? (reason === "fast_path" ? "fast-path" : "code") : "cached", tokens_in: 0, tokens_out: 0, cost_usd: 0, latency_ms: Date.now() - started, first_output_ms: Date.now() - started, tools: o.trace, fallback: reason, attempts, mode: code ? reason : "limited", ...spendToday() } });
   };
 
   // G3/G4 input limits: text only, and a length cap (no model call)
@@ -112,7 +116,18 @@ export async function POST(req: Request) {
 
   // routed intent (rules in code). For quick answers without a model, simple product-fact questions count too (B9).
   const routed = forcedTool(userText, !!page);
-  const quickIntent: QuickIntent = routed ?? (page && FACTS_Q.test(userText) ? "get_product_facts" : null);
+  const quickIntent: QuickIntent = routed ?? (page && FACTS_Q.test(userText) ? "get_product_facts" : PREFS.test(userText) ? "update_preferences" : null);
+  // medical questions and "talk to a person" get a fixed, code-written reply (no model paraphrase of safety lines)
+  const safetyKind = routed === "handoff" ? handoffKind(userText) : null;
+  if (safetyKind === "medical" || safetyKind === "human")
+    return respond((writer) => {
+      writer.write({ type: "start" });
+      writer.write(inputGuard);
+      writer.write({ type: "data-guard", data: { stage: "input", name: "safety handoff", pass: true, detail: `${safetyKind}: answered in code, no model call` } });
+      offline(writer, "safety_handoff", [], "handoff");
+      writer.write({ type: "finish" });
+    });
+
   const llm = pickLlm("agent");
   if (!llm)
     return respond((writer) => {
@@ -204,18 +219,24 @@ export async function POST(req: Request) {
         writeText(writer, "decline", DECLINE);
       } else if (!text.trim()) {
         // the model went quiet after its tool calls (e.g. a step timeout): G11 safe answer built from the tool results
-        text = answerFromTools(log, !!context.pincode, page, userText) ?? `Sorry, that took too long to finish. Please ask again, or email our care team at ${db.brand.support.email}.`;
+        text = answerFromTools(log, !!(context.pincode || context.typedPincode)) ?? `Sorry, that took too long to finish. Please ask again, or email our care team at ${db.brand.support.email}.`;
         writeText(writer, "tail", text);
         writer.write({ type: "data-guard", data: { stage: "output", name: "safe template", pass: true, detail: `model gave no text${piped.error ? ` (${piped.error})` : ""}; answer built from tool results` } });
       }
       // delivery checked without a known pincode: the estimate line is required, so code adds it if the reply left it out
-      if (!context.pincode && toolLog.some((x) => x.tool === "check_delivery") && !/pincode/i.test(text)) {
+      if (!context.pincode && !context.typedPincode && toolLog.some((x) => x.tool === "check_delivery") && !/pincode/i.test(text)) {
         const note = "That's an estimate for Pune; share your pincode for an exact date.";
         writeText(writer, "estimate", note);
         text = `${text} ${note}`;
       }
       const sources = JSON.stringify(toolLog.map((t) => t.output)) + JSON.stringify(page ? core.verifiedFacts(page) : null) + JSON.stringify(db.brand.policies) + JSON.stringify(db.rules.offer_caps) + JSON.stringify(db.rules.escalation);
       for (const c of outputChecks(text, sources, db.rules, page)) writer.write({ type: "data-guard", data: { stage: "output", ...c } });
+      // unknown facts: an "we offer / don't offer …" claim needs a lookup_policy result this turn
+      const asserted = policyAssertion(text);
+      const policyBacked = !!asserted && toolLog.some((x) => x.tool === "lookup_policy" && policyCovers(String((x.output as { text?: string })?.text ?? ""), asserted.topic));
+      const notIdeal = toolLog.some((x) => x.tool === "get_return_insight" && (x.output as { fit?: string })?.fit === "not_ideal");
+      writer.write({ type: "data-guard", data: { stage: "output", name: "honest lead", pass: !(notIdeal && opensWithYes(text)), detail: notIdeal ? (opensWithYes(text) ? "opened with yes although the fit is not ideal" : "led with the honest answer") : "no fit verdict" } });
+      writer.write({ type: "data-guard", data: { stage: "output", name: "policy claims grounded", pass: !asserted || policyBacked, detail: asserted ? `${policyBacked ? "backed by lookup_policy" : "no lookup_policy result covers"}: "${asserted.phrase}"` : "no policy claims" } });
       if (finishReason === "length") writer.write({ type: "data-guard", data: { stage: "output", name: "length", pass: false, detail: `finishReason length at ${AGENT.maxOutputTokens} max output tokens` } });
       const tokensIn = usage?.inputTokens ?? 0, tokensOut = usage?.outputTokens ?? 0;
       const cost = estimateCostUsd(m.modelId, tokensIn, tokensOut);
@@ -316,11 +337,11 @@ function routedAnswer(intent: NonNullable<QuickIntent>, page: NonNullable<Return
     return t("get_offer", { cart: [{ sku: page.handle, qty: 1 }], prepaid: true, requested_discount_pct: pct }, `I can't create discounts; the store caps offers at ${o.cap.max_pct}% or ${inr(o.cap.max_flat_inr)}.${best ? ` What you do get: ${best.label.charAt(0).toLowerCase() + best.label.slice(1)}, so you'd pay ${inr(o.total_inr)}.` : ""}`);
   }
   if (intent === "check_delivery") {
-    const pin = ctx.pincode ?? "411038";
+    const pin = ctx.pincode ?? ctx.typedPincode ?? "411038";
     const deadline = parseDeadline(userText, db.now);
     const d = core.checkDelivery(db, page.handle, pin, deadline);
     if ("error" in d) return null;
-    return t("check_delivery", { sku: page.handle, pincode: pin, ...(deadline ? { deadline } : {}) }, deliveryText(d, !!ctx.pincode));
+    return t("check_delivery", { sku: page.handle, pincode: pin, ...(deadline ? { deadline } : {}) }, deliveryText(d, !!(ctx.pincode || ctx.typedPincode)));
   }
   if (intent === "lookup_policy") {
     const r = core.lookupPolicy(db, userText);
@@ -340,7 +361,13 @@ function routedAnswer(intent: NonNullable<QuickIntent>, page: NonNullable<Return
     const r = core.addToBag(db, ctx.cart ?? [], page.handle, parseQty(userText));
     return t("add_to_bag", { sku: page.handle, qty: parseQty(userText) }, bagText(r));
   }
-  if (intent === "handoff") return t("handoff", { reason: "routed: care question" }, ALLERGY.test(userText) ? `${nickelAnswer(page)} ${carePointer()}` : db.rules.escalation.text);
+  if (intent === "handoff") return t("handoff", { reason: "routed: care question" }, core.handoff(db, "routed: care question", handoffKind(userText), page).message);
+  if (intent === "update_preferences") {
+    const prefs = parsePrefs(userText, db.now);
+    const filters = { ...(prefs.budget_max_inr ? { max_price_inr: prefs.budget_max_inr } : {}), ...(prefs.occasion ? { occasion: prefs.occasion } : {}), ...(prefs.deadline ? { deliver_by: prefs.deadline, deliver_to_pincode: ctx.pincode ?? ctx.typedPincode ?? "411038" } : {}), limit: 3 };
+    const said = [prefs.budget_max_inr ? `under ₹${prefs.budget_max_inr.toLocaleString("en-IN")}` : null, prefs.occasion ? `for ${prefs.occasion}` : null, prefs.deadline ? `by ${formatDeadline(prefs.deadline)}` : null].filter(Boolean).join(", ");
+    return { cached_response: { text: `Noted${said ? `: ${said}` : ""}. Here are a few pieces that fit.`, cards: [], trace: [{ tool: "update_preferences", args: prefs as Record<string, unknown> }, { tool: "search_catalog", args: { query: "", ...filters } as Record<string, unknown> }] } };
+  }
   return null; // get_return_insight needs the model to judge fit
 }
 
@@ -351,7 +378,8 @@ function deliveryText(d: DeliveryResult, knownPincode: boolean): string {
   return `${d.summary}${knownPincode ? "" : " That's an estimate for Pune; share your pincode for an exact date."}`;
 }
 
-type QuickIntent = ReturnType<typeof forcedTool> | "get_product_facts";
+type QuickIntent = ReturnType<typeof forcedTool> | "get_product_facts" | "update_preferences";
+const formatDeadline = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
 /** Simple product-fact questions, answered from verified facts when no model is available. */
 const FACTS_Q = /\b(how (big|long|heavy|wide)|what size|size of|dimensions?|diameter|length|weight|made of|material|what metal)\b/i;
 type Facts = Extract<ReturnType<typeof core.getProductFacts>, { found: true }>;
@@ -375,25 +403,8 @@ function bagText(r: ReturnType<typeof core.addToBag>) {
   return "I couldn't add that one. Which piece would you like?";
 }
 
-/** "Our care team can help…" with the support email and reply time (for answers that aren't a dead end). */
-const carePointer = () => {
-  const b = getDb().brand.support;
-  return `Our care team can help at ${b.email}; we reply ${b.reply}.`;
-};
-
-/** Honest nickel answer from verified metafields (fast path and safe template share it). */
-function nickelAnswer(page: NonNullable<ReturnType<typeof core.findProduct>>): string {
-  const j = page.metafields.jewellery;
-  const metal = { "stainless steel": "stainless steel", "925 silver": "sterling silver", brass: "brass" }[j.base_metal];
-  const finish = j.plating === "18k gold plating" ? "18K gold plating" : j.plating === "gold vermeil" ? "gold vermeil" : j.plating ?? "a gold-toned finish";
-  const plural = /s$/i.test(page.title);
-  return j.nickel_free === false
-    ? `No. ${plural ? "They're" : "It's"} ${metal}, which has a little nickel, so we don't call ${plural ? "them" : "it"} hypoallergenic. If you have a nickel allergy, please check with your doctor first.`
-    : `The brand hasn't confirmed this. ${plural ? "They're" : "It's"} ${metal} with ${finish}. If you have a nickel allergy, please check with your doctor first.`;
-}
-
 /** G11: a plain answer built only from tool results, used when the model returns no text after calling tools. */
-function answerFromTools(log: { tool: string; output: unknown }[], knownPincode: boolean, page: ReturnType<typeof core.findProduct>, userText: string): string | null {
+function answerFromTools(log: { tool: string; output: unknown }[], knownPincode: boolean): string | null {
   const db = getDb();
   const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
   for (const { tool, output } of [...log].reverse()) {
@@ -408,11 +419,13 @@ function answerFromTools(log: { tool: string; output: unknown }[], knownPincode:
     if (tool === "lookup_policy") return o.found ? shortPolicy(String(o.text)) : db.rules.escalation.text;
     if (tool === "get_product_facts" && o.found) return factsText(o as unknown as Facts);
     if (tool === "add_to_bag") return bagText(o as unknown as ReturnType<typeof core.addToBag>);
-    if (tool === "handoff") return page && ALLERGY.test(userText) ? `${nickelAnswer(page)} ${carePointer()}` : db.rules.escalation.text;
+    if (tool === "handoff") return String(o.message ?? db.rules.escalation.text);
     if (tool === "get_return_insight") {
-      const ri = output as unknown as { relevant: boolean; title: string; top_reason: { count: number; of: number; label: string } | null; keepers: { title: string; share_of_keepers: number } | null; context: string };
+      const ri = output as unknown as { relevant: boolean; title: string; top_reason: { count: number; of: number; label: string } | null; keepers: { title: string; share_of_keepers: number } | null; alternative: { title: string; size: string | null; price_inr: number } | null; context: string };
       if (!ri.relevant || !ri.top_reason) return `The ${ri.title} suit ${ri.context} wear well; buyers in that context rarely return them.`;
-      return `Buyers who wore the ${ri.title} for ${ri.context} and returned them mostly said "${ri.top_reason.label.toLowerCase()}" (${ri.top_reason.count} of ${ri.top_reason.of}).${ri.keepers ? ` ${Math.round(ri.keepers.share_of_keepers * 100)}% of ${ri.context} keepers picked the ${ri.keepers.title} instead.` : ""}`;
+      // honest answer first, then the code-computed alternative (with its size)
+      const alt = ri.alternative ? ` A better fit: the ${ri.alternative.size ? `${ri.alternative.size.replace(/ (across|long)$/, "")} ` : ""}${ri.alternative.title} (${inr(ri.alternative.price_inr)})${ri.keepers ? `, picked by ${Math.round(ri.keepers.share_of_keepers * 100)}% of ${ri.context} keepers` : ""}.` : "";
+      return `Honestly, buyers who wore the ${ri.title} for ${ri.context} and returned them mostly said "${ri.top_reason.label.toLowerCase()}" (${ri.top_reason.count} of ${ri.top_reason.of}).${alt}`;
     }
   }
   return null;
@@ -506,7 +519,10 @@ function offlineWriter(userText: string, pageSku: string | null, ctx: ChatContex
     const a = c.trace[0]?.args ?? {};
     return (a.sku as string | undefined) ?? (a.cart as { sku: string }[] | undefined)?.[0]?.sku ?? null;
   };
-  const cached = db.demo.steps.find((s) => s.chip && s.cached_response && norm(s.chip) === norm(userText) && (!pageSku || cachedFor(s.cached_response) === pageSku))?.cached_response ?? null;
+  const demoCached = db.demo.steps.find((s) => s.chip && s.cached_response && norm(s.chip) === norm(userText) && (!pageSku || cachedFor(s.cached_response) === pageSku))?.cached_response ?? null;
+  // demo answers were cached with a known pincode; without one, a delivery answer still says it's a Pune estimate
+  const estimateLine = " That's an estimate for Pune; share your pincode for an exact date.";
+  const cached = demoCached && !ctx.pincode && !ctx.typedPincode && demoCached.trace.some((t) => t.tool === "check_delivery") && !/pincode/i.test(demoCached.text) ? { ...demoCached, text: demoCached.text + estimateLine } : demoCached;
   // "Show me other products" (4th prompt tile): similar pieces to the page product, computed by the real tool
   const page = pageSku ? core.findProduct(db, pageSku) : null;
   const step =
@@ -541,7 +557,7 @@ function offlineWriter(userText: string, pageSku: string | null, ctx: ChatContex
               const verb = /s$/i.test(page.title) ? "are" : "is";
               if (norm(userText) === "what metal is this")
                 return { cached_response: { text: `${verb === "are" ? "They're" : "It's"} ${metal} all the way through, with ${finish}.`, cards: [], trace: [] } };
-              const text = `${nickelAnswer(page)} Our care team can help too.`;
+              const text = `${core.nickelAnswer(page)} Our care team can help too.`;
               return { cached_response: { text, cards: [], trace: [{ tool: "handoff", args: { reason: "nickel / sensitive-ears question" } as Record<string, unknown> }] } };
             })()
         : (norm(userText) === "suitable for wedding gift" || norm(userText) === "is gift wrap available") && page
@@ -572,7 +588,8 @@ function offlineWriter(userText: string, pageSku: string | null, ctx: ChatContex
       case "get_return_insight": return core.getReturnInsight(db, a.sku, a.context);
       case "search_catalog": { const { query, ...f } = a; return core.searchCatalog(db, query, f); }
       case "check_delivery": return core.checkDelivery(db, a.sku, a.pincode, a.deadline);
-      case "handoff": return core.handoff(db, a.reason);
+      case "handoff": return core.handoff(db, a.reason, handoffKind(userText), page);
+      case "update_preferences": return { saved: true, preferences: a, why: `Saved (quick answer): ${Object.entries(a).map(([k, v]) => `${k}=${v}`).join(", ")}` };
       case "lookup_policy": return core.lookupPolicy(db, a.topic);
       case "get_product_facts": return core.getProductFacts(db, a.sku);
       case "add_to_bag": return core.addToBag(db, ctx.cart ?? [], a.sku, a.qty);
