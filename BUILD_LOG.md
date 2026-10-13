@@ -748,3 +748,26 @@ Order followed: checker → test wording → agent. AI tool: Claude Code wrote t
   - 390px flows (`flows.mjs`), with and without a key: 27/27, covering home → gift chip → card → product (history + divider) → delivery → follow-ups → bag; the wedding ad (no water chips); the steel ad → nickel → care card; and 30mm → "need it in Pune by 18 Oct" → Everyday Tube Hoops card → Add → bag count.
   - Click-through 42/42 and loop 17/17 (tests updated for the new chip copy); bag UI 7/7.
   - Evals without the judge: 65/65 after the checker fix.
+
+
+## 13 Oct 2026 — Codex chat frontend repairs
+
+Worked exclusively in `rzp-build-context-codex`. No backend, model configuration, generated catalogue/pipeline data or planted facts changed. No push.
+
+Reproduced before editing: launcher → Store home opened a 1280px-wide drawer under `<body>` outside a 470px phone frame. Guided sponsored-card navigation also failed to leave a visible drawer after opening. The mount-time document lookup could select no frame or a previous route's frame. Replaced it with a per-frame React surface and callback refs; the drawer/backdrop portal is explicitly owned by the current frame. A ResizeObserver updates its dimensions on desktop/mobile resizing. Overlay clipping is local to the frame, with no global document overflow workaround.
+
+The old height toggle did not configure real Vaul snap points. The repaired sheet uses measured half/full snap points (58%/94%), with a snap-sized layout and an offset that accounts for Vaul's translation. The input/footer stay visible at both snaps; dragging and input-focus expansion work. Focus enters the sheet's close control and returns to the opener on Escape/close. The accessible expand/collapse button is separate from Vaul's aria-hidden decorative handle. Chat card Add/quantity, care and login controls have 44px touch targets. Typing remains visible throughout an unfinished reply, including while text streams.
+
+Restoration now runs after hydration, and saving is disabled until restoration completes. Corrupt saved messages are rejected. One root useChat instance remains; messages/dividers persist across navigation and refresh, with memory fallback when storage is denied. Navigation and New chat abort and drain pending requests; canceled data parts cannot update the bag or preferences. Page registration only closes/cancels on an actual context change. Dividers update to the latest viewed product when no intervening message exists; saved dividers are pruned with their messages.
+
+Ad/control context follows explicit shop links, including logo, category menu, grid cards and bag. A plain direct URL does not inherit an old campaign or arm A. Home/category grids remain static. Existing AI/curated openers, safe chip configuration, fast paths and guardrails remain unchanged. Chips are rules, not AI, so the guided path is fast, testable and can never suggest unsafe prompts.
+
+Verification on the production build:
+- `npm run build`, `npm run lint` and TypeScript: pass.
+- `npm run validate-data`: 79 passed, zero errors; the existing orders-count warning remains.
+- `npm run test:claims`: 29 passed. `npm run test:chips`: 105/105, no model calls or failed guards.
+- New repeatable browser regression suite: 18/18 with the live key and 18/18 without keys; console/page error checks passed. Tested 1280×1000 desktop framing and 390×844 mobile viewport, launcher/home/category/product/bag, waterproof/wedding guided ads, approved steel ad, office fit alternative, 30mm 21 Oct → Aria 2.8cm 16 Oct rescue and Add, history/refresh/back-forward, current SKU context, direct/ad separation, arm A/pause, Escape/focus, drag snaps, 500-character input, card scrolling, delayed reply cancellation, corrupt storage and a same-origin 390px iframe with both storage APIs denied. The iframe harness is temporary browser interception, not a new product route.
+- Run against production with `npm run test:chat-browser -- http://localhost:3700 .cache/chat-browser/live` (uses installed Chrome; CHROME_PATH can select another Chrome executable). For offline testing, launch a separate production instance with both provider keys set to empty environment values. The suite sends two free-text messages; live runs can incur existing capped API costs. Screenshots/results are in `docs/screenshots/chat-repair/`.
+- The six planted facts remain intact: 9/9 office size insight and 64% choosing 3cm, 30mm/Aria delivery dates, sensitive-ears demand 28 with eight steel earrings, waterproof ×18, layered-set office exclusion rule and wedding pause. Catalogue/generated files were not edited.
+
+Limits: physical iPhone/Safari keyboard behaviour is not verified; mobile keyboard accommodation remains in code. Checkout is still the pre-existing disabled placeholder and no checkout implementation was added. With browser storage denied, memory preserves navigation within the mounted session, not a full document refresh. No backend eval rerun was needed for these frontend-only repairs.

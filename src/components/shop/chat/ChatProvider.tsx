@@ -4,8 +4,8 @@
  *
  * - Lives in the root layout, so a single useChat instance (stable id) survives client-side navigation.
  * - Messages, "Now viewing" dividers and the session's ad context are saved to sessionStorage after each finished
- *   reply and read back when the provider first renders in the browser, so a refresh keeps the chat (the sheet is
- *   closed on load, so the server's empty render and the browser's restored state show the same markup). Every storage call is in try/catch with an
+ *   reply and restored after hydration, so server and browser first renders agree. Saving is gated until the
+ *   restore finishes. Every storage call is in try/catch with an
  *   in-memory fallback, because storage can be blocked (private windows, the /demo page's iframe). Nothing here
  *   reads window.top or the parent frame.
  * - Each page registers itself (product, home, category, bag). The next message carries that page's context;
@@ -15,6 +15,8 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { parseSavedChat, type SavedChat, type ChatDivider } from "@/lib/chat-session";
+import { usePathname } from "next/navigation";
 import { readState, writeState, type CartLine } from "@/lib/state";
 import type { CardVM } from "@/lib/view";
 import type { PageKind } from "@/lib/agent/chips";
@@ -30,8 +32,8 @@ export type ChatPage = {
   opener: string; // first assistant line when the conversation is empty
   linkQuery: string; // carried on product links from the chat
 };
-export type Divider = { afterId: string; label: string };
-type Saved = { messages: UIMessage[]; dividers: Divider[]; lastSku: string | null; adGroupId: string | null; arm: ChatPage["arm"] };
+export type Divider = ChatDivider;
+type Saved = SavedChat;
 
 const KEY = "cosmos-chat-v1";
 const MAX_SAVED = 40; // messages kept across refreshes (the server only reads the last 10)
@@ -40,7 +42,7 @@ let memory: Saved | null = null; // fallback when sessionStorage is unavailable 
 function load(): Saved | null {
   try {
     const raw = window.sessionStorage.getItem(KEY);
-    if (raw) return JSON.parse(raw) as Saved;
+    if (raw) return parseSavedChat(raw);
   } catch {}
   return memory;
 }
@@ -61,7 +63,8 @@ type Ctx = {
   messages: UIMessage[];
   status: ReturnType<typeof useChat>["status"];
   send: (text: string) => void;
-  newChat: () => void;
+  newChat: () => Promise<void>;
+  ready: boolean;
   page: ChatPage | null;
   register: (p: ChatPage) => void;
   dividers: Divider[];
@@ -83,16 +86,21 @@ export function useCosmosChat() {
 }
 
 export default function ChatProvider({ cards, children }: { cards: Record<string, CardVM>; children: React.ReactNode }) {
-  const [initial] = useState<Saved | null>(() => (typeof window === "undefined" ? null : load()));
+  const pathname = usePathname();
+  const [ready, setReady] = useState(false);
+  const restored = useRef(false);
+  const acceptingData = useRef(false);
+  const requestBusy = useRef(false);
   const [transport] = useState(() => new DefaultChatTransport({ api: "/api/chat" }));
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { messages, sendMessage, status, setMessages, stop } = useChat({
     id: "cosmos-session",
     transport,
-    messages: initial?.messages ?? [],
+    messages: [],
     // data parts from the agent: a new bag (header count updates at once, plus a toast) and saved preferences
     onData: (part) => {
+      if (!acceptingData.current) return;
       if (part.type === "data-cart") {
         const d = part.data as { cart: CartLine[]; added: { title: string; qty: number } };
         writeState({ cart: d.cart });
@@ -109,10 +117,10 @@ export default function ChatProvider({ cards, children }: { cards: Record<string
   });
 
   const [page, setPage] = useState<ChatPage | null>(null);
-  const [dividers, setDividers] = useState<Divider[]>(initial?.dividers ?? []);
-  const [session, setSession] = useState<{ lastSku: string | null; adGroupId: string | null; arm: ChatPage["arm"] }>({ lastSku: initial?.lastSku ?? null, adGroupId: initial?.adGroupId ?? null, arm: initial?.arm ?? null });
+  const [dividers, setDividers] = useState<Divider[]>([]);
+  const [session, setSession] = useState<{ lastSku: string | null; adGroupId: string | null; arm: ChatPage["arm"] }>({ lastSku: null, adGroupId: null, arm: null });
   const [open, setOpen] = useState(false);
-  const [pageStart, setPageStart] = useState(initial?.messages?.length ?? 0);
+  const [pageStart, setPageStart] = useState(0);
   const pageKeyRef = useRef<string | null>(null);
   const sessionRef = useRef(session);
   const messagesRef = useRef(messages);
@@ -121,41 +129,78 @@ export default function ChatProvider({ cards, children }: { cards: Record<string
     messagesRef.current = messages;
   }, [session, messages]);
 
+  // Storage is an external system: restore only after hydration, never in a render initializer.
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    if (restored.current) return;
+    restored.current = true;
+    const saved = load();
+    if (saved && Array.isArray(saved.messages) && Array.isArray(saved.dividers)) {
+      setMessages(saved.messages);
+      messagesRef.current = saved.messages;
+      setDividers(saved.dividers);
+      setPageStart(saved.messages.length);
+    }
+    // Page URLs own campaign/arm context. Restoring messages must not restore a stale holdout arm.
+    setReady(true);
+    // This one-time storage synchronization deliberately happens after identical server/client first renders.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    acceptingData.current = false;
+    requestBusy.current = false;
+    void stop();
+    if (!/^\/(shop|c\/|p\/|cart)/.test(pathname)) {
+      setOpen(false);
+      setPage(null);
+    }
+    setToast(null);
+    return () => { acceptingData.current = false; void stop(); };
+  }, [pathname, stop]);
+
+  /* eslint-enable react-hooks/set-state-in-effect */
+
   // save after each finished reply (not on every streamed token)
   useEffect(() => {
-    if (status === "streaming" || status === "submitted") return;
-    save({ messages: messages.slice(-MAX_SAVED), dividers, ...session });
-  }, [status, messages, dividers, session]);
+    if (!ready || status === "streaming" || status === "submitted") return;
+    const kept = messages.slice(-MAX_SAVED);
+    save({ messages: kept, dividers: dividers.filter((d) => kept.some((m) => m.id === d.afterId)), ...session });
+  }, [ready, status, messages, dividers, session]);
 
   /** A page announces itself. A different product than last time → divider (if there is a conversation). */
   const register = useCallback((p: ChatPage) => {
     setPage(p);
-    setOpen(false);
-    const key = `${p.kind}|${p.sku ?? ""}`;
+    const key = `${p.kind}|${p.sku ?? p.title ?? ""}|${p.adGroupId ?? ""}|${p.arm ?? "C"}`;
     if (key !== pageKeyRef.current) {
+      setOpen(false);
+      acceptingData.current = false;
+      requestBusy.current = false;
+      void stop();
       pageKeyRef.current = key;
       setPageStart(messagesRef.current.length); // a new page: its starter chips, not the last page's follow-ups
     } // a new page starts with the sheet closed; the conversation is kept
     const s = sessionRef.current;
-    const next = { ...s, adGroupId: p.adGroupId ?? s.adGroupId, arm: p.arm ?? s.arm };
+    const next = { ...s, adGroupId: p.adGroupId, arm: p.arm ?? "C" };
     if (p.kind === "product" && p.sku && p.sku !== s.lastSku) {
       const last = messagesRef.current.at(-1);
-      if (last) setDividers((d) => (d.some((x) => x.afterId === last.id) ? d : [...d, { afterId: last.id, label: `Now viewing: ${p.title}` }]));
+      if (last) setDividers((d) => ([...d.filter((x) => x.afterId !== last.id), { afterId: last.id, label: `Now viewing: ${p.title}` }]));
       next.lastSku = p.sku;
     }
     sessionRef.current = next;
     setSession(next);
-  }, []);
+  }, [stop]);
 
-  // a product page follows its own URL (ad or direct visit), so the sheet matches the page; home, category and the
-  // bag follow the session's ad
-  const adGroupId = page?.kind === "product" ? page.adGroupId : page?.adGroupId ?? session.adGroupId;
-  const arm = page?.arm ?? session.arm;
+  // Campaign/holdout context follows explicit shop links. A plain direct URL never inherits an old campaign.
+  const adGroupId = page?.adGroupId ?? null;
+  const arm = page?.arm ?? "C";
 
   // read at send time so the bag and login flag are current (they live in the browser)
   const send = useCallback(
     (text: string) => {
-      if (!text.trim()) return;
+      if (!ready || !page || !text.trim() || requestBusy.current || status === "submitted" || status === "streaming") return;
+      requestBusy.current = true;
+      acceptingData.current = true;
       const st = readState();
       const context = {
         sku: page?.kind === "product" ? page.sku : null,
@@ -166,31 +211,35 @@ export default function ChatProvider({ cards, children }: { cards: Record<string
         loginOffered: st.loginOffered,
         path: `${location.pathname}${location.search}`,
       };
-      sendMessage({ text: text.trim() }, { body: { context } });
+      void sendMessage({ text: text.trim().slice(0, 500) }, { body: { context } }).finally(() => { requestBusy.current = false; });
     },
-    [page, adGroupId, sendMessage],
+    [ready, page, adGroupId, status, sendMessage],
   );
 
   const openWith = useCallback(
     (text?: string) => {
+      if (!ready || !page) return;
       setOpen(true);
       if (text) send(text);
     },
-    [send],
+    [ready, page, send],
   );
 
-  const newChat = useCallback(() => {
-    stop();
+  const newChat = useCallback(async () => {
+    acceptingData.current = false;
+    requestBusy.current = true;
+    await stop();
     setMessages([]);
     setDividers([]);
     setPageStart(0);
     setSession((s) => ({ ...s, lastSku: page?.kind === "product" ? page.sku : null }));
     clear();
+    requestBusy.current = false;
   }, [stop, setMessages, page]);
 
   const value = useMemo<Ctx>(
-    () => ({ messages, status, send, newChat, page, register, dividers, pageStart, adGroupId, arm, cards, open, setOpen, openWith, toast }),
-    [messages, status, send, newChat, page, register, dividers, pageStart, adGroupId, arm, cards, open, openWith, toast],
+    () => ({ messages, status, send, newChat, page, register, dividers, pageStart, adGroupId, arm, cards, open, setOpen, openWith, toast, ready }),
+    [messages, status, send, newChat, page, register, dividers, pageStart, adGroupId, arm, cards, open, openWith, toast, ready],
   );
   return <ChatCtx.Provider value={value}>{children}</ChatCtx.Provider>;
 }

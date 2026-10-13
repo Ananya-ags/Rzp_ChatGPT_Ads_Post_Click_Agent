@@ -19,7 +19,8 @@
     "evals": "tsx --conditions=react-server scripts/evals/run.ts",
     "evals:rejudge": "tsx --conditions=react-server scripts/evals/rejudge.ts",
     "test:claims": "tsx scripts/tests/claims.test.ts",
-    "test:chips": "tsx --conditions=react-server scripts/tests/chips.test.ts"
+    "test:chips": "tsx --conditions=react-server scripts/tests/chips.test.ts",
+    "test:chat-browser": "node scripts/tests/chat-browser.mjs"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.78",
@@ -40,6 +41,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
+    "playwright": "^1.58.2",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5"

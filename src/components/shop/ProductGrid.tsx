@@ -1,16 +1,19 @@
+"use client";
 /**
  * Two-column product grid for the store home and category pages. Same cards for every visitor (no personalisation).
  * Tapping the card opens the product page; the button below adds to the bag in place (qty stepper once added).
  */
+import { useProductHref } from "./productLink";
 import Link from "next/link";
 import ProductImage from "./ProductImage";
 import CartButton from "./CartButton";
 import { inr, type CardVM } from "@/lib/view";
 
 export function GridCard({ card }: { card: CardVM }) {
+  const href = useProductHref();
   return (
     <div className="flex h-full min-w-0 flex-col">
-      <Link href={`/p/${card.handle}`} className="group block min-w-0 active:opacity-80">
+      <Link href={href(card.handle)} className="group block min-w-0 active:opacity-80">
         <div className="relative overflow-hidden rounded-2xl border border-line/70 bg-white">
           <ProductImage card={card} className="transition-transform duration-300 group-hover:scale-[1.03]" />
           {card.badge && (

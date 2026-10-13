@@ -117,11 +117,11 @@ export function ToolCard({ name, output, cards }: { name: string; output: Any; c
             </div>
           </div>
           {kc && (
-            <div className="flex items-center justify-between border-t border-line bg-sand/50 px-3 py-2 text-[12px]">
-              <Link href={href(kc.handle)} className="underline underline-offset-2">
+            <div className="flex items-center justify-between gap-2 border-t border-line bg-sand/50 px-3 py-2 text-[12px]">
+              <Link href={href(kc.handle)} className="min-w-0 flex-1 break-words underline underline-offset-2">
                 Better fit: {alt?.size ? `${alt.size} · ` : ""}{kc.title} · {inr(kc.price)}
               </Link>
-              <CartButton sku={kc.handle} max={kc.maxQty} limitReason={kc.limitReason} size="md" />
+              <CartButton sku={kc.handle} max={kc.maxQty} limitReason={kc.limitReason} size="touch" className="w-[96px] shrink-0" />
             </div>
           )}
         </div>
@@ -163,7 +163,7 @@ function CareCard({ contact = CARE_EMAIL }: { contact?: string }) {
   return (
     <div className="rounded-2xl border border-line bg-white px-3 py-2.5 text-[12.5px]">
       <p className="font-medium">Cosmos care team</p>
-      <a href={`mailto:${contact}`} className="mt-0.5 inline-flex min-h-8 items-center break-all text-ink underline underline-offset-2">
+      <a href={`mailto:${contact}`} className="mt-0.5 inline-flex min-h-11 items-center break-all text-ink underline underline-offset-2">
         {contact}
       </a>
       <p className="text-muted">We&apos;ll get back to you within 24 hours</p>
@@ -196,10 +196,10 @@ function LoginCard({ href }: { href: string }) {
     <div className="rounded-2xl border border-gold/40 bg-gold/5 px-3 py-2.5 text-[12.5px]">
       <p className="font-medium">Log in for your saved address and exact delivery date</p>
       <div className="mt-2 flex gap-2">
-        <Link href={href} className="rounded-full bg-ink px-3.5 py-1.5 text-[12px] font-medium text-ivory">
+        <Link href={href} className="inline-flex min-h-11 items-center rounded-full bg-ink px-3.5 py-1.5 text-[12px] font-medium text-ivory">
           Log in
         </Link>
-        <button onClick={() => write({ loginOffered: true, loginDismissed: true })} className="rounded-full border border-line bg-white px-3.5 py-1.5 text-[12px]">
+        <button onClick={() => write({ loginOffered: true, loginDismissed: true })} className="min-h-11 rounded-full border border-line bg-white px-3.5 py-1.5 text-[12px]">
           Not now
         </button>
       </div>

@@ -12,7 +12,7 @@
  * - Text input only (no attachments), 500 characters, with a counter near the limit; disclosure always visible.
  */
 import { Drawer } from "vaul";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { UIMessage } from "ai";
 import { ToolCard } from "./ToolCards";
@@ -24,6 +24,7 @@ import { inr } from "@/lib/view";
 import { useDemoState } from "@/lib/state";
 import { browseOpener, followUpChips, starterChips, type ChipContext, type LastTool } from "@/lib/agent/chips";
 import { norm } from "@/lib/agent/intents";
+import { usePhoneSurface } from "../PhoneSurface";
 import CosmosStar from "../brand/CosmosStar";
 
 const MAX_CHARS = 500;
@@ -49,18 +50,36 @@ export default function ChatSheet() {
   const chat = useCosmosChat();
   const { page, open, setOpen, messages, status, send, newChat, dividers, pageStart, cards, adGroupId, toast } = chat;
   const [state] = useDemoState();
-  const [full, setFull] = useState(false);
+  const { portal } = usePhoneSurface();
+  const [snap, setSnap] = useState<0.58 | 1>(0.58);
+  const full = snap === 1;
   const [input, setInput] = useState("");
   const [kb, setKb] = useState(0); // on-screen keyboard height (iOS), so the input stays above it
-  // inside the desktop phone frame, portal the sheet into the frame; on phones, into <body>
-  const [container] = useState<HTMLElement | null>(() =>
-    typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches ? document.getElementById("phone") : null,
-  );
+  const [viewport, setViewport] = useState({ height: 0, desktop: false });
+  useEffect(() => {
+    if (!portal) return;
+    const measure = () => setViewport({ height: portal.clientHeight, desktop: window.matchMedia("(min-width: 768px)").matches });
+    const observer = new ResizeObserver(measure);
+    observer.observe(portal);
+    window.addEventListener("resize", measure);
+    measure();
+    return () => { observer.disconnect(); window.removeEventListener("resize", measure); };
+  }, [portal]);
+  // Pixel snaps make the visible sheet's layout (including its input) fit each height, rather than hiding its
+  // footer below the bottom edge of a full-height drawer at the half snap.
+  const snapPoints = useMemo(() => [Math.round(viewport.height * 0.58) + "px", Math.round(viewport.height * 0.94) + "px"], [viewport.height]);
+  const activeSnap = full ? snapPoints[1] : snapPoints[0];
   const listRef = useRef<HTMLDivElement>(null);
+  const returnFocus = useRef<HTMLElement | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (open && document.activeElement instanceof HTMLElement && !portal?.contains(document.activeElement)) {
+      returnFocus.current = document.activeElement;
+    }
+  }, [open, portal]);
 
   const busy = status === "submitted" || status === "streaming";
   const last = messages.at(-1);
-  const replying = last?.role === "assistant" && last.parts.some((x) => x.type === "text" && x.text.trim());
   const running = last?.role === "assistant" ? (last.parts as ToolPart[]).filter((p) => toolName(p) && p.state !== "output-available").map(toolName).at(-1) : undefined;
 
   const hero = page?.kind === "product" && page.sku ? cards[page.sku] ?? null : null;
@@ -99,7 +118,7 @@ export default function ChatSheet() {
   // iOS: keep the input above the on-screen keyboard
   useEffect(() => {
     const vv = typeof window !== "undefined" ? window.visualViewport : null;
-    if (!vv || container) return; // the desktop frame has no keyboard
+    if (!vv || viewport.desktop) return; // the desktop frame has no keyboard
     const onResize = () => {
       const h = Math.round(window.innerHeight - vv.height - vv.offsetTop);
       setKb(h > 120 ? h : 0); // only a real on-screen keyboard, not browser chrome resizing
@@ -110,7 +129,7 @@ export default function ChatSheet() {
       vv.removeEventListener("resize", onResize);
       vv.removeEventListener("scroll", onResize);
     };
-  }, [container]);
+  }, [viewport.desktop]);
 
   const submit = (text: string) => {
     if (!text.trim() || busy) return;
@@ -130,17 +149,47 @@ export default function ChatSheet() {
           </Link>
         </div>
       )}
-      <Drawer.Root open={open} onOpenChange={(o) => { setOpen(o); if (!o) setFull(false); }} container={container} repositionInputs={false}>
+      {portal && viewport.height > 0 && <Drawer.Root
+        open={open}
+        onOpenChange={(o) => { setOpen(o); if (!o) setSnap(0.58); }}
+        container={portal}
+        snapPoints={snapPoints}
+        activeSnapPoint={activeSnap}
+        setActiveSnapPoint={(point) => setSnap(point === snapPoints[1] ? 1 : 0.58)}
+        fadeFromIndex={0}
+        snapToSequentialPoint
+        handleOnly
+        noBodyStyles
+        repositionInputs={false}
+      >
         <Drawer.Portal>
-          <Drawer.Overlay className="fixed inset-0 z-40 bg-ink/25" />
+          <Drawer.Overlay className="pointer-events-auto absolute inset-0 z-40 bg-ink/25" />
           <Drawer.Content
             aria-describedby={undefined}
-            style={kb ? { paddingBottom: kb } : undefined}
-            className={`fixed inset-x-0 bottom-0 z-50 flex max-w-full flex-col overflow-hidden rounded-t-[22px] bg-ivory shadow-[0_-10px_40px_-10px_rgba(31,26,23,0.35)] outline-none transition-[height] duration-300 motion-reduce:transition-none ${full ? "h-[94%]" : "h-[58%]"}`}
+            ref={contentRef}
+            onOpenAutoFocus={(event) => {
+              event.preventDefault();
+              if (document.activeElement instanceof HTMLElement) returnFocus.current = document.activeElement;
+              contentRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close chat"]')?.focus({ preventScroll: true });
+            }}
+            onCloseAutoFocus={(event) => {
+              event.preventDefault();
+              if (returnFocus.current?.isConnected) returnFocus.current.focus({ preventScroll: true });
+            }}
+            // Vaul translates by (container height - snap height). Offset the actual, snap-sized content by
+            // that same amount, keeping both the visible drawer and its footer inside the frame at each snap.
+            style={{ height: Number.parseInt(activeSnap), bottom: viewport.height - Number.parseInt(activeSnap), paddingBottom: kb || undefined }}
+            data-cosmos-sheet
+            className="cosmos-sheet pointer-events-auto absolute inset-x-0 z-50 flex min-w-0 max-w-full flex-col overflow-hidden rounded-t-[22px] bg-ivory shadow-[0_-10px_40px_-10px_rgba(31,26,23,0.35)] outline-none"
           >
-            <button onClick={() => setFull((f) => !f)} className="mx-auto flex h-5 w-16 shrink-0 items-center justify-center" aria-label={full ? "Collapse chat" : "Expand chat"}>
-              <span className="h-1.5 w-10 rounded-full bg-line" />
-            </button>
+            <div className="relative h-11 shrink-0">
+              <Drawer.Handle preventCycle className="!my-0 !h-11 !w-full !bg-transparent !opacity-100">
+                <span className="absolute left-1/2 top-1/2 h-1 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-line" />
+              </Drawer.Handle>
+              <button type="button" onClick={() => setSnap(full ? 0.58 : 1)} className="absolute right-3 top-0 z-10 grid size-11 place-items-center rounded-full text-muted focus-visible:outline-2 focus-visible:outline-gold" aria-label={full ? "Collapse chat" : "Expand chat"}>
+                <svg viewBox="0 0 20 20" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden><path d={full ? "M5 7l5 5 5-5" : "M5 12l5-5 5 5"} /></svg>
+              </button>
+            </div>
 
             {/* header */}
             <div className="flex items-center gap-2 px-4 pb-2">
@@ -151,7 +200,7 @@ export default function ChatSheet() {
                 <p className="truncate text-[11.5px] text-muted">{subtitle}</p>
               </div>
               {messages.length > 0 && (
-                <button onClick={newChat} className="h-11 shrink-0 rounded-full px-3 text-[12.5px] text-ink underline decoration-line underline-offset-2 focus-visible:outline-2 focus-visible:outline-gold">
+                <button onClick={() => { setInput(""); void newChat(); }} className="h-11 shrink-0 rounded-full px-3 text-[12.5px] text-ink underline decoration-line underline-offset-2 focus-visible:outline-2 focus-visible:outline-gold">
                   New chat
                 </button>
               )}
@@ -170,7 +219,7 @@ export default function ChatSheet() {
                   <p className="truncate text-[12.5px]">{hero.title}</p>
                   <p className="text-[12.5px] font-medium">{inr(hero.price)}</p>
                 </div>
-                <CartButton sku={hero.handle} max={hero.maxQty} limitReason={hero.limitReason} size="md" />
+                <CartButton sku={hero.handle} max={hero.maxQty} limitReason={hero.limitReason} size="touch" />
               </div>
             )}
             {full && page?.kind === "bag" && (
@@ -207,7 +256,7 @@ export default function ChatSheet() {
                   </div>
                 );
               })}
-              {busy && !replying && (
+              {busy && (
                 <AiRow waiting>
                   <div className="flex items-center gap-2 py-1.5 text-muted" aria-label="Cosmos AI is typing">
                     <span className="flex items-center gap-1 text-ink">
@@ -229,7 +278,7 @@ export default function ChatSheet() {
               {chips.length > 0 && !busy && (
                 <div className="mb-2 flex min-w-0 gap-2 overflow-x-auto no-scrollbar" role="group" aria-label="Suggested questions">
                   {chips.map((c) => (
-                    <button key={c} onClick={() => submit(c)} className="h-10 shrink-0 rounded-full border border-line bg-white px-3.5 text-[12.5px] active:bg-sand focus-visible:outline-2 focus-visible:outline-gold">
+                    <button key={c} onClick={() => submit(c)} className="h-11 shrink-0 rounded-full border border-line bg-white px-3.5 text-[12.5px] active:bg-sand focus-visible:outline-2 focus-visible:outline-gold">
                       {c}
                     </button>
                   ))}
@@ -249,7 +298,7 @@ export default function ChatSheet() {
                   id="cosmos-chat-input"
                   value={input}
                   onChange={(e) => setInput(e.target.value.slice(0, MAX_CHARS))}
-                  onFocus={() => setFull(true)}
+                  onFocus={() => setSnap(1)}
                   // text only: no attachments; pasting or dropping a file or image does nothing
                   onPaste={(e) => {
                     if (e.clipboardData.files.length) e.preventDefault();
@@ -278,7 +327,7 @@ export default function ChatSheet() {
             </div>
           </Drawer.Content>
         </Drawer.Portal>
-      </Drawer.Root>
+      </Drawer.Root>}
     </ProductLinkProvider>
   );
 }

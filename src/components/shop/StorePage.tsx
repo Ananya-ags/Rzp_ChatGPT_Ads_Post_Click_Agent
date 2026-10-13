@@ -6,6 +6,8 @@
  */
 import Link from "next/link";
 import { useEffect } from "react";
+import { ProductLinkProvider } from "./productLink";
+import { useCosmosChat } from "./chat/ChatProvider";
 import SiteHeader from "./SiteHeader";
 import AskCosmos from "./AskCosmos";
 import ProductGrid from "./ProductGrid";
@@ -27,12 +29,15 @@ type Props = {
 };
 
 export default function StorePage(p: Props) {
+  const { adGroupId, arm } = useCosmosChat();
+  const query = adGroupId ? `?ad_group=${adGroupId}&arm=${arm}` : arm === "A" || arm === "B" ? `?arm=${arm}` : "";
   useEffect(() => {
     document.getElementById("phone-scroll")?.scrollTo({ top: 0 });
     window.scrollTo({ top: 0 });
   }, []);
 
   return (
+    <ProductLinkProvider value={query}>
     <div className="relative pb-24">
       <SiteHeader loginHref={`/login?next=${encodeURIComponent(p.path)}`} />
 
@@ -48,7 +53,7 @@ export default function StorePage(p: Props) {
           return (
             <Link
               key={c.label}
-              href={c.slug ? `/c/${c.slug}` : "/shop"}
+              href={`${c.slug ? `/c/${c.slug}` : "/shop"}${query}`}
               aria-current={active ? "page" : undefined}
               className={`shrink-0 rounded-full border px-3.5 py-1.5 text-[12.5px] ${active ? "border-ink bg-ink text-ivory" : "border-line bg-white text-ink active:bg-sand"}`}
             >
@@ -65,7 +70,7 @@ export default function StorePage(p: Props) {
               <h2 id={`sec-${s.slug}`} className="font-display text-[20px]">
                 {s.label}
               </h2>
-              <Link href={`/c/${s.slug}`} className="text-[12.5px] text-muted underline decoration-line underline-offset-2">
+              <Link href={`/c/${s.slug}${query}`} className="text-[12.5px] text-muted underline decoration-line underline-offset-2">
                 See all {s.cards.length}
               </Link>
             </div>
@@ -94,5 +99,6 @@ export default function StorePage(p: Props) {
         }}
       />
     </div>
+    </ProductLinkProvider>
   );
 }

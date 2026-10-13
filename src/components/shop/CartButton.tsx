@@ -13,7 +13,7 @@ const SIZES = {
   sm: { box: "h-8 text-[12px]", btn: "w-8 text-[15px]", note: "text-[10.5px]" },
   md: { box: "h-8 text-[12.5px] min-w-[96px]", btn: "w-8 text-[15px]", note: "text-[10.5px]" },
   lg: { box: "h-12 text-[14px]", btn: "w-12 text-[18px]", note: "" },
-  touch: { box: "h-11 text-[12.5px]", btn: "w-9 text-[16px]", note: "text-[10.5px]" }, // chat cards: 44px tall
+  touch: { box: "h-11 text-[12.5px]", btn: "w-11 shrink-0 text-[16px]", note: "text-[10.5px]" }, // chat cards: 44px tall
 };
 
 export default function CartButton({ sku, max, limitReason, label = "Add", size = "sm", className = "" }: Props) {

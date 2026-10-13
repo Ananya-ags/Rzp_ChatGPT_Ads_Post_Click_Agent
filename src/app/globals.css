@@ -133,3 +133,10 @@ body {
   .typing-dot { opacity: 0.6; }
   .fab-label { transition: none; }
 }
+
+/* Only the overlay surface is clipped to its frame; the document remains free to scroll. */
+.cosmos-sheet { overscroll-behavior: contain; }
+[data-phone-overlays] [data-vaul-overlay] { pointer-events: auto; }
+@media (prefers-reduced-motion: reduce) {
+  [data-phone-overlays] [data-vaul-drawer], [data-phone-overlays] [data-vaul-overlay] { transition-duration: 0s !important; animation-duration: 0s !important; }
+}

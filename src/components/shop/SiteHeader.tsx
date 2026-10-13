@@ -55,21 +55,21 @@ export default function SiteHeader({ user = null, loginHref = "/login" }: { user
   return (
     <>
       <header className="sticky top-0 z-30 flex items-center gap-1 border-b border-line/70 bg-ivory/90 px-2 py-1.5 backdrop-blur">
-        <button onClick={openMenu} aria-label="Open menu" className="grid size-10 place-items-center rounded-full text-ink active:bg-sand">
+        <button onClick={openMenu} aria-label="Open menu" className="grid size-11 place-items-center rounded-full text-ink active:bg-sand">
           <Icon d={MENU_ICON} />
         </button>
-        <Link href={STORE_HOME} aria-label="Cosmos home" className="mr-auto">
+        <Link href={`${STORE_HOME}${q}`} aria-label="Cosmos home" className="mr-auto">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/cosmos-logo-v4.png" alt="Cosmos" className="h-6 w-auto md:h-[30px]" />
         </Link>
-        <Link href={loginHref} aria-label={user ? "Your account" : "Log in"} className="grid size-10 place-items-center rounded-full text-ink active:bg-sand">
+        <Link href={loginHref} aria-label={user ? "Your account" : "Log in"} className="grid size-11 place-items-center rounded-full text-ink active:bg-sand">
           {user ? (
             <span className="ai-badge grid size-7 place-items-center rounded-full text-[13px] font-semibold text-[#3a2a10]">{user.firstName[0]}</span>
           ) : (
             <Icon d={USER_ICON} />
           )}
         </Link>
-        <Link href={`/cart${q}`} aria-label={`Bag, ${count} item${count === 1 ? "" : "s"}`} className="relative grid size-10 place-items-center rounded-full text-ink active:bg-sand">
+        <Link href={`/cart${q}`} aria-label={`Bag, ${count} item${count === 1 ? "" : "s"}`} className="relative grid size-11 place-items-center rounded-full text-ink active:bg-sand">
           <Icon d={BAG_ICON} />
           {count > 0 && (
             <span className="absolute right-0.5 top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-gold-deep px-1 text-[10.5px] font-semibold text-white tabular-nums">
@@ -89,7 +89,7 @@ export default function SiteHeader({ user = null, loginHref = "/login" }: { user
           <div className="flex items-center justify-between border-b border-line px-4 py-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/brand/cosmos-logo-v4.png" alt="Cosmos" className="h-6 w-auto" />
-            <button onClick={() => setMenuOpen(false)} aria-label="Close menu" className="grid size-9 place-items-center rounded-full bg-sand text-[14px]">
+            <button onClick={() => setMenuOpen(false)} aria-label="Close menu" className="grid size-11 place-items-center rounded-full bg-sand text-[14px]">
               ✕
             </button>
           </div>
@@ -99,7 +99,7 @@ export default function SiteHeader({ user = null, loginHref = "/login" }: { user
               return (
                 <li key={m.href} className="border-b border-line/60">
                   <Link
-                    href={m.href}
+                    href={`${m.href}${q}`}
                     onClick={() => setMenuOpen(false)}
                     aria-current={current ? "page" : undefined}
                     className={`flex items-center justify-between rounded-lg px-3 py-4 font-display text-[19px] active:bg-sand ${current ? "text-gold-deep" : ""}`}

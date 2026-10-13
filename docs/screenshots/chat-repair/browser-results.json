@@ -1,0 +1,150 @@
+{
+  "live": [
+    {
+      "name": "desktop launcher home containment",
+      "pass": true
+    },
+    {
+      "name": "desktop expand/focus and resize mobile\u2192desktop",
+      "pass": true
+    },
+    {
+      "name": "home gift \u2192 product history divider \u2192 delivery \u2192 bag persistence",
+      "pass": true
+    },
+    {
+      "name": "guided waterproof sponsored route",
+      "pass": true
+    },
+    {
+      "name": "guided wedding sponsored route and no water chips",
+      "pass": true
+    },
+    {
+      "name": "steel nickel care card",
+      "pass": true
+    },
+    {
+      "name": "30mm rescue \u2192 Aria16Oct \u2192 Add updates bag",
+      "pass": true
+    },
+    {
+      "name": "office honest fit alternative",
+      "pass": true
+    },
+    {
+      "name": "armA then direct home remains enabled; paused suppresses",
+      "pass": true
+    },
+    {
+      "name": "category navigation, direct refresh, back/forward and current context",
+      "pass": true
+    },
+    {
+      "name": "ad session across home/category/grid; direct URL clears ad",
+      "pass": true
+    },
+    {
+      "name": "500-character limit, horizontal cards, keyboard Escape and focus return",
+      "pass": true
+    },
+    {
+      "name": "drawer handle drag snaps down and up",
+      "pass": true
+    },
+    {
+      "name": "reset and navigation cancel a delayed reply without stale bag actions",
+      "pass": true
+    },
+    {
+      "name": "same-origin iframe with storage denied still navigates and keeps history",
+      "pass": true
+    },
+    {
+      "name": "corrupt saved session cannot break the shop",
+      "pass": true
+    },
+    {
+      "name": "guided approval unlocks steel ad",
+      "pass": true
+    },
+    {
+      "name": "no browser errors",
+      "pass": true
+    }
+  ],
+  "offline": [
+    {
+      "name": "desktop launcher home containment",
+      "pass": true
+    },
+    {
+      "name": "desktop expand/focus and resize mobile\u2192desktop",
+      "pass": true
+    },
+    {
+      "name": "home gift \u2192 product history divider \u2192 delivery \u2192 bag persistence",
+      "pass": true
+    },
+    {
+      "name": "guided waterproof sponsored route",
+      "pass": true
+    },
+    {
+      "name": "guided wedding sponsored route and no water chips",
+      "pass": true
+    },
+    {
+      "name": "steel nickel care card",
+      "pass": true
+    },
+    {
+      "name": "30mm rescue \u2192 Aria16Oct \u2192 Add updates bag",
+      "pass": true
+    },
+    {
+      "name": "office honest fit alternative",
+      "pass": true
+    },
+    {
+      "name": "armA then direct home remains enabled; paused suppresses",
+      "pass": true
+    },
+    {
+      "name": "category navigation, direct refresh, back/forward and current context",
+      "pass": true
+    },
+    {
+      "name": "ad session across home/category/grid; direct URL clears ad",
+      "pass": true
+    },
+    {
+      "name": "500-character limit, horizontal cards, keyboard Escape and focus return",
+      "pass": true
+    },
+    {
+      "name": "drawer handle drag snaps down and up",
+      "pass": true
+    },
+    {
+      "name": "reset and navigation cancel a delayed reply without stale bag actions",
+      "pass": true
+    },
+    {
+      "name": "same-origin iframe with storage denied still navigates and keeps history",
+      "pass": true
+    },
+    {
+      "name": "corrupt saved session cannot break the shop",
+      "pass": true
+    },
+    {
+      "name": "guided approval unlocks steel ad",
+      "pass": true
+    },
+    {
+      "name": "no browser errors",
+      "pass": true
+    }
+  ]
+}

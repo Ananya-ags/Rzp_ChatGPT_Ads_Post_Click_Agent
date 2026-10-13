@@ -8,6 +8,7 @@
  * - Hidden when the store has paused the agent, and on control arm A. Never rendered in checkout.
  */
 import { useEffect, useState } from "react";
+import { usePhoneSurface } from "../PhoneSurface";
 import ChatSheet from "./ChatSheet";
 import { useCosmosChat, type ChatPage } from "./chat/ChatProvider";
 import { useDemoState } from "@/lib/state";
@@ -31,8 +32,9 @@ function fromUrl() {
 }
 
 export default function AskCosmos({ page, fab, lift = false }: Props) {
-  const { register, setOpen, arm } = useCosmosChat();
+  const { register, setOpen, arm, ready } = useCosmosChat();
   const [state] = useDemoState();
+  const { scroller } = usePhoneSurface();
   const [collapsed, setCollapsed] = useState(false);
   const key = JSON.stringify(page);
 
@@ -45,7 +47,6 @@ export default function AskCosmos({ page, fab, lift = false }: Props) {
   // the label shows on first view and collapses to the star after the shopper scrolls
   useEffect(() => {
     if (!fab) return;
-    const scroller = document.getElementById("phone-scroll");
     const onScroll = () => {
       const y = Math.max(window.scrollY, scroller?.scrollTop ?? 0);
       if (y > 120) setCollapsed(true);
@@ -56,9 +57,9 @@ export default function AskCosmos({ page, fab, lift = false }: Props) {
       window.removeEventListener("scroll", onScroll);
       scroller?.removeEventListener("scroll", onScroll);
     };
-  }, [fab]);
+  }, [fab, scroller]);
 
-  if (state.agentPaused || arm === "A") return null;
+  if (!ready || state.agentPaused || arm === "A" || arm === "B") return null;
 
   return (
     <>
