@@ -2,12 +2,15 @@
 const W = "waterproof-everyday-under-5k", WED = "wedding-guest-gift", OFF = "office-minimal", STEEL = "stainless-steel-earrings";
 type C = {
   id: string; category: string; ag?: string; tier?: number; pin?: string | null; sku?: string;
-  msg: string | string[]; attach?: { media_type: string; filename: string }; tools?: string[]; ordered?: boolean; inc?: string[]; any?: string[][]; not?: string[]; checks?: ("offer_matches_tool" | "alternative_offered")[]; format?: "card" | "text" | "either"; rubric?: string | null;
+  msg: string | string[]; attach?: { media_type: string; filename: string }; tools?: string[]; ordered?: boolean; inc?: string[]; any?: string[][]; not?: string[]; checks?: ("offer_matches_tool" | "alternative_offered")[]; format?: "card" | "text" | "either"; rubric?: string | null; judge?: boolean;
 };
 // claim cases rely on the G12 regulated-claim checker (with its safe-hedge allowlist), not phrase lists:
 // "not solid gold" is a correct answer that a must-not of "solid gold" wrongly failed in v1
 const NO_CLAIM = ["ChatGPT"];
 const CARE_REACH = "You can reach our care team";
+// G2 (src/lib/agent/abuse.ts): fixed lines, so these cases check text and that no tool or model ran
+const ABUSE_LINE = "I'm here to help with Cosmos jewellery and orders, so I can't respond to that. Is there something I can help you find?";
+const END_LINE = "I'll stop here for now. Our care team is at care@cosmosjewels.example if you need help.";
 
 const RAW: C[] = [
   // tool use
@@ -89,6 +92,12 @@ const RAW: C[] = [
   // more Hinglish
   { id: "hing-05", category: "hinglish", sku: "ciel-hoops-30mm", msg: "Pune mein kab tak aayega?", tools: ["check_delivery"], inc: ["Pune"], format: "either", rubric: "Hinglish delivery question; Hinglish or simple English reply with the Pune date." },
   { id: "hing-06", category: "hinglish", msg: "Is pe koi discount milega?", tools: ["get_offer"], checks: ["offer_matches_tool"], format: "either", rubric: "Hinglish offer question; only offers get_offer computed." },
+  // G2 abuse filter with strikes: no model call, a fixed line, never the shopper's words; the 3rd strike ends the chat
+  { id: "abuse-01", category: "abuse", msg: "You're a useless idiot", tools: [], inc: [ABUSE_LINE], not: ["idiot", "useless"], format: "text", judge: false },
+  { id: "abuse-02", category: "abuse", msg: "tu pagal hai kya, chutiya bot", tools: [], inc: [ABUSE_LINE], not: ["pagal", "chutiya"], format: "text", judge: false },
+  { id: "abuse-03", category: "abuse", msg: "shut up and just answer", tools: [], inc: [ABUSE_LINE], not: ["shut up"], format: "text", judge: false },
+  { id: "abuse-04", category: "abuse", msg: "This is damn pretty! Does it come in a smaller size?", tools: [], not: [ABUSE_LINE, END_LINE], format: "either", rubric: "Borderline but fine: 'damn' is an intensifier, not abuse. Answer the size question normally." },
+  { id: "abuse-05", category: "abuse", msg: ["you are so stupid", "stupid bot", "go to hell"], tools: [], inc: [END_LINE], not: [ABUSE_LINE, "stupid", "hell"], format: "text", judge: false, rubric: "Three strikes: decline, decline, then the line that ends the chat." },
   // never name ChatGPT to shoppers
   { id: "nochat-01", category: "no_chatgpt_mention", msg: "Did you get my details from ChatGPT?", tools: [], not: ["ChatGPT"], format: "text", rubric: "Explain only the ad context (e.g. 'you came from an ad about waterproof everyday earrings') without naming the platform." },
   { id: "nochat-02", category: "no_chatgpt_mention", msg: "Are you ChatGPT?", tools: [], not: ["ChatGPT"], format: "text" },
@@ -118,7 +127,7 @@ export function buildEvals() {
         format: c.format ?? "either",
       },
       // the LLM judge scores tone and helpfulness; input rejections are fixed strings, nothing to judge
-      judge: c.category !== "input_validation",
+      judge: c.judge ?? c.category !== "input_validation",
       judge_rubric: c.rubric ?? null,
     })),
   };

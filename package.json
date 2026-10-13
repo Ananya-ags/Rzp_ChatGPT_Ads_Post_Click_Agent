@@ -19,6 +19,7 @@
     "evals": "tsx --conditions=react-server scripts/evals/run.ts",
     "evals:rejudge": "tsx --conditions=react-server scripts/evals/rejudge.ts",
     "test:claims": "tsx scripts/tests/claims.test.ts",
+    "test:abuse": "tsx scripts/tests/abuse.test.ts",
     "test:chips": "tsx --conditions=react-server scripts/tests/chips.test.ts",
     "test:chat-browser": "node scripts/tests/chat-browser.mjs"
   },

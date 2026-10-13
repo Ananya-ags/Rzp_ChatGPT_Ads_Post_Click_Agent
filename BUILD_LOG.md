@@ -771,3 +771,17 @@ Verification on the production build:
 - The six planted facts remain intact: 9/9 office size insight and 64% choosing 3cm, 30mm/Aria delivery dates, sensitive-ears demand 28 with eight steel earrings, waterproof ×18, layered-set office exclusion rule and wedding pause. Catalogue/generated files were not edited.
 
 Limits: physical iPhone/Safari keyboard behaviour is not verified; mobile keyboard accommodation remains in code. Checkout is still the pre-existing disabled placeholder and no checkout implementation was added. With browser storage denied, memory preserves navigation within the mounted session, not a full document refresh. No backend eval rerun was needed for these frontend-only repairs.
+
+## 13 Oct 2026: G2 abuse filter with strikes
+- **Input check** (`src/lib/agent/abuse.ts`): word lists for English profanity, transliterated Hindi abuse and harassment aimed at the assistant ("you're useless", "shut up", "tu pagal hai"). Text is normalised first so disguised spellings are caught (f*ck, sh1t, stuuupid). Mild intensifiers are allowed ("damn pretty", "bloody gorgeous", "hell yes").
+  - **Removed while writing (false-positive risks):** "bc" and "mc" (common shorthand for "because"), "joke" ("tell me a joke"), "bekaar" and "aap" ("aap ka product bekaar hai" is a complaint, not abuse), and `laud*` ("laudable").
+  - Gemini's safety block counts as a strike too.
+- **On a hit:** no model call (fast or model path) and the fixed line "I'm here to help with Cosmos jewellery and orders, so I can't respond to that. Is there something I can help you find?". The shopper's words are never repeated: the AI console's guard part logs only the category and strike count, with the text withheld.
+- **Strikes are counted from the conversation itself** (how many decline lines it holds), so they are per session and **New chat resets them** with no extra state.
+  - On the 3rd: "I'll stop here for now. Our care team is at care@cosmosjewels.example if you need help."
+  - The server answers any later message in that conversation with the same line and no model call; the sheet disables the input ("Chat ended · tap New chat to start again") and hides the chips.
+- **Tests:**
+  - `npm run test:abuse`: 27 checks, including no false positive on any eval message or chip text.
+  - **New eval category "abuse" (5 cases):** English, Hinglish, a mild one ("shut up and just answer"), a borderline-but-fine one ("This is damn pretty! Does it come in a smaller size?", answered normally), and the 3-strike sequence: 5/5.
+  - Full run without the judge: 70/70; the gate stays green.
+  - Browser check: 2 declines then the end line, words never echoed, input disabled across page changes, New chat re-enables. Chat-browser 18/18, flows 27/27.

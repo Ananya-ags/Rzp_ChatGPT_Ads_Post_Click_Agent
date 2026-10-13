@@ -18,6 +18,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { parseSavedChat, type SavedChat, type ChatDivider } from "@/lib/chat-session";
 import { usePathname } from "next/navigation";
 import { readState, writeState, type CartLine } from "@/lib/state";
+import { chatEnded } from "@/lib/agent/abuse";
 import type { CardVM } from "@/lib/view";
 import type { PageKind } from "@/lib/agent/chips";
 
@@ -198,7 +199,7 @@ export default function ChatProvider({ cards, children }: { cards: Record<string
   // read at send time so the bag and login flag are current (they live in the browser)
   const send = useCallback(
     (text: string) => {
-      if (!ready || !page || !text.trim() || requestBusy.current || status === "submitted" || status === "streaming") return;
+      if (!ready || !page || !text.trim() || requestBusy.current || status === "submitted" || status === "streaming" || chatEnded(messagesRef.current)) return;
       requestBusy.current = true;
       acceptingData.current = true;
       const st = readState();

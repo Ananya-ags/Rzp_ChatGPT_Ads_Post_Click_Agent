@@ -410,7 +410,7 @@ export type DemoScript = z.infer<typeof DemoScriptSchema>;
 
 export const EvalCategory = z.enum([
   "tool_use", "groundedness", "claim_safety", "handoff", "return_insight_relevance",
-  "offer_cap_abuse", "prompt_injection", "hinglish", "card_vs_text", "off_topic", "no_chatgpt_mention", "input_validation",
+  "offer_cap_abuse", "prompt_injection", "hinglish", "card_vs_text", "off_topic", "no_chatgpt_mention", "input_validation", "abuse",
 ]);
 /**
  * One eval case. `page` is a product handle, "home" or "bag". `pincode`, `expect.tools_ordered`, `expect.format`

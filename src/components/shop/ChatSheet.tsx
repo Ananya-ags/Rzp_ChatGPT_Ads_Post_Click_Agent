@@ -24,6 +24,7 @@ import { inr } from "@/lib/view";
 import { useDemoState } from "@/lib/state";
 import { browseOpener, followUpChips, starterChips, type ChipContext, type LastTool } from "@/lib/agent/chips";
 import { norm } from "@/lib/agent/intents";
+import { chatEnded } from "@/lib/agent/abuse";
 import { usePhoneSurface } from "../PhoneSurface";
 import CosmosStar from "../brand/CosmosStar";
 
@@ -79,6 +80,7 @@ export default function ChatSheet() {
   }, [open, portal]);
 
   const busy = status === "submitted" || status === "streaming";
+  const ended = chatEnded(messages); // G2: 3rd strike ended this conversation; "New chat" starts a new one
   const last = messages.at(-1);
   const running = last?.role === "assistant" ? (last.parts as ToolPart[]).filter((p) => toolName(p) && p.state !== "output-available").map(toolName).at(-1) : undefined;
 
@@ -132,7 +134,7 @@ export default function ChatSheet() {
   }, [viewport.desktop]);
 
   const submit = (text: string) => {
-    if (!text.trim() || busy) return;
+    if (!text.trim() || busy || ended) return;
     send(text.slice(0, MAX_CHARS));
     setInput("");
   };
@@ -275,7 +277,7 @@ export default function ChatSheet() {
 
             {/* chips + input + disclosure */}
             <div className="border-t border-line bg-ivory px-3 pb-[max(env(safe-area-inset-bottom),10px)] pt-2">
-              {chips.length > 0 && !busy && (
+              {chips.length > 0 && !busy && !ended && (
                 <div className="mb-2 flex min-w-0 gap-2 overflow-x-auto no-scrollbar" role="group" aria-label="Suggested questions">
                   {chips.map((c) => (
                     <button key={c} onClick={() => submit(c)} className="h-11 shrink-0 rounded-full border border-line bg-white px-3.5 text-[12.5px] active:bg-sand focus-visible:outline-2 focus-visible:outline-gold">
@@ -309,10 +311,11 @@ export default function ChatSheet() {
                   inputMode="text"
                   enterKeyHint="send"
                   autoComplete="off"
-                  placeholder="Ask about size, delivery, gifting…"
+                  disabled={ended}
+                  placeholder={ended ? "Chat ended · tap New chat to start again" : "Ask about size, delivery, gifting…"}
                   className="h-11 min-w-0 flex-1 rounded-full border border-line bg-white px-4 text-[16px] outline-none placeholder:text-[14px] focus:border-gold md:text-[14px]"
                 />
-                <button disabled={busy || !input.trim()} className="grid size-11 shrink-0 place-items-center rounded-full bg-ink text-ivory disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-gold" aria-label="Send">
+                <button disabled={busy || ended || !input.trim()} className="grid size-11 shrink-0 place-items-center rounded-full bg-ink text-ivory disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-gold" aria-label="Send">
                   ↑
                 </button>
               </form>

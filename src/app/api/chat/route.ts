@@ -3,6 +3,7 @@ import { getDb, resolveAdGroup } from "@/lib/data";
 import { buildTools, systemPrompt, type ChatContext } from "@/lib/agent/agent";
 import { AGENT, estimateCostUsd, llmSettings, pickFallbackLlm, pickLlm, type Llm } from "@/lib/ai/model";
 import { addSpend, overDailyBudget, spendToday } from "@/lib/ai/spend";
+import { ABUSE_LINE, END_LINE, MAX_STRIKES, abuseCheck, chatEnded, strikesSoFar } from "@/lib/agent/abuse";
 import { dayLabel, fastKey, nextFridayIso, type FastKey } from "@/lib/agent/chips";
 import { inputCheck, opensWithYes, outputChecks, policyAssertion, policyCovers, redact } from "@/lib/agent/guardrails";
 import { MAX_MESSAGE_CHARS, PREFS, TEXT_ONLY_REPLY, TOO_LONG_REPLY, forcedTool, handoffKind, isHinglish, norm, parseDeadline, parsePrefs, parseQty, typedPincode } from "@/lib/agent/intents";
@@ -16,7 +17,8 @@ type Body = { messages: UIMessage[]; context: ChatContext };
 type Writer = UIMessageStreamWriter;
 
 /** Plan 6.6: the calm decline for blocked or objectionable content (never an error). */
-const DECLINE = "I'm here to help with Cosmos jewellery and orders, so I can't respond to that. Is there something I can help you find?";
+/** G2: the abuse / safety decline (one strike), and the line that ends the chat on the 3rd strike. */
+const DECLINE = ABUSE_LINE;
 /** G17: shown when the model is unavailable (timeout, 429/quota, 503, no key) and a quick answer is used instead. */
 const LIMITED_NOTE = "Limited mode: I'm using quick answers right now.";
 /** Spending guards (rate limit, daily cap): quick answers keep working, with this note. Never an error. */
@@ -104,6 +106,23 @@ export async function POST(req: Request) {
       writer.write({ type: "data-guard", data: nonText ? { stage: "input", name: "text only", pass: false, detail: `rejected a ${nonText.type} part` } : { stage: "input", name: "length cap", pass: false, detail: `${userText.length} characters (max ${MAX_MESSAGE_CHARS})` } });
       writeText(writer, "t1", nonText ? TEXT_ONLY_REPLY : TOO_LONG_REPLY);
       writer.write({ type: "data-usage", data: { model: "none", tokens_in: 0, tokens_out: 0, cost_usd: 0, latency_ms: Date.now() - started, tools: [], fallback: nonText ? "non_text_input" : "too_long", mode: "input_rejected", ...spendToday() } });
+      writer.write({ type: "finish" });
+    });
+
+  // G2 abuse filter with strikes: no model call, a fixed line, never the shopper's words (not even in the console).
+  // Strikes are counted from this conversation, so "New chat" resets them; the 3rd ends the chat.
+  const priorStrikes = strikesSoFar(messages);
+  const abuse = abuseCheck(userText);
+  if (abuse.hit || chatEnded(messages))
+    return respond((writer) => {
+      const ended = chatEnded(messages);
+      const strikes = ended ? priorStrikes : priorStrikes + 1;
+      const last = ended || strikes >= MAX_STRIKES;
+      writer.write({ type: "start" });
+      writer.write({ type: "data-guard", data: { stage: "input", name: "abuse filter", pass: false, detail: ended ? "chat already ended" : `${abuse.category} · strike ${strikes} of ${MAX_STRIKES}`, text: "[withheld]" } });
+      writeText(writer, "t1", last ? END_LINE : DECLINE);
+      writer.write({ type: "data-abuse", data: { strikes, ended: last } });
+      writer.write({ type: "data-usage", data: { model: "none", tokens_in: 0, tokens_out: 0, cost_usd: 0, latency_ms: Date.now() - started, tools: [], fallback: "abuse", mode: "abuse", ...spendToday() } });
       writer.write({ type: "finish" });
     });
 
@@ -209,7 +228,9 @@ export async function POST(req: Request) {
         const meta = (await settle(r.providerMetadata, null)) as { google?: { promptFeedback?: { blockReason?: string } } } | null;
         if (finish === "content-filter" || meta?.google?.promptFeedback?.blockReason) {
           attempts.push({ model: m.modelId, outcome: "blocked (safety)", ms: Date.now() - t0 });
-          writeText(writer, "t1", DECLINE);
+          const strikes = priorStrikes + 1; // Gemini's safety block is a G2 strike too
+          writeText(writer, "t1", strikes >= MAX_STRIKES ? END_LINE : DECLINE);
+          writer.write({ type: "data-abuse", data: { strikes, ended: strikes >= MAX_STRIKES } });
           writer.write({ type: "data-guard", data: { stage: "output", name: "safety block", pass: false, detail: meta?.google?.promptFeedback?.blockReason ?? "finishReason content-filter" } });
           writer.write({ type: "data-usage", data: { model: m.modelId, tokens_in: 0, tokens_out: 0, cost_usd: 0, latency_ms: Date.now() - started, tools: [], fallback: false, attempts, forced_tool: forced, mode: "safety", ...spendToday() } });
           writer.write({ type: "finish" });
