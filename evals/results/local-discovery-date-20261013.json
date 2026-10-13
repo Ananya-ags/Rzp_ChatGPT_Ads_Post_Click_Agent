@@ -1,0 +1,56 @@
+{
+  "run": "local-discovery-date-20261013",
+  "run_at": "2026-10-13T11:17:54.803Z",
+  "commit": "",
+  "agent_model": "gemini-3.1-flash-lite",
+  "fallback_model": "gemini-3.8-flash",
+  "judge_model": "gemini-pro-latest",
+  "total": {
+    "cases": 1,
+    "pass_rate": 1,
+    "p50_ms": 2950,
+    "p95_ms": 2950,
+    "agent_cost_usd": 0.0021,
+    "judge_cost_usd": 0.0025
+  },
+  "by_category": [
+    {
+      "category": "groundedness",
+      "cases": 1,
+      "pass_rate": 1,
+      "rule_pass_rate": 1,
+      "p50_ms": 2950,
+      "p95_ms": 2950,
+      "cost_per_chat_usd": 0.00208
+    }
+  ],
+  "results": [
+    {
+      "id": "pin-02",
+      "category": "groundedness",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Provides the exact delivery date concisely and answers the shopper's question directly."
+      },
+      "judge_error": null,
+      "tools": [
+        "check_delivery"
+      ],
+      "reply": "The Everyday Tube Hoop Earrings arrive Thu, 15 Oct in Delhi.",
+      "latency_ms": 2950,
+      "first_output_ms": 1502,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7995,
+      "tokens_out": 51,
+      "cost_usd": 0.00208,
+      "judge_cost_usd": 0.00247,
+      "hinglish_words": 0
+    }
+  ]
+}

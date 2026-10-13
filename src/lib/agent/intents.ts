@@ -81,17 +81,22 @@ export function parseQty(text: string): number {
   return m ? (Number(m[1]) || words[m[1].toLowerCase()] || 1) : 1;
 }
 
-export type ForcedTool = "get_offer" | "check_delivery" | "handoff" | "get_return_insight" | "lookup_policy" | "add_to_bag";
+const DISCOVERY = /\b(show|find|recommend|suggest|browse|looking for|look for|alternatives?|designs?|styles?|compare)\b/i;
+export type ForcedTool = "get_offer" | "check_delivery" | "handoff" | "get_return_insight" | "lookup_policy" | "add_to_bag" | "search_catalog" | "suggest_login";
 
 /** The tool the model must call first, or null. Needs a page product (the tools take or concern its SKU). */
 export function forcedTool(text: string, hasPageProduct: boolean): ForcedTool | null {
-  if (!hasPageProduct) return null;
+  if (!hasPageProduct && (ALLERGY.test(text) || MEDICAL.test(text) || HUMAN.test(text) || CARE.test(text))) return "handoff";
+  if (OWNED.test(text)) return "suggest_login";
+  if (!hasPageProduct) return PREFS.test(text) || DISCOVERY.test(text) ? "search_catalog" : null;
   if (OFFER.test(text)) return "get_offer";
   if (ALLERGY.test(text) || MEDICAL.test(text) || HUMAN.test(text) || CARE.test(text)) return "handoff";
   if (ADD_TO_BAG.test(text)) return "add_to_bag";
   if (POLICY.test(text)) return "lookup_policy";
   if (DELIVERY.test(text)) return "check_delivery";
   if (FIT.test(text)) return "get_return_insight";
+  if (PREFS.test(text)) return "search_catalog";
+  if (DISCOVERY.test(text)) return "search_catalog";
   return null;
 }
 
@@ -111,4 +116,3 @@ export function parsePrefs(text: string, now: Date) {
   const deadline = parseDeadline(text, now) ?? undefined;
   return Object.fromEntries(Object.entries({ budget_max_inr: budget, occasion, deadline }).filter(([, v]) => v !== undefined)) as { budget_max_inr?: number; occasion?: "office" | "wedding guest" | "gifting" | "festive" | "everyday"; deadline?: string };
 }
-

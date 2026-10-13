@@ -16,12 +16,13 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { parseSavedChat, type SavedChat, type ChatDivider } from "@/lib/chat-session";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { readState, writeState, type CartLine } from "@/lib/state";
 import { chatEnded } from "@/lib/agent/abuse";
 import { consoleData, consoleMessage } from "@/lib/console/chatEvents";
 import type { CardVM } from "@/lib/view";
 import type { PageKind } from "@/lib/agent/chips";
+import { PREFS_COOKIE, PreferencesSchema } from "@/lib/preferences";
 
 export type ChatPage = {
   kind: PageKind;
@@ -89,6 +90,7 @@ export function useCosmosChat() {
 
 export default function ChatProvider({ cards, children }: { cards: Record<string, CardVM>; children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [ready, setReady] = useState(false);
   const restored = useRef(false);
   const acceptingData = useRef(false);
@@ -113,8 +115,16 @@ export default function ChatProvider({ cards, children }: { cards: Record<string
       }
       if (part.type === "data-preferences") {
         try {
-          document.cookie = `cosmos_prefs=${encodeURIComponent(JSON.stringify((part.data as { preferences: unknown }).preferences))}; path=/; samesite=lax`; // session cookie
-        } catch {}
+          const preferences = PreferencesSchema.parse((part.data as { preferences: unknown }).preferences);
+          const value = `${PREFS_COOKIE}=${encodeURIComponent(JSON.stringify(preferences))}`;
+          if (document.cookie.split("; ").includes(value)) return;
+          document.cookie = `${value}; path=/; samesite=lax`;
+          if (!document.cookie.split("; ").includes(value)) throw new Error("Preference cookie was not saved");
+          router.refresh();
+        } catch (error) {
+          console.error("Could not update chat preferences:", error);
+          setToast("I couldn't update your recommendations. Please try again.");
+        }
       }
     },
   });

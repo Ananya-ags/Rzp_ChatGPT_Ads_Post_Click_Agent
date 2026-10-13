@@ -35,7 +35,7 @@ type Quote = {
   user: null | { firstName: string; phone: string; email: string; address: { label: string; line1: string; city: string; pincode: string }; paymentMethods: string[]; nudgePrepaid: boolean };
 };
 
-const OFFER_NAME: Record<string, string> = { prepaid_bonus: "Prepaid offer", prepaid_nudge: "Pay-online offer (extra 5%)", first_order: "First-order offer", bank_offer: "Bank offer" };
+const OFFER_NAME: Record<string, string> = { prepaid_bonus: "Prepaid offer", prepaid_nudge: "Pay-online offer", first_order: "First-order offer", bank_offer: "Bank offer" };
 
 const UNLOCK: Record<string, string> = {
   first_order: "Log in to check if this is your first order",
@@ -219,7 +219,7 @@ export default function CartView({ cards, linkQuery, continueHref, trust, user: 
               <section className="mx-4 mt-3 rounded-2xl border border-line bg-white p-3.5">
                 {quote.user?.nudgePrepaid && (
                   <p className="mb-3 rounded-lg bg-[#fbf3e2] px-3 py-2 text-[12.5px] text-gold-deep">
-                    ✦ Paying online? You get an <b>extra 5% off</b>, already included in your total.
+                    ✦ Eligible online offers are already included in your total, subject to the store cap.
                   </p>
                 )}
                 {quote.user && (

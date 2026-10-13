@@ -4,6 +4,7 @@
  * still renders in private windows or with storage blocked. Tabs stay in sync via the storage event.
  */
 import { useSyncExternalStore } from "react";
+import { MAX_PER_SKU } from "./view";
 
 export type CartLine = { sku: string; qty: number };
 export type DemoState = {
@@ -24,11 +25,42 @@ let storageBlocked = false;
 const DEFAULT: DemoState = { cart: [], approvedProposals: [], agentPaused: false, returningVisitor: false, loggedIn: false, loginOffered: false, loginDismissed: false };
 const EVENT = "cosmos-demo-state";
 
+export function parseDemoState(raw: string | null): DemoState {
+  if (!raw) return DEFAULT;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("Expected an object");
+    const data = parsed as Record<string, unknown>;
+    if (data.cart !== undefined && !Array.isArray(data.cart) || data.approvedProposals !== undefined && !Array.isArray(data.approvedProposals)) {
+      console.warn("Invalid saved cart or approvals; resetting those fields.");
+    }
+    const cart = new Map<string, number>();
+    for (const value of Array.isArray(data.cart) ? data.cart : []) {
+      if (!value || typeof value !== "object") continue;
+      const line = value as Record<string, unknown>;
+      if (typeof line.sku !== "string" || !line.sku.trim() || typeof line.qty !== "number" || !Number.isInteger(line.qty) || line.qty <= 0) continue;
+      cart.set(line.sku, Math.min(MAX_PER_SKU, (cart.get(line.sku) ?? 0) + line.qty));
+    }
+    return {
+      cart: [...cart].map(([sku, qty]) => ({ sku, qty })),
+      approvedProposals: Array.isArray(data.approvedProposals) ? [...new Set(data.approvedProposals.filter((id): id is string => typeof id === "string"))] : [],
+      agentPaused: data.agentPaused === true,
+      returningVisitor: data.returningVisitor === true,
+      loggedIn: data.loggedIn === true,
+      loginOffered: data.loginOffered === true,
+      loginDismissed: data.loginDismissed === true,
+    };
+  } catch {
+    console.warn("Invalid saved demo state; starting with an empty demo.");
+    return DEFAULT;
+  }
+}
+
 export function readState(): DemoState {
   if (memory) return memory;
   try {
     const raw = window.localStorage.getItem(KEY);
-    return raw ? { ...DEFAULT, ...JSON.parse(raw) } : DEFAULT;
+    return parseDemoState(raw);
   } catch {
     return DEFAULT;
   }

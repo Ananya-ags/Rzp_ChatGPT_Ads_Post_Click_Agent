@@ -105,6 +105,8 @@ export default function CheckoutFlow(p: {
   const [coupon, setCoupon] = useState<string | null>(null);
   const [method, setMethod] = useState<Method>("upi");
   const [quote, setQuote] = useState<Quote | null>(null);
+  const [quotedKey, setQuotedKey] = useState<string | null>(null);
+  const [quoteError, setQuoteError] = useState<string | null>(null);
   const [payNote, setPayNote] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [mockPay, setMockPay] = useState<{ token: string; amount: number; reason: string } | null>(null);
@@ -112,6 +114,9 @@ export default function CheckoutFlow(p: {
 
   const pincode = useSaved && prefill ? prefill.address.pincode : /^\d{6}$/.test(addr.pincode) ? addr.pincode : null;
   const isCod = method === "cod";
+  const eligibleBankCard = bankCard && method === "card";
+  const quoteKey = JSON.stringify({ pincode, method: isCod ? "cod" : "online", walletOn, bankCard: eligibleBankCard, coupon, adGroupId: p.adGroupId, giftWrap: p.giftWrap });
+  const quoteReady = !!quote && quotedKey === quoteKey && !quoteError;
 
   // the bag cookie mirrors the browser's bag (older sessions may not have it yet)
   useEffect(() => {
@@ -120,12 +125,19 @@ export default function CheckoutFlow(p: {
 
   const refresh = useCallback(async () => {
     const id = ++reqId.current;
+    setQuotedKey(null);
+    setQuoteError(null);
     try {
-      const r = await fetch("/api/checkout/quote", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ pincode, method: isCod ? "cod" : "online", walletOn, bankCard: bankCard && !isCod, coupon, adGroupId: p.adGroupId, giftWrap: p.giftWrap }) });
+      const r = await fetch("/api/checkout/quote", { method: "POST", headers: { "content-type": "application/json" }, body: quoteKey });
+      if (!r.ok) throw new Error(`Quote request failed (${r.status})`);
       const q = (await r.json()) as Quote;
-      if (id === reqId.current) setQuote(q);
-    } catch {}
-  }, [pincode, isCod, walletOn, bankCard, coupon, p.adGroupId, p.giftWrap]);
+      if (id === reqId.current) { setQuote(q); setQuotedKey(quoteKey); }
+    } catch (error) {
+      if (id !== reqId.current) return;
+      console.error("Checkout quote failed:", error);
+      setQuoteError("Couldn't update your total. Please retry before paying.");
+    }
+  }, [quoteKey]);
   useEffect(() => {
     // re-price on the server whenever a choice changes (setQuote runs after the fetch, not synchronously)
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -171,6 +183,7 @@ export default function CheckoutFlow(p: {
   /* ── step 2: address ── */
   const submitAddress = () => {
     setAddrNote(null);
+    if (!quoteReady) return setAddrNote("Please wait for your total to update.");
     if (!useSaved || !prefill) {
       if (!addr.name.trim() || !addr.line1.trim() || !addr.city.trim()) return setAddrNote("Please fill in your name, address and city.");
       if (!/^\d{6}$/.test(addr.pincode)) return setAddrNote("Enter a 6-digit pincode.");
@@ -178,7 +191,7 @@ export default function CheckoutFlow(p: {
     logStep(`Address: ${useSaved && prefill ? "saved address" : "new address"} ${pincode ?? ""} → arrives ${quote?.arrives_label ?? "?"}`, { source: useSaved && prefill ? "login" : "session", detail: `COD ${quote?.cod.eligible ? "eligible" : "not eligible"} · delivery from checkDelivery (slowest item sets the date)` });
     // the internal RTO reasoning, fetched for the console only (never rendered to the shopper)
     if (consoleListening())
-      void fetch("/api/checkout/quote", { method: "POST", headers: { "content-type": "application/json", "x-cosmos-console": "1" }, body: JSON.stringify({ pincode, method: "online", walletOn, bankCard, coupon, adGroupId: p.adGroupId, giftWrap: p.giftWrap }) })
+      void fetch("/api/checkout/quote", { method: "POST", headers: { "content-type": "application/json", "x-cosmos-console": "1" }, body: quoteKey })
         .then((r) => r.json())
         .then((q: { console?: { rto_risk: string; nudge: string; pincode_risk_score: number; from_history: string | null } }) => {
           if (q.console) logStep(`RTO risk ${q.console.rto_risk} (internal, never shown to the shopper)`, { source: "rule", status: "info", detail: `${q.console.nudge} · pincode score ${q.console.pincode_risk_score}${q.console.from_history ? ` · order history: ${q.console.from_history}` : ""}` });
@@ -209,11 +222,11 @@ export default function CheckoutFlow(p: {
   const createOrder = async (forceMock = false) => {
     const contact = { name: prefill?.name ?? addr.name, phone: digits, email };
     const address = useSaved && prefill ? { ...prefill.address, name: prefill.name } : addr;
-    const r = await fetch("/api/checkout/order", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ pincode, method: isCod ? "cod" : "online", walletOn, bankCard: bankCard && !isCod, coupon, adGroupId: p.adGroupId, giftWrap: p.giftWrap, arm: p.arm, contact, address, forceMock }) });
+    const r = await fetch("/api/checkout/order", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ pincode, method: isCod ? "cod" : "online", walletOn, bankCard: eligibleBankCard, coupon, adGroupId: p.adGroupId, giftWrap: p.giftWrap, arm: p.arm, contact, address, forceMock }) });
     return r.json();
   };
   const pay = async () => {
-    if (!quote || busy) return;
+    if (!quoteReady || !quote || busy) return;
     setBusy(true);
     setPayNote(null);
     // online in test mode: Checkout.js must load first, else this payment is simulated (mock) with a note
@@ -273,7 +286,7 @@ export default function CheckoutFlow(p: {
     </ol>
   );
 
-  const total = quote ? (isCod ? quote.cod_payable_inr : quote.online_payable_inr) : null;
+  const total = quoteReady && quote ? quote.payable_inr : null;
 
   return (
     <div className="min-h-full bg-ivory pb-40">
@@ -290,6 +303,12 @@ export default function CheckoutFlow(p: {
         Checkout steps simulated to show Magic Checkout features · payment uses Razorpay Test Mode
       </p>
       {progress}
+      {!quoteReady && (
+        <div className="mx-4 mt-3 text-[13px]" role={quoteError ? "alert" : "status"}>
+          {quoteError ?? "Updating total..."}
+          {quoteError && <button onClick={() => void refresh()} className="ml-2 underline">Retry total</button>}
+        </div>
+      )}
 
       {/* order summary strip */}
       {quote && (
@@ -406,7 +425,7 @@ export default function CheckoutFlow(p: {
         {step === 2 && quote && (
           <div className="space-y-3">
             <h2 className="font-display text-[19px]">Offers</h2>
-            {quote.applied.length ? (
+            {quoteReady && (quote.applied.length ? (
               <ul className="space-y-1.5 text-[13px]">
                 {quote.applied.map((a) => (
                   <li key={a.id} className="flex justify-between gap-2">
@@ -417,12 +436,12 @@ export default function CheckoutFlow(p: {
               </ul>
             ) : (
               <p className="text-[13px] text-muted">No offers apply to this bag right now.</p>
-            )}
+            ))}
             <p className="text-[11px] text-muted">Best offers applied automatically · capped at {quote.cap.max_pct}% or {inr(quote.cap.max_flat_inr)} by the store</p>
             {quote.bank_offer.available && (
               <label className="flex items-center justify-between gap-3 rounded-xl border border-line p-3 text-[13px]">
                 <span>{quote.bank_offer.label} <span className="text-[11px] text-muted">(simulated issuer)</span></span>
-                <input type="checkbox" checked={bankCard} onChange={(e) => setBankCard(e.target.checked)} className="size-5" />
+                <input type="checkbox" checked={bankCard} onChange={(e) => { setBankCard(e.target.checked); if (e.target.checked) setMethod("card"); }} className="size-5" />
               </label>
             )}
             {quote.wallet.available && (
@@ -440,14 +459,16 @@ export default function CheckoutFlow(p: {
               <button className="h-12 rounded-full border border-ink px-4 text-[13px]">Apply</button>
             </form>
             {quote.coupon && <p className={`text-[12.5px] ${quote.coupon.valid ? "text-success" : "text-muted"}`} role="status">{quote.coupon.message}</p>}
-            {quote.saved_inr > 0 && <p className="rounded-lg bg-success/5 px-3 py-2 text-[13.5px] font-medium text-success">You save {inr(quote.saved_inr)}</p>}
+            {quoteReady && quote.saved_inr > 0 && <p className="rounded-lg bg-success/5 px-3 py-2 text-[13.5px] font-medium text-success">You save {inr(quote.saved_inr)}</p>}
             <button
               onClick={() => {
+                if (!quoteReady) return;
                 logStep(`Offers: ${quote.applied.map((a) => `${a.label} −₹${a.amount_inr}`).join(" + ") || "none"}${quote.wallet.on && quote.wallet.usable_inr ? ` · wallet −₹${quote.wallet.usable_inr}` : ""}`, { source: "rule", detail: `Capped at ${quote.cap.max_pct}% or ₹${quote.cap.max_flat_inr} in code · wallet ${quote.wallet.on ? `−₹${quote.wallet.usable_inr}` : "off"}${quote.coupon ? ` · coupon ${quote.coupon.code}: ${quote.coupon.valid ? "applied" : "not valid"}` : ""} · you save ₹${quote.saved_inr}` });
                 if (quote.prepaid_nudge) logStep(`RTO nudge shown: "${quote.prepaid_nudge.text}"`, { source: "rule", status: "info", detail: "COD stays available; the reason is never shown to the shopper" });
                 setStep(3);
               }}
-              className="h-12 w-full rounded-full bg-ink text-[14px] font-medium text-ivory"
+              disabled={!quoteReady}
+              className="h-12 w-full rounded-full bg-ink text-[14px] font-medium text-ivory disabled:opacity-40"
             >
               Continue to payment
             </button>
@@ -458,7 +479,7 @@ export default function CheckoutFlow(p: {
         {step === 3 && quote && (
           <div className="space-y-3">
             <h2 className="font-display text-[19px]">Payment method</h2>
-            {quote.prepaid_nudge && (
+            {quoteReady && quote.prepaid_nudge && (
               <p className="rounded-xl border border-gold/50 bg-gold/10 px-3 py-2.5 text-[13px] font-medium text-gold-deep" data-prepaid-nudge>
                 ✦ {quote.prepaid_nudge.text}
               </p>
@@ -466,7 +487,7 @@ export default function CheckoutFlow(p: {
             <div role="radiogroup" aria-label="Payment method" className="space-y-2">
               {METHODS.filter((m) => (m.id !== "emi" || quote.emi_available) && (m.id !== "cod" || quote.cod.eligible)).map((m) => (
                 <label key={m.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 text-[13.5px] ${method === m.id ? "border-ink bg-sand/40" : "border-line"} ${m.id === "upi" && quote.prepaid_nudge ? "ring-1 ring-gold/50" : ""}`}>
-                  <input type="radio" name="method" value={m.id} checked={method === m.id} onChange={() => setMethod(m.id)} />
+                  <input type="radio" name="method" value={m.id} checked={method === m.id} onChange={() => { setMethod(m.id); if (m.id !== "card") setBankCard(false); }} />
                   <span className="flex-1">
                     {m.label}
                     {m.sub && <span className="block text-[11px] text-muted">{m.sub}</span>}
@@ -476,7 +497,7 @@ export default function CheckoutFlow(p: {
                 </label>
               ))}
             </div>
-            <dl className="space-y-1 border-t border-line pt-3 text-[13px]">
+            {quoteReady && <dl className="space-y-1 border-t border-line pt-3 text-[13px]">
               <div className="flex justify-between"><dt className="text-muted">Subtotal</dt><dd>{inr(quote.subtotal_inr)}</dd></div>
               {quote.discount_inr > 0 && <div className="flex justify-between"><dt className="text-muted">Offers</dt><dd className="text-success">−{inr(quote.discount_inr)}</dd></div>}
               {quote.wallet.on && quote.wallet.usable_inr > 0 && <div className="flex justify-between"><dt className="text-muted">Cosmos wallet</dt><dd className="text-success">−{inr(quote.wallet.usable_inr)}</dd></div>}
@@ -484,7 +505,7 @@ export default function CheckoutFlow(p: {
               {quote.gift_wrap_inr > 0 && <div className="flex justify-between"><dt className="text-muted">Gift wrap</dt><dd>{inr(quote.gift_wrap_inr)}</dd></div>}
               {isCod && <div className="flex justify-between"><dt className="text-muted">Cash on delivery fee</dt><dd>{inr(quote.cod_fee_inr)}</dd></div>}
               <div className="flex justify-between pt-1 text-[15px] font-semibold"><dt>Total</dt><dd>{inr(quote.payable_inr)}</dd></div>
-            </dl>
+            </dl>}
             {payNote && <p className="rounded-lg bg-sand px-3 py-2 text-[13px]" role="status">{payNote}</p>}
           </div>
         )}
@@ -504,8 +525,8 @@ export default function CheckoutFlow(p: {
       )}
       {step === 3 && (
         <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-ivory/95 px-4 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 backdrop-blur">
-          <button onClick={pay} disabled={busy || !quote || quote.count === 0} className="h-12 w-full rounded-full bg-ink text-[14px] font-medium text-ivory disabled:opacity-50">
-            {busy ? "Opening payment…" : isCod ? `Place order · ${inr(quote?.cod_payable_inr ?? 0)} on delivery` : `Pay ${inr(quote?.online_payable_inr ?? 0)}`}
+          <button onClick={pay} disabled={busy || !quoteReady || !quote || quote.count === 0} className="h-12 w-full rounded-full bg-ink text-[14px] font-medium text-ivory disabled:opacity-50">
+            {busy ? "Opening payment…" : !quoteReady ? quoteError ? "Total unavailable" : "Updating total..." : isCod ? `Place order · ${inr(quote?.cod_payable_inr ?? 0)} on delivery` : `Pay ${inr(quote?.online_payable_inr ?? 0)}`}
           </button>
           <button onClick={() => setStep(2)} className="mt-1 h-9 w-full text-[12px] text-muted underline underline-offset-2">Back to offers</button>
         </div>

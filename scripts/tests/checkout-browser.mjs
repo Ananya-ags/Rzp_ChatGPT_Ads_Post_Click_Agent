@@ -125,7 +125,9 @@ try {
     await p.getByRole('button', { name: 'Continue to payment' }).click();
     await p.waitForTimeout(500);
     const nudge = await p.locator('[data-prepaid-nudge]').innerText().catch(() => '');
-    check('(d) high-RTO shopper sees "Pay online, extra 5% off"', /Pay online, extra 5% off/.test(nudge), nudge);
+    const nudgeQuote = await p.evaluate(async () => (await fetch('/api/checkout/quote', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ pincode: '411038', method: 'online', walletOn: true, bankCard: false, coupon: 'FAKE50' }) })).json());
+    const saving = nudgeQuote.cod_payable_inr - nudgeQuote.online_payable_inr;
+    check('(d) prepaid nudge shows the actual saving versus COD', nudge.includes(`₹${saving.toLocaleString('en-IN')}`) && /compared with cash on delivery/.test(nudge) && !/extra 5%/.test(nudge), nudge);
     const t4 = await p.locator('body').innerText();
     check('(d) COD still available, and the reason is never shown', /Cash on delivery/.test(t4) && !/risk|RTO|refused|returned before/i.test(t4));
     check('(b) EMI shown on a bag over ₹3,000', /EMI \/ Pay Later/.test(t4));

@@ -23,7 +23,7 @@ fs.mkdirSync(OUT, { recursive: true });
     }
     catch (e) {
         results.push({ name, pass: false, error: e.message });
-        console.log('FAIL', name, e.message.slice(0, 300));
+        console.log('FAIL', name, (e.stack || e.message).slice(0, 900));
         await p.screenshot({ path: `${OUT}/failure-${results.length}.png` });
     } };
     const sheet = () => p.locator('[data-cosmos-sheet]');
@@ -38,7 +38,7 @@ fs.mkdirSync(OUT, { recursive: true });
         await check('desktop launcher home containment', async () => { await p.goto(BASE); await p.getByRole('link', { name: /Store home/ }).click(); await open(); await fits(); await p.screenshot({ path: OUT + '/desktop-containment.png' }); await close(); });
         await check('desktop expand/focus and resize mobile→desktop', async () => { await open(); await sheet().getByRole('textbox').focus(); await fits(); await p.setViewportSize({ width: 390, height: 844 }); await fits(); await p.setViewportSize({ width: 1280, height: 1000 }); await fits(); await close(); });
         await p.setViewportSize({ width: 390, height: 844 });
-        await check('home gift → product history divider → delivery → bag persistence', async () => { await p.goto(BASE + '/shop'); await open(); await fits(); await p.screenshot({ path: OUT + '/home-opener.png' }); await chip('Gift under ₹2,000'); assert(await sheet().getByRole('link', { name: /^View / }).count() > 0); await sheet().getByRole('link', { name: /^View / }).first().click(); await open(); assert(await sheet().getByText(/Now viewing:/).count() > 0); assert(await sheet().getByText('Gift under ₹2,000', { exact: true }).count() > 0); await chip('When will it arrive?'); await fits(); await close(); await p.getByRole('link', { name: /^Bag/ }).click(); await open(); assert((await sheet().innerText()).includes('Gift under ₹2,000')); await p.screenshot({ path: OUT + '/bag-chat.png' }); await close(); await p.reload(); await open(); assert((await sheet().innerText()).includes('Gift under ₹2,000')); await sheet().getByRole('button', { name: 'New chat' }).click(); assert.equal(await sheet().locator('[data-role="user"]').count(), 0); await close(); });
+        await check('home gift → product history divider → delivery → bag persistence', async () => { await p.goto(BASE + '/shop'); await open(); await fits(); await p.screenshot({ path: OUT + '/home-opener.png' }); await chip('Gift under ₹2,000'); assert(await sheet().getByRole('link', { name: /^View / }).count() > 0); await sheet().getByRole('link', { name: /^View / }).first().click(); await p.waitForURL('**/p/**'); await open(); assert(await sheet().getByText(/Now viewing:/).count() > 0); assert(await sheet().getByText('Gift under ₹2,000', { exact: true }).count() > 0); await chip('When will it arrive?'); await fits(); await close(); await p.getByRole('link', { name: /^Bag/ }).click(); await p.waitForURL(/\/cart(?:\?|$)/); await p.getByRole('heading', { name: /^Your bag/ }).waitFor(); await open(); assert((await sheet().innerText()).includes('Gift under ₹2,000')); await p.screenshot({ path: OUT + '/bag-chat.png' }); await close(); await p.reload(); await open(); assert((await sheet().innerText()).includes('Gift under ₹2,000')); await sheet().getByRole('button', { name: 'New chat' }).click(); assert.equal(await sheet().locator('[data-role="user"]').count(), 0); await close(); });
         await check('guided waterproof sponsored route', async () => { await p.goto(BASE + '/chatgpt'); await p.locator('a[href^="/p/"]').click(); await open(); assert((await sheet().innerText()).includes('Can I shower in these?')); await chip('Can I shower in these?'); await fits(); await close(); });
         await check('guided wedding sponsored route and no water chips', async () => { await p.goto(BASE + '/chatgpt?c=conv-wedding'); await p.locator('a[href^="/p/"]').click(); await open(); const t = await sheet().locator('[aria-label="Suggested questions"]').innerText(); assert(!/shower|gym|water/i.test(t), t); assert(t.includes('Show matching pieces')); await p.screenshot({ path: OUT + '/wedding-chips.png' }); await chip('Can you gift wrap it?'); await close(); });
         await check('steel nickel care card', async () => { await p.goto(BASE + '/p/kira-mini-huggies?ad_group=stainless-steel-earrings'); await open(); await chip('Is it nickel-free?'); assert((await sheet().innerText()).includes('No.')); assert(await sheet().locator('a[href="mailto:care@cosmosjewels.example"]').count() > 0); await fits(); await close(); });
@@ -49,6 +49,8 @@ fs.mkdirSync(OUT, { recursive: true });
             await p.goto(BASE + '/shop');
             await p.getByRole('button', { name: 'Open menu' }).click();
             await p.getByRole('navigation', { name: 'Shop categories' }).getByRole('link', { name: /Earrings/ }).click();
+            await p.waitForURL(/\/c\/earrings(?:\?|$)/);
+            await p.getByRole('heading', { name: 'Earrings', exact: true, level: 1 }).waitFor();
             await open();
             assert((await sheet().innerText()).includes('Browsing earrings'));
             await fits();

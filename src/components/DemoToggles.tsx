@@ -1,5 +1,6 @@
 "use client";
 import { useDemoState } from "@/lib/state";
+import { useState } from "react";
 
 /**
  * Demo-only switches (stored in localStorage). Until the merchant console exists, "approve" here stands in for its
@@ -7,6 +8,27 @@ import { useDemoState } from "@/lib/state";
  */
 export default function DemoToggles({ proposals = [] }: { proposals?: { id: string; title: string }[] }) {
   const [s, write, ready] = useDemoState();
+  const [resetting, setResetting] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+  const reset = async () => {
+    setResetting(true);
+    setResetError(null);
+    try {
+      const response = await fetch("/api/demo/reset", { method: "POST" });
+      if (!response.ok) throw new Error("Demo reset request failed");
+      write({ cart: [], approvedProposals: [], loggedIn: false, loginOffered: false, loginDismissed: false, agentPaused: false, returningVisitor: false });
+      try {
+        for (const key of ["cosmos-chat-v1", "cosmos-orders-v1", "cosmos-console-events"]) sessionStorage.removeItem(key);
+      } catch {
+        console.warn("Session storage unavailable while resetting the demo.");
+      }
+      window.location.reload();
+    } catch (error) {
+      console.error("Could not reset the demo:", error);
+      setResetError("Couldn't reset the demo. Please try again.");
+      setResetting(false);
+    }
+  };
   if (!ready) return null;
   return (
     <div className="mt-8 rounded-2xl border border-line bg-white px-4 py-2">
@@ -21,16 +43,13 @@ export default function DemoToggles({ proposals = [] }: { proposals?: { id: stri
         />
       ))}
       <button
-        onClick={() => {
-          write({ cart: [], approvedProposals: [], loggedIn: false, loginOffered: false, loginDismissed: false, agentPaused: false, returningVisitor: false });
-          try {
-            document.cookie = "cosmos_user=; path=/; max-age=0; samesite=lax";
-          } catch {}
-        }}
+        onClick={() => void reset()}
+        disabled={resetting}
         className="my-2 text-[13px] text-muted underline"
       >
-        Reset demo state (also logs out)
+        {resetting ? "Resetting demo..." : "Reset demo state (also logs out)"}
       </button>
+      {resetError && <p role="alert" className="pb-2 text-[13px] text-danger">{resetError}</p>}
     </div>
   );
 }

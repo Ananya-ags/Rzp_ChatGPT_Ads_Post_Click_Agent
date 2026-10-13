@@ -87,6 +87,28 @@ export function verifiedFacts(p: Product) {
 
 /* ───────────────────────── search_catalog ───────────────────────── */
 
+/** Design context for semantic matching, not raw marketing copy or unverified benefit claims. */
+export function catalogDesignIndex(db: Db) {
+  const excluded = new Set(db.rules.excluded_skus.map((e) => e.sku));
+  return db.products
+    .filter((p) => !excluded.has(p.handle) && !p.metafields.jewellery.excluded)
+    .map((p) => {
+      const j = p.metafields.jewellery;
+      return {
+        sku: p.handle,
+        title: p.title,
+        category: j.category,
+        subtype: j.subtype,
+        styles: j.style_tags,
+        occasions: j.occasions,
+        stone: j.stone_type,
+        photo_design_tags: (db.enriched?.skus[p.handle]?.visual_tags ?? [])
+          .filter((v) => ["shape", "motif", "texture", "silhouette", "style"].includes(v.kind))
+          .map((v) => v.tag),
+      };
+    });
+}
+
 export type SearchFilters = {
   category?: Product["metafields"]["jewellery"]["category"];
   subtype?: string;
@@ -100,14 +122,36 @@ export type SearchFilters = {
   deliver_by?: string; // YYYY-MM-DD
   exclude?: string[];
   base_metal?: string; // code-only filter (chips such as "Stainless steel earrings"); not offered to the model
+  ranked_skus?: string[]; // semantic matches selected by the LLM from the catalogue index; [] means no match
+  design_terms?: string[]; // explicit motifs, shapes or textures, checked against catalogue appearance evidence
+  design_match?: "all" | "any";
   limit?: number;
 };
 
+const SEARCH_FILLER = new Set(["show", "me", "find", "some", "any", "a", "an", "the", "with", "and", "or", "for", "of", "in", "design", "style", "piece", "jewellery", "jewelry", "please"]);
+const searchWords = (s: string) => s.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean)
+  .map((w) => w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w)
+  .map((w) => w === "floral" ? "flower" : w === "gift" ? "gifting" : w);
+
+export function catalogCategory(query: string): SearchFilters["category"] {
+  const words = new Set(searchWords(query));
+  const matches = (["earrings", "necklace", "ring", "bracelet"] as const).filter((category) => words.has(searchWords(category)[0]));
+  return matches.length === 1 ? matches[0] : undefined;
+}
+
 export function searchCatalog(db: Db, query: string, f: SearchFilters = {}) {
-  const q = query.toLowerCase();
+  const requestedWords = new Set(searchWords(query));
+  const ignoredDesignTerms = (f.design_terms ?? []).filter((term) => !searchWords(term).every((word) => requestedWords.has(word)));
+  f = {
+    ...f,
+    category: f.category ?? catalogCategory(query),
+    ...(f.design_terms ? { design_terms: f.design_terms.filter((term) => !ignoredDesignTerms.includes(term)) } : {}),
+  };
   const excluded = new Set([...(db.rules.excluded_skus.map((e) => e.sku)), ...(f.exclude ?? [])]);
   const ref = f.similar_to ? findProduct(db, f.similar_to) : null;
-  const words = q.split(/\W+/).filter((w) => w.length > 2);
+  const ranked = f.ranked_skus ? new Map([...new Set(f.ranked_skus)].map((sku, index) => [sku, index])) : null;
+  const words = searchWords(query).filter((w) => !SEARCH_FILLER.has(w));
+  const designs = new Map(catalogDesignIndex(db).map((p) => [p.sku, p.photo_design_tags]));
   const rows = db.products
     .filter((p) => !excluded.has(p.handle) && !p.metafields.jewellery.excluded)
     .filter((p) => {
@@ -115,7 +159,7 @@ export function searchCatalog(db: Db, query: string, f: SearchFilters = {}) {
       if (f.category && j.category !== f.category) return false;
       if (f.subtype && j.subtype !== f.subtype) return false;
       if (f.base_metal && j.base_metal !== f.base_metal) return false;
-      if (f.max_price_inr && price(p) > f.max_price_inr) return false;
+      if (f.max_price_inr !== undefined && price(p) > f.max_price_inr) return false;
       if (f.occasion && !j.occasions.includes(f.occasion as never)) return false;
       if (f.water_resistant !== undefined && j.water_resistant !== f.water_resistant) return false; // verified only
       if (f.max_outer_diameter_cm && (j.outer_diameter_cm ?? Infinity) > f.max_outer_diameter_cm) return false;
@@ -124,8 +168,11 @@ export function searchCatalog(db: Db, query: string, f: SearchFilters = {}) {
     })
     .map((p) => {
       const j = p.metafields.jewellery;
-      const hay = `${p.title} ${p.tags.join(" ")} ${j.occasions.join(" ")} ${j.style_tags.join(" ")} ${j.subtype} ${j.collection}`.toLowerCase();
-      let score = words.reduce((s, w) => s + (hay.includes(w) ? 2 : 0), 0) + j.rating;
+      const hay = new Set(searchWords(`${p.title} ${p.tags.join(" ")} ${j.occasions.join(" ")} ${j.style_tags.join(" ")} ${j.subtype} ${j.collection} ${j.stone_type} ${designs.get(p.handle)?.join(" ") ?? ""}`));
+      const matches = words.filter((w) => hay.has(w)).length;
+      const termMatches = (f.design_terms ?? []).map((term) => searchWords(term).every((w) => hay.has(w)));
+      const designMatches = !termMatches.length || (f.design_match === "any" ? termMatches.some(Boolean) : termMatches.every(Boolean));
+      let score = matches * 2 + j.rating;
       if (ref) {
         const rj = ref.metafields.jewellery;
         if (rj.subtype === j.subtype) score += 4;
@@ -134,17 +181,25 @@ export function searchCatalog(db: Db, query: string, f: SearchFilters = {}) {
         if (p.handle === ref.handle) score -= 100;
       }
       const delivery = f.deliver_to_pincode ? estimateDelivery(p, f.deliver_to_pincode, db.logistics, db.now, f.deliver_by ?? null) : null;
-      return { p, score, delivery };
+      return { p, score, delivery, matches, designMatches };
     })
+    .filter((x) => x.designMatches)
+    .filter((x) => ranked ? ranked.has(x.p.handle) || !!f.design_terms?.length : x.matches === words.length)
     .filter((x) => !f.deliver_by || x.delivery?.meets_deadline)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, f.limit ?? 5);
+    .sort((a, b) => {
+      const rankA = ranked?.get(a.p.handle) ?? Infinity, rankB = ranked?.get(b.p.handle) ?? Infinity;
+      return rankA !== rankB ? rankA - rankB : b.score - a.score;
+    });
+  const page = rows.slice(0, f.limit ?? 5);
   return {
     query,
     filters: f,
-    count: rows.length,
-    why: `${rows.length} catalogue match(es) for "${query || "(filters only)"}"${Object.keys(f).filter((k) => k !== "limit").length ? ` with ${Object.keys(f).filter((k) => k !== "limit").join(", ")}` : ""}`,
-    results: rows.map(({ p, delivery }) => ({
+    count: page.length,
+    total_matches: rows.length,
+    has_more: rows.length > page.length,
+    ignored_design_terms: ignoredDesignTerms,
+    why: `${page.length} shown of ${rows.length} remaining catalogue match(es) for "${query || "(filters only)"}"${ranked ? "; semantic selection, constraints enforced in code" : ""}${ignoredDesignTerms.length ? `; unrequested hard design filters ignored: ${ignoredDesignTerms.join(", ")}` : ""}`,
+    results: page.map(({ p, delivery }) => ({
       ...verifiedFacts(p),
       unverified: unverifiedFor(db, p.handle),
       ...(delivery ? { arrives_on: delivery.arrives_on, arrives_label: formatDay(delivery.arrives_on), meets_deadline: delivery.meets_deadline } : {}),
@@ -218,9 +273,16 @@ export function getOffer(db: Db, cart: CartLine[], ctx: OfferContext = {}) {
   const stackSum = eligible.filter((e) => e.stackable).reduce((s, e) => s + e.amount, 0);
   const bestSingle = eligible.filter((e) => !e.stackable).sort((a, b) => b.amount - a.amount)[0];
   const useStack = !bestSingle || stackSum >= bestSingle.amount;
-  const applied = useStack ? eligible.filter((e) => e.stackable) : [bestSingle];
-  const raw = applied.reduce((s, e) => s + e.amount, 0);
+  const selected = useStack ? eligible.filter((e) => e.stackable) : [bestSingle];
+  const raw = selected.reduce((s, e) => s + e.amount, 0);
   const discount = Math.min(raw, capInr);
+  // Preserve configured offer order; later offers can use only the remaining cap.
+  let remainingDiscount = discount;
+  const applied = selected.map((a) => {
+    const amount = Math.min(a.amount, remainingDiscount);
+    remainingDiscount -= amount;
+    return { id: a.id, label: amount < a.amount ? "Offer adjusted to the store cap" : a.label, amount_inr: amount };
+  }).filter((a) => a.amount_inr > 0);
   const walletOffer = db.offers.find((o) => o.type === "wallet");
   const walletBalance = ctx.logged_in ? db.shoppers.tier3_demo.loyalty_wallet_inr : 0;
   const walletUsable = walletOffer ? Math.min(walletBalance, Math.floor(((subtotal - discount) * walletOffer.value) / 100)) : 0;
@@ -229,7 +291,7 @@ export function getOffer(db: Db, cart: CartLine[], ctx: OfferContext = {}) {
   return {
     why: `Offers computed in code; cap ${caps.max_pct}% / ₹${caps.max_flat_inr}${ctx.requested_discount_pct ? `; requested ${ctx.requested_discount_pct}% not allowed` : ""}`,
     subtotal_inr: subtotal,
-    applied: applied.map((a) => ({ id: a.id, label: a.label, amount_inr: a.amount })),
+    applied,
     discount_inr: discount,
     cap: { max_pct: caps.max_pct, max_flat_inr: caps.max_flat_inr, cap_inr_for_this_cart: capInr, clamped: raw > capInr },
     ineligible,
@@ -359,19 +421,29 @@ export function checkoutTotals(db: Db, cart: CartLine[], ctx: OfferContext & { c
 /* ───────────────────────── claims gate ───────────────────────── */
 
 /**
- * AI-extracted attributes for a SKU, labelled so they're never stated as claims: vague wording is unknown (null);
- * the rest come from the description and are described as materials, never benefits.
+ * Only material descriptions reach the shopper agent. Proposed benefits and their source phrases stay in the
+ * offline enrichment data for merchant review, so quoting the description cannot turn them into shopper claims.
  */
 export function unverifiedFor(db: Db, sku: string) {
-  return (db.enriched?.skus[sku]?.attributes ?? []).map((a) => ({
-    attribute: a.attribute,
-    value: a.vague ? null : a.value,
-    label: a.vague ? "vague wording: unknown, never a claim" : "from the description, not verified: describe as a material, never a benefit",
-    phrase: a.source.phrase,
-  }));
+  return (db.enriched?.skus[sku]?.attributes ?? []).map((a) => {
+    const material = a.attribute === "base_metal" || a.attribute === "plating";
+    return {
+      attribute: a.attribute,
+      value: material && !a.vague ? a.value : null,
+      label: a.vague ? "vague wording: unknown, never a claim" : material ? "from the description, not verified: describe as a material, never a benefit" : "unverified benefit: do not state, quote or paraphrase; use the verified product field",
+      phrase: material ? a.source.phrase : null,
+    };
+  });
 }
 
 /* ───────────────────────── get_product_facts ───────────────────────── */
+
+/** Raw care prose may claim water safety before the brand has verified it. */
+export function verifiedCare(p: Product): string {
+  return p.metafields.jewellery.water_resistant === true
+    ? p.metafields.jewellery.care
+    : "Keep dry and away from perfume. Wipe with a soft dry cloth after wear and store in the pouch.";
+}
 
 /** Verified facts and the size text for any product (by handle or title), plus labelled unverified attributes. */
 export function getProductFacts(db: Db, skuOrName: string) {
@@ -387,7 +459,7 @@ export function getProductFacts(db: Db, skuOrName: string) {
     found: true as const,
     ...verifiedFacts(p),
     size: sizeText(j),
-    care: j.care,
+    care: verifiedCare(p),
     anti_tarnish_warranty_months: j.anti_tarnish_warranty_months,
     unverified,
     why: `Verified catalogue fields for ${p.title}${unverified.length ? `; ${unverified.length} unverified attribute(s) labelled, not claims` : ""}`,
@@ -491,5 +563,4 @@ export function addToBag(db: Db, cart: CartLine[], sku: string, qty = 1) {
 
 /* ───────────────────────── preferences ───────────────────────── */
 
-export type Preferences = { budget_max_inr?: number; occasion?: string; category?: Product["metafields"]["jewellery"]["category"]; style?: string; deadline?: string };
-
+export type { Preferences } from "../preferences";

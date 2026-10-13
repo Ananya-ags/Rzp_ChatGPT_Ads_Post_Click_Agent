@@ -8,7 +8,7 @@
  */
 import "server-only";
 import { getDb } from "./data";
-import { checkDelivery, findProduct, getOffer, getRtoRisk, type CartLine } from "./tools/core";
+import { checkDelivery, findProduct, getOffer, getRtoRisk, verifiedCare, type CartLine } from "./tools/core";
 import { MAX_PER_SKU } from "./view";
 import type { Persona } from "./user";
 
@@ -54,7 +54,7 @@ export function quote(cart: CartLine[], user: Persona | null, input: QuoteInput)
   const lines = cart.map((l) => {
     const p = findProduct(db, l.sku)!;
     const unit = Number(p.variants[0].price);
-    return { sku: p.handle, title: p.title, qty: l.qty, unit_inr: unit, line_inr: unit * l.qty, care: p.metafields.jewellery.care, variant_id: String(p.variants[0].id ?? p.handle) };
+    return { sku: p.handle, title: p.title, qty: l.qty, unit_inr: unit, line_inr: unit * l.qty, care: verifiedCare(p), variant_id: String(p.variants[0].id ?? p.handle) };
   });
 
   // RTO: the pincode's risk, raised by the shopper's own history when known; internal only (never shown)
@@ -82,7 +82,7 @@ export function quote(cart: CartLine[], user: Persona | null, input: QuoteInput)
 
   const codEligible = online.subtotal_inr <= rzp.cod_eligibility.max_cart_inr;
   const nudge = risk === "high";
-  const extra = online.applied.find((a) => a.id === "prepaid_nudge");
+  const onlineSaving = codTotal - onlineTotal;
 
   return {
     lines,
@@ -94,7 +94,7 @@ export function quote(cart: CartLine[], user: Persona | null, input: QuoteInput)
     subtotal_inr: online.subtotal_inr,
     applied: chosen.applied,
     discount_inr: chosen.discount_inr,
-    cap: online.cap,
+    cap: chosen.cap,
     coupon,
     bank_offer: { available: online.subtotal_inr >= (db.offers.find((o) => o.id === "bank_offer")?.eligibility.min_cart_inr ?? Infinity), on: input.bankCard && !cod, label: db.offers.find((o) => o.id === "bank_offer")?.label ?? "" },
     wallet: { available: !!user, balance_inr: chosen.wallet.balance_inr, usable_inr: chosen.wallet.usable_inr, on: !!user && input.walletOn },
@@ -108,7 +108,9 @@ export function quote(cart: CartLine[], user: Persona | null, input: QuoteInput)
     saved_inr: chosen.discount_inr + wallet(chosen),
     cod: { eligible: codEligible, fee_inr: db.brand.policies.cod_fee_inr, note: codEligible ? "Online offers don't apply to cash on delivery." : `Cash on delivery is available on orders up to ₹${rzp.cod_eligibility.max_cart_inr.toLocaleString("en-IN")}.` },
     // the nudge is shown, the reason never is
-    prepaid_nudge: nudge ? { text: extra ? `Pay online, extra 5% off (−₹${extra.amount_inr.toLocaleString("en-IN")})` : pinRisk.prepay_nudge ?? `Pay online and save ₹${(codTotal - onlineTotal).toLocaleString("en-IN")}` } : null,
+    prepaid_nudge: nudge ? { text: codEligible && onlineSaving > 0
+      ? `Pay online and save ₹${onlineSaving.toLocaleString("en-IN")} compared with cash on delivery, including its fee.`
+      : "Eligible online offers are included in your total, subject to the store cap." } : null,
     emi_available: online.subtotal_inr > rzp.affordability.emi_min_inr, // "bags over ₹3,000": the bag value, as on the bag page
     // internal (server → order notes and the AI console), never rendered to the shopper
     _risk: risk,
@@ -160,19 +162,23 @@ export function predictKept(q: Quote, adGroupId: string | null) {
 export function lineItems(q: Quote) {
   const db = getDb();
   const amount = q.payable_inr * 100;
-  const base = q.lines.map((l) => l.line_inr * 100);
-  const sumBase = base.reduce((a, b) => a + b, 0) || 1;
-  // per-unit offer price, rounded down; the leftover paise go to whole units (single-unit lines take any remainder)
-  const unit = q.lines.map((l, i) => Math.floor((base[i] * amount) / sumBase / l.qty));
-  let left = amount - unit.reduce((s, u, i) => s + u * q.lines[i].qty, 0);
-  for (let pass = 0; pass < 2 && left > 0; pass++)
-    q.lines.forEach((l, i) => {
-      const add = Math.floor(left / l.qty);
-      if (add > 0 && (pass === 1 || l.qty === 1)) {
-        unit[i] += add;
-        left -= add * l.qty;
-      }
-    });
-  const items = q.lines.map((l, i) => ({ sku: l.sku, variant_id: l.variant_id, name: l.title, price: l.unit_inr * 100, offer_price: unit[i], tax_amount: 0, quantity: l.qty, product_url: `/p/${l.sku}`, image_url: db.manifest.products[l.sku]?.front.kind === "photo" ? `/${db.manifest.products[l.sku]?.front.file}` : "" }));
+  const sumBase = q.lines.reduce((sum, l) => sum + l.line_inr, 0);
+  if (!Number.isSafeInteger(amount) || amount < 0 || !Number.isFinite(sumBase) || sumBase <= 0
+      || q.lines.some((l) => !Number.isInteger(l.qty) || l.qty <= 0 || l.line_inr <= 0)) {
+    throw new Error("Cannot allocate payment to an invalid checkout quote.");
+  }
+  let cumulativeBase = 0;
+  let allocated = 0;
+  const items = q.lines.flatMap((l) => {
+    cumulativeBase += l.line_inr;
+    const cumulativeAmount = Math.round(amount * cumulativeBase / sumBase);
+    const lineAmount = cumulativeAmount - allocated;
+    allocated = cumulativeAmount;
+    const unit = Math.floor(lineAmount / l.qty);
+    const remainder = lineAmount % l.qty;
+    const item = { sku: l.sku, variant_id: l.variant_id, name: l.title, price: l.unit_inr * 100, offer_price: unit, tax_amount: 0, quantity: l.qty - remainder, product_url: `/p/${l.sku}`, image_url: db.manifest.products[l.sku]?.front.kind === "photo" ? `/${db.manifest.products[l.sku]?.front.file}` : "" };
+    // Some units receive one extra paise; split only that quantity, never lose the remainder.
+    return [...(item.quantity > 0 ? [item] : []), ...(remainder > 0 ? [{ ...item, quantity: remainder, offer_price: unit + 1 }] : [])];
+  });
   return { line_items: items, line_items_total: amount };
 }

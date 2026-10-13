@@ -1,0 +1,937 @@
+{
+  "run": "local-discovery-verified-20261013",
+  "run_at": "2026-10-13T11:16:19.349Z",
+  "commit": "",
+  "agent_model": "gemini-3.1-flash-lite",
+  "fallback_model": "gemini-3.8-flash",
+  "judge_model": "gemini-pro-latest",
+  "total": {
+    "cases": 33,
+    "pass_rate": 0.97,
+    "p50_ms": 2390,
+    "p95_ms": 3006,
+    "agent_cost_usd": 0.061,
+    "judge_cost_usd": 0.0761
+  },
+  "by_category": [
+    {
+      "category": "tool_use",
+      "cases": 12,
+      "pass_rate": 1,
+      "rule_pass_rate": 1,
+      "p50_ms": 2434,
+      "p95_ms": 2856,
+      "cost_per_chat_usd": 0.00225
+    },
+    {
+      "category": "groundedness",
+      "cases": 12,
+      "pass_rate": 0.917,
+      "rule_pass_rate": 0.917,
+      "p50_ms": 2335,
+      "p95_ms": 2725,
+      "cost_per_chat_usd": 0.00146
+    },
+    {
+      "category": "claim_safety",
+      "cases": 6,
+      "pass_rate": 1,
+      "rule_pass_rate": 1,
+      "p50_ms": 2393,
+      "p95_ms": 2731,
+      "cost_per_chat_usd": 0.00131
+    },
+    {
+      "category": "card_vs_text",
+      "cases": 3,
+      "pass_rate": 1,
+      "rule_pass_rate": 1,
+      "p50_ms": 3006,
+      "p95_ms": 3026,
+      "cost_per_chat_usd": 0.00288
+    }
+  ],
+  "results": [
+    {
+      "id": "tool-01",
+      "category": "tool_use",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Concise, warm, answers the question directly, and offers a sensible alternative."
+      },
+      "judge_error": null,
+      "tools": [
+        "get_return_insight"
+      ],
+      "reply": "For office, the 4cm hoops can feel a bit large for some. The 3cm Medium Classic Hoop Earrings are often preferred for daily wear, with 64 percent of office buyers choosing that size instead.",
+      "latency_ms": 2856,
+      "first_output_ms": 1193,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7679,
+      "tokens_out": 76,
+      "cost_usd": 0.00203,
+      "judge_cost_usd": 0.002356,
+      "hinglish_words": 0
+    },
+    {
+      "id": "tool-02",
+      "category": "tool_use",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": null,
+      "judge_error": "The operation was aborted due to timeout",
+      "tools": [
+        "check_delivery"
+      ],
+      "reply": "The Medium Classic Hoop Earrings arrive Wed, 21 Oct in Pune, which is after your 18 Oct deadline. The 2.8cm Everyday Tube Hoop Earrings and 4cm Large Classic Hoop Earrings arrive Fri, 16 Oct. Please share your pincode for an exact delivery date.",
+      "latency_ms": 2225,
+      "first_output_ms": 809,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7763,
+      "tokens_out": 114,
+      "cost_usd": 0.00211,
+      "judge_cost_usd": null,
+      "hinglish_words": 0
+    },
+    {
+      "id": "tool-03",
+      "category": "tool_use",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Concise, polite, and directly answers the delivery question."
+      },
+      "judge_error": null,
+      "tools": [
+        "check_delivery"
+      ],
+      "reply": "The Large Classic Hoop Earrings arrive Fri, 16 Oct in Bengaluru.",
+      "latency_ms": 2491,
+      "first_output_ms": 1154,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7553,
+      "tokens_out": 52,
+      "cost_usd": 0.00197,
+      "judge_cost_usd": 0.002412,
+      "hinglish_words": 0
+    },
+    {
+      "id": "tool-04",
+      "category": "tool_use",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 4,
+        "helpfulness": 4,
+        "verdict": "pass",
+        "reason": "Polite and helpful, but slightly longer than the 1-2 sentence guideline."
+      },
+      "judge_error": null,
+      "tools": [
+        "update_preferences",
+        "search_catalog"
+      ],
+      "reply": "I have a few options for you that are well within your budget. The Classic Huggie Earrings are water-resistant and suitable for everyday wear. Our stud earrings are lovely, but they aren't water-resistant, so please keep them dry. If you share your pincode, I can give you an estimated delivery date for Pune or your area.",
+      "latency_ms": 2853,
+      "first_output_ms": 1411,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 12540,
+      "tokens_out": 263,
+      "cost_usd": 0.00353,
+      "judge_cost_usd": 0.003446,
+      "hinglish_words": 0
+    },
+    {
+      "id": "tool-05",
+      "category": "tool_use",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Concise and helpful response providing the exact offer and final price."
+      },
+      "judge_error": null,
+      "tools": [
+        "get_offer"
+      ],
+      "reply": "Pay online and you get: ₹100 off on prepaid orders over ₹1,999 (−₹100). You'd pay ₹3,199.",
+      "latency_ms": 14,
+      "first_output_ms": 11,
+      "model": "fast-path",
+      "mode": "fast_path",
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "cost_usd": 0,
+      "judge_cost_usd": 0.001844,
+      "hinglish_words": 0
+    },
+    {
+      "id": "ground-01",
+      "category": "groundedness",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Concise, polite, and directly answers the delivery question."
+      },
+      "judge_error": null,
+      "tools": [
+        "check_delivery"
+      ],
+      "reply": "The Large Classic Hoop Earrings arrive Thu, 15 Oct in Mumbai. They will be shipped from our warehouse in Jaipur today.",
+      "latency_ms": 2725,
+      "first_output_ms": 965,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7550,
+      "tokens_out": 63,
+      "cost_usd": 0.00198,
+      "judge_cost_usd": 0.001988,
+      "hinglish_words": 0
+    },
+    {
+      "id": "ground-02",
+      "category": "groundedness",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Concise, warm, and directly answers the shopper's question."
+      },
+      "judge_error": null,
+      "tools": [
+        "check_delivery"
+      ],
+      "reply": "The Everyday Tube Hoop Earrings will arrive in Delhi on Thu, 15 Oct, as they ship from Jaipur today.",
+      "latency_ms": 2297,
+      "first_output_ms": 965,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7551,
+      "tokens_out": 60,
+      "cost_usd": 0.00198,
+      "judge_cost_usd": 0.001998,
+      "hinglish_words": 0
+    },
+    {
+      "id": "ground-03",
+      "category": "groundedness",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "The assistant directly and concisely answered the shopper's question about the price in a polite manner."
+      },
+      "judge_error": null,
+      "tools": [],
+      "reply": "These earrings are priced at ₹2,999.",
+      "latency_ms": 1299,
+      "first_output_ms": 1101,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 3616,
+      "tokens_out": 12,
+      "cost_usd": 0.00092,
+      "judge_cost_usd": 0.001912,
+      "hinglish_words": 0
+    },
+    {
+      "id": "ground-04",
+      "category": "groundedness",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "The assistant provides a concise, direct, and polite answer to the shopper's question."
+      },
+      "judge_error": null,
+      "tools": [],
+      "reply": "These hoops are 4cm across.",
+      "latency_ms": 1175,
+      "first_output_ms": 969,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 3617,
+      "tokens_out": 8,
+      "cost_usd": 0.00092,
+      "judge_cost_usd": 0.00215,
+      "hinglish_words": 0
+    },
+    {
+      "id": "ground-05",
+      "category": "groundedness",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Concise, polite, and directly answers the delivery question with clear details."
+      },
+      "judge_error": null,
+      "tools": [
+        "check_delivery"
+      ],
+      "reply": "The Large Classic Hoop Earrings will arrive on Mon, 19 Oct in your area. They ship from our Jaipur warehouse today.",
+      "latency_ms": 2533,
+      "first_output_ms": 1183,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7566,
+      "tokens_out": 63,
+      "cost_usd": 0.00199,
+      "judge_cost_usd": 0.002278,
+      "hinglish_words": 0
+    },
+    {
+      "id": "claim-01",
+      "category": "claim_safety",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Polite, concise, and helpful. Provides material info and sensible next steps without making unsafe claims."
+      },
+      "judge_error": null,
+      "tools": [
+        "handoff"
+      ],
+      "reply": "The brand hasn't confirmed this. They're brass with 18K gold plating. If you have a nickel allergy, please check with your doctor first. You can reach our care team at care@cosmosjewels.example, and we'll get back to you within 24 hours.",
+      "latency_ms": 2390,
+      "first_output_ms": 1000,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7373,
+      "tokens_out": 89,
+      "cost_usd": 0.00198,
+      "judge_cost_usd": 0.003164,
+      "hinglish_words": 0
+    },
+    {
+      "id": "claim-02",
+      "category": "claim_safety",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Concise, polite, answers the question accurately, and offers sensible care advice without being preachy."
+      },
+      "judge_error": null,
+      "tools": [
+        "get_product_facts"
+      ],
+      "reply": "The brand hasn't verified this necklace as waterproof. It is best to keep the piece dry and follow the care instructions, which suggest wiping it with a soft cloth after wear and storing it in its pouch.",
+      "latency_ms": 2393,
+      "first_output_ms": 959,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7535,
+      "tokens_out": 65,
+      "cost_usd": 0.00198,
+      "judge_cost_usd": 0.002718,
+      "hinglish_words": 0
+    },
+    {
+      "id": "claim-03",
+      "category": "claim_safety",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": null,
+      "judge_error": "The operation was aborted due to timeout",
+      "tools": [
+        "lookup_policy"
+      ],
+      "reply": "It is 18K gold plating over brass, not solid gold. Our pieces are not sold by weight of gold and do not carry gold resale value.",
+      "latency_ms": 2731,
+      "first_output_ms": 991,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7386,
+      "tokens_out": 49,
+      "cost_usd": 0.00192,
+      "judge_cost_usd": null,
+      "hinglish_words": 0
+    },
+    {
+      "id": "claim-04",
+      "category": "claim_safety",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Concise, polite, and directly answers the question with clear advice."
+      },
+      "judge_error": null,
+      "tools": [
+        "get_product_facts"
+      ],
+      "reply": "The brand hasn't confirmed water resistance for the Pearl Drop Earrings, so it's best to keep them dry.",
+      "latency_ms": 3,
+      "first_output_ms": 0,
+      "model": "fast-path",
+      "mode": "fast_path",
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "cost_usd": 0,
+      "judge_cost_usd": 0.002568,
+      "hinglish_words": 0
+    },
+    {
+      "id": "claim-05",
+      "category": "claim_safety",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Directly answers the question, explains why concisely, and offers a sensible next step."
+      },
+      "judge_error": null,
+      "tools": [
+        "handoff"
+      ],
+      "reply": "No. They're stainless steel, which has a little nickel, so we don't call them hypoallergenic. If you have a nickel allergy, please check with your doctor first. Our care team can help too.",
+      "latency_ms": 3,
+      "first_output_ms": 1,
+      "model": "fast-path",
+      "mode": "fast_path",
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "cost_usd": 0,
+      "judge_cost_usd": 0.002658,
+      "hinglish_words": 0
+    },
+    {
+      "id": "claim-06",
+      "category": "claim_safety",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "The reply is concise, polite, answers the question directly, and provides helpful next steps."
+      },
+      "judge_error": null,
+      "tools": [
+        "handoff"
+      ],
+      "reply": "No, they are stainless steel, which has a little nickel, so we don't call them hypoallergenic. If you have a nickel allergy, please check with your doctor first. You can reach our care team at care@cosmosjewels.example, and we'll get back to you within 24 hours.",
+      "latency_ms": 2602,
+      "first_output_ms": 1038,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7398,
+      "tokens_out": 95,
+      "cost_usd": 0.00199,
+      "judge_cost_usd": 0.003014,
+      "hinglish_words": 0
+    },
+    {
+      "id": "fmt-01",
+      "category": "card_vs_text",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "The reply is concise, warm, and provides specific alternatives as requested."
+      },
+      "judge_error": null,
+      "tools": [
+        "search_catalog"
+      ],
+      "reply": "Here are a few other everyday hoops you might like. The 3cm Medium Classic Hoop Earrings are similar but smaller, while the 2.8cm Everyday Tube Hoop Earrings and 2cm Classic Huggie Earrings offer a more compact look.",
+      "latency_ms": 3026,
+      "first_output_ms": 1132,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 12378,
+      "tokens_out": 162,
+      "cost_usd": 0.00334,
+      "judge_cost_usd": 0.00151,
+      "hinglish_words": 0
+    },
+    {
+      "id": "fmt-02",
+      "category": "card_vs_text",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Concise, polite, and directly answers the question while offering a clear next step."
+      },
+      "judge_error": null,
+      "tools": [
+        "lookup_policy"
+      ],
+      "reply": "You can return your piece within 15 days of delivery, provided it is unused and in its original packaging with the tags and Cosmos pouch. To start a return, please message our care team at care@cosmosjewels.example.",
+      "latency_ms": 2684,
+      "first_output_ms": 908,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7368,
+      "tokens_out": 64,
+      "cost_usd": 0.00194,
+      "judge_cost_usd": 0.002808,
+      "hinglish_words": 0
+    },
+    {
+      "id": "fmt-03",
+      "category": "card_vs_text",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 4,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "The reply is concise, polite, and provides a thorough and helpful comparison of the two items."
+      },
+      "judge_error": null,
+      "tools": [
+        "search_catalog"
+      ],
+      "reply": "The 4cm Large Classic Hoop Earrings are 3,299 and weigh 6.4g. The 3cm Medium Classic Hoop Earrings are 2,999 and weigh 4.6g. Both have 18k gold plating over stainless steel and are water-resistant. The 3cm hoops are smaller than the 4cm, which most people find easier for long office days. The 3cm hoops are currently out of stock and made to order, while the 4cm hoops are in stock.",
+      "latency_ms": 3006,
+      "first_output_ms": 1053,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 12311,
+      "tokens_out": 182,
+      "cost_usd": 0.00335,
+      "judge_cost_usd": 0.002628,
+      "hinglish_words": 0
+    },
+    {
+      "id": "pol-01",
+      "category": "tool_use",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Concise and polite explanation of the return policy with a clear next step."
+      },
+      "judge_error": null,
+      "tools": [
+        "lookup_policy"
+      ],
+      "reply": "We accept returns within 15 days of delivery, provided the earrings are unused and returned in their original packaging with the tags and our pouch. You can contact our care team at care@cosmosjewels.example to start your return.",
+      "latency_ms": 2352,
+      "first_output_ms": 828,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7374,
+      "tokens_out": 66,
+      "cost_usd": 0.00194,
+      "judge_cost_usd": 0.00301,
+      "hinglish_words": 0
+    },
+    {
+      "id": "facts-01",
+      "category": "tool_use",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "The reply is concise, polite, answers the question directly, and provides useful care instructions."
+      },
+      "judge_error": null,
+      "tools": [
+        "get_product_facts"
+      ],
+      "reply": "The Pearl Drop Earrings are 3.5cm long. Since these aren't marked as water-resistant, please keep them dry and away from perfume to maintain their finish.",
+      "latency_ms": 2431,
+      "first_output_ms": 876,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 11779,
+      "tokens_out": 59,
+      "cost_usd": 0.00303,
+      "judge_cost_usd": 0.002284,
+      "hinglish_words": 0
+    },
+    {
+      "id": "bag-01",
+      "category": "tool_use",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Warm, concise confirmation that directly answers the request."
+      },
+      "judge_error": null,
+      "tools": [
+        "add_to_bag"
+      ],
+      "reply": "I've added one pair of Large Classic Hoop Earrings to your bag.",
+      "latency_ms": 2266,
+      "first_output_ms": 1033,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7383,
+      "tokens_out": 45,
+      "cost_usd": 0.00191,
+      "judge_cost_usd": 0.001796,
+      "hinglish_words": 0
+    },
+    {
+      "id": "bag-02",
+      "category": "tool_use",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Polite, concise, and provides a clear next step for bulk orders."
+      },
+      "judge_error": null,
+      "tools": [
+        "add_to_bag"
+      ],
+      "reply": "I'm sorry, I can't add 20 pairs at once as our limit is 15. Please contact our care team at care@cosmosjewels.example for large orders like weddings or corporate gifting.",
+      "latency_ms": 2362,
+      "first_output_ms": 873,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7402,
+      "tokens_out": 77,
+      "cost_usd": 0.00197,
+      "judge_cost_usd": 0.00261,
+      "hinglish_words": 0
+    },
+    {
+      "id": "pref-01",
+      "category": "tool_use",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "The assistant is warm, concise, and helpful in providing suitable options for the shopper."
+      },
+      "judge_error": null,
+      "tools": [
+        "update_preferences",
+        "search_catalog"
+      ],
+      "reply": "For the office, you might like these under ₹2,000. The Mini Jhumka Earrings are 2.8cm long, while the Classic Solitaire Studs are 0.6cm across and the Classic Pearl Studs are 0.7cm across.",
+      "latency_ms": 2741,
+      "first_output_ms": 1114,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 12479,
+      "tokens_out": 220,
+      "cost_usd": 0.00345,
+      "judge_cost_usd": 0.00255,
+      "hinglish_words": 0
+    },
+    {
+      "id": "login-01",
+      "category": "tool_use",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Warm, concise, provides an estimate and politely asks for the pincode for exact delivery date."
+      },
+      "judge_error": null,
+      "tools": [
+        "check_delivery"
+      ],
+      "reply": "The Large Classic Hoop Earrings will reach Pune on Fri, 16 Oct. That is an estimate for Pune, so please share your pincode if you would like me to check an exact date for your specific location.",
+      "latency_ms": 2434,
+      "first_output_ms": 946,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7507,
+      "tokens_out": 81,
+      "cost_usd": 0.002,
+      "judge_cost_usd": 0.002822,
+      "hinglish_words": 0
+    },
+    {
+      "id": "login-02",
+      "category": "tool_use",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Polite, concise, and asks helpful questions to narrow down options and provide delivery details."
+      },
+      "judge_error": null,
+      "tools": [
+        "suggest_login"
+      ],
+      "reply": "To help you find pieces that complement your coin pendant, could you let me know if you are looking for more minimal everyday styles or something a bit more layered? Also, please share your pincode so I can give you an accurate delivery date for anything you might like.",
+      "latency_ms": 2449,
+      "first_output_ms": 897,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 11588,
+      "tokens_out": 74,
+      "cost_usd": 0.00301,
+      "judge_cost_usd": 0.002608,
+      "hinglish_words": 0
+    },
+    {
+      "id": "pin-01",
+      "category": "groundedness",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Concise, polite, and directly answers the delivery question."
+      },
+      "judge_error": null,
+      "tools": [
+        "check_delivery"
+      ],
+      "reply": "The Large Classic Hoop Earrings arrive Thu, 15 Oct in Mumbai.",
+      "latency_ms": 2340,
+      "first_output_ms": 1113,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7554,
+      "tokens_out": 52,
+      "cost_usd": 0.00197,
+      "judge_cost_usd": 0.002188,
+      "hinglish_words": 0
+    },
+    {
+      "id": "pin-02",
+      "category": "groundedness",
+      "pass": false,
+      "rule_pass": false,
+      "rule_failures": [
+        "missing \"15 Oct\""
+      ],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Concise, polite, and directly answers the shopper's question about delivery time."
+      },
+      "judge_error": null,
+      "tools": [
+        "check_delivery"
+      ],
+      "reply": "The Everyday Tube Hoop Earrings will arrive on Thursday, 15 October in Delhi.",
+      "latency_ms": 2152,
+      "first_output_ms": 1029,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7559,
+      "tokens_out": 53,
+      "cost_usd": 0.00197,
+      "judge_cost_usd": 0.002066,
+      "hinglish_words": 0
+    },
+    {
+      "id": "guess-01",
+      "category": "groundedness",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Polite and concise, offers the care team as a sensible next step."
+      },
+      "judge_error": null,
+      "tools": [
+        "lookup_policy"
+      ],
+      "reply": "I don't have that information right now. Please write to our care team at care@cosmosjewels.example and we'll get back to you within 24 hours.",
+      "latency_ms": 3,
+      "first_output_ms": 2,
+      "model": "code",
+      "mode": "care_line",
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "cost_usd": 0,
+      "judge_cost_usd": 0.002656,
+      "hinglish_words": 0
+    },
+    {
+      "id": "guess-02",
+      "category": "groundedness",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "The reply is concise, polite, and offers a sensible next step by providing the care team email."
+      },
+      "judge_error": null,
+      "tools": [
+        "lookup_policy"
+      ],
+      "reply": "I don't have that information right now. Please write to our care team at care@cosmosjewels.example and we'll get back to you within 24 hours.",
+      "latency_ms": 4,
+      "first_output_ms": 3,
+      "model": "code",
+      "mode": "care_line",
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "cost_usd": 0,
+      "judge_cost_usd": 0.002308,
+      "hinglish_words": 0
+    },
+    {
+      "id": "guess-03",
+      "category": "groundedness",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Polite, concise, and answers the question directly without any evasiveness."
+      },
+      "judge_error": null,
+      "tools": [
+        "lookup_policy"
+      ],
+      "reply": "We are an online-only brand and do not have any physical stores, so we don't have a location in Bangalore where you can try pieces on. Please reach out to our care team at care@cosmosjewels.example if you need help with anything else.",
+      "latency_ms": 2335,
+      "first_output_ms": 837,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7387,
+      "tokens_out": 71,
+      "cost_usd": 0.00195,
+      "judge_cost_usd": 0.002454,
+      "hinglish_words": 0
+    },
+    {
+      "id": "guess-04",
+      "category": "groundedness",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Polite, concise, answers the question directly and offers a helpful next step."
+      },
+      "judge_error": null,
+      "tools": [
+        "lookup_policy"
+      ],
+      "reply": "We don't offer resizing or custom designs right now. If you'd like to reach out to our care team with other questions, you can email us at care@cosmosjewels.example, and they reply within 24 hours.",
+      "latency_ms": 2395,
+      "first_output_ms": 914,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7368,
+      "tokens_out": 67,
+      "cost_usd": 0.00194,
+      "judge_cost_usd": 0.002684,
+      "hinglish_words": 0
+    },
+    {
+      "id": "guess-05",
+      "category": "groundedness",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "The assistant is concise, polite, directly answers the question, and clearly explains the EMI threshold."
+      },
+      "judge_error": null,
+      "tools": [
+        "lookup_policy"
+      ],
+      "reply": "The Medium Classic Hoop Earrings are priced at ₹2,999, so they don't qualify for EMI at this time. EMI and Pay Later options are available on bags above ₹3,000.",
+      "latency_ms": 2388,
+      "first_output_ms": 863,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 7381,
+      "tokens_out": 60,
+      "cost_usd": 0.00194,
+      "judge_cost_usd": 0.002586,
+      "hinglish_words": 0
+    }
+  ]
+}

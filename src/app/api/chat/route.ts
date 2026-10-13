@@ -10,6 +10,7 @@ import { MAX_MESSAGE_CHARS, PREFS, TEXT_ONLY_REPLY, TOO_LONG_REPLY, forcedTool, 
 import { allowMessage, hasDemoBypass, visitorKey, VISITOR_COOKIE } from "@/lib/agent/rateLimit";
 import * as core from "@/lib/tools/core";
 import { userFromRequest } from "@/lib/user";
+import { PREFS_COOKIE, readPreferencesCookie } from "@/lib/preferences";
 
 export const maxDuration = 30;
 
@@ -57,7 +58,7 @@ export async function POST(req: Request) {
     cart: Array.isArray(clientCtx.cart) ? clientCtx.cart.filter((l) => l && typeof l.sku === "string" && Number.isFinite(l.qty)).slice(0, 50) : [],
     loginOffered: !!clientCtx.loginOffered,
     path: typeof clientCtx.path === "string" && clientCtx.path.startsWith("/") ? clientCtx.path.slice(0, 300) : "/",
-    preferences: readPrefsCookie(req),
+    preferences: readPreferencesCookie((req.headers.get("cookie") ?? "").match(new RegExp(`(?:^|;\\s*)${PREFS_COOKIE}=([^;]+)`))?.[1]),
   };
   // the product page the chat was opened on; null when opened from the store home or a category page
   const page = context.sku ? core.findProduct(db, context.sku) : null;
@@ -182,12 +183,21 @@ export async function POST(req: Request) {
     });
 
   const tools = buildTools(db, context);
+  const requestedPrefs = routed === "search_catalog" ? parsePrefs(userText, db.now) : {};
+  const prefsResult = Object.keys(requestedPrefs).length
+    ? await tools.update_preferences.execute!(requestedPrefs, { toolCallId: "requested-prefs", messages: [], context: {} })
+    : null;
   const { stable, context: ctxText } = systemPrompt(db, context, page, group, input);
   const forced = routed;
 
   return respond(async (writer) => {
     writer.write({ type: "start" });
     writer.write(inputGuard);
+    if (prefsResult) {
+      writer.write({ type: "tool-input-available", toolCallId: "requested-prefs", toolName: "update_preferences", input: requestedPrefs });
+      writer.write({ type: "tool-output-available", toolCallId: "requested-prefs", output: prefsResult });
+      writeToolParts(writer, "update_preferences", requestedPrefs, prefsResult, 0, "code");
+    }
     writer.write({ type: "data-guard", data: { stage: "input", name: "routed intent", pass: true, detail: forced ? `forced ${forced} on step 1` : "none (auto)" } });
     // only the last 10 messages of history go to the model (cost; the page context is in the system prompt)
     const modelMessages = await convertToModelMessages(messages.slice(-AGENT.historyMessages));
@@ -201,7 +211,7 @@ export async function POST(req: Request) {
       if (remaining < 1500) break;
       const t0 = Date.now();
       let stepStart = t0;
-      const log: typeof toolLog = [];
+      const log: typeof toolLog = prefsResult ? [{ tool: "update_preferences", args: requestedPrefs, output: prefsResult, ms: 0 }] : [];
       const r = streamText({
         model: m.model,
         system: `${stable}\n\n${ctxText}`, // stable rules first, dynamic context after (implicit caching)
@@ -303,26 +313,13 @@ export async function POST(req: Request) {
   });
 }
 
-export const PREFS_COOKIE = "cosmos_prefs";
-/** Shopper preferences saved by update_preferences (session cookie, set by the browser from a data part). */
-function readPrefsCookie(req: Request): core.Preferences {
-  const raw = (req.headers.get("cookie") ?? "").match(new RegExp(`(?:^|;\\s*)${PREFS_COOKIE}=([^;]+)`))?.[1];
-  if (!raw) return {};
-  try {
-    const p = JSON.parse(decodeURIComponent(raw)) as core.Preferences;
-    return { budget_max_inr: Number(p.budget_max_inr) || undefined, occasion: p.occasion, category: p.category, style: typeof p.style === "string" ? p.style.slice(0, 40) : undefined, deadline: typeof p.deadline === "string" && /^\d{4}-\d{2}-\d{2}$/.test(p.deadline) ? p.deadline : undefined };
-  } catch {
-    return {};
-  }
-}
-
 /** One line for the AI console describing a tool result. */
 function summarizeTool(tool: string, o: Record<string, unknown> | null): string {
   if (!o) return "no result";
   if ("error" in o && o.error) return `error: ${o.error}`;
   const list = (xs: unknown) => (Array.isArray(xs) ? xs : []) as Record<string, unknown>[];
   switch (tool) {
-    case "search_catalog": return `${list(o.results).length} result(s): ${list(o.results).map((r) => r.sku).join(", ")}`;
+    case "search_catalog": return `${list(o.results).length} of ${o.total_matches ?? list(o.results).length} remaining: ${list(o.results).map((r) => r.sku).join(", ")}`;
     case "check_delivery": return `${o.title} arrives ${o.arrives_label}${o.meets_deadline === false ? " (misses the deadline)" : ""}${list(o.alternatives).length ? `; alternatives: ${list(o.alternatives).map((a) => `${a.sku} ${a.arrives_label}`).join(", ")}` : ""}`;
     case "get_offer": return `pay ₹${o.total_inr}; applied: ${list(o.applied).map((a) => a.id).join(", ") || "none"}`;
     case "get_return_insight": return o.relevant ? `relevant: ${(o.top_reason as Record<string, unknown>)?.label} ${(o.top_reason as Record<string, unknown>)?.count}/${(o.top_reason as Record<string, unknown>)?.of}` : "not relevant";
@@ -563,7 +560,13 @@ function lastTools(messages: UIMessage[]): Pick<ChatContext, "lastSearch" | "las
     if (m.role !== "assistant") continue;
     for (const part of [...m.parts].reverse() as { type: string; toolName?: string; input?: Record<string, unknown>; output?: Record<string, unknown> }[]) {
       const name = part.type === "dynamic-tool" ? part.toolName : part.type.startsWith("tool-") ? part.type.slice(5) : null;
-      if (!lastSearch && name === "search_catalog" && part.input) lastSearch = { args: part.input, skus: ((part.output?.results as { sku: string }[] | undefined) ?? []).map((r) => r.sku) };
+      if (!lastSearch && name === "search_catalog" && part.input) {
+        const filters = part.output?.filters;
+        lastSearch = {
+          args: { ...part.input, ...(filters && typeof filters === "object" && !Array.isArray(filters) ? filters : {}), ...(typeof part.output?.query === "string" ? { query: part.output.query } : {}) },
+          skus: ((part.output?.results as { sku: string }[] | undefined) ?? []).map((r) => r.sku),
+        };
+      }
       if (!lastDelivery && name === "check_delivery" && part.input?.sku && part.input?.pincode) lastDelivery = { sku: String(part.input.sku), pincode: String(part.input.pincode), deadline: (part.input.deadline as string | undefined) ?? null };
     }
     if (lastSearch && lastDelivery) break;
@@ -716,7 +719,7 @@ function fastTemplate(key: FastKey, page: ReturnType<typeof core.findProduct>, c
     case "show_more": {
       if (!ctx.lastSearch) return null;
       const args = { ...ctx.lastSearch.args, exclude: [...((ctx.lastSearch.args.exclude as string[] | undefined) ?? []), ...ctx.lastSearch.skus], limit: 3 };
-      return search(args).length ? step("A few more:", [{ tool: "search_catalog", args }]) : step("That's everything that matches.", []);
+      return step(search(args).length ? "A few more:" : "That's everything that matches.", [{ tool: "search_catalog", args }]);
     }
     case "faster": {
       const d = ctx.lastDelivery;
@@ -773,7 +776,7 @@ function offlineWriter(userText: string, pageSku: string | null, ctx: ChatContex
             // tier 0: approx city from IP → Pune; the exact date is computed by check_delivery
             const pin = ctx.pincode ?? "411038";
             const d = core.checkDelivery(db, page.handle, pin);
-            const nudge = ctx.loggedIn && ctx.rtoRisk === "high" ? " Pay online at checkout and you get an extra 5% off." : "";
+            const nudge = ctx.loggedIn && ctx.rtoRisk === "high" ? " Check your online offers at checkout. Store caps apply." : "";
             const text = ctx.pincode
               ? `It arrives ${"error" in d ? "" : d.arrives_label} at your saved address in ${"error" in d ? "" : d.city} if you order before 2pm today.${nudge}`
               : `It arrives ${"error" in d ? "" : d.arrives_label} in ${"error" in d ? "" : d.city} if you order before 2pm today. Share your pincode for an exact date.`;

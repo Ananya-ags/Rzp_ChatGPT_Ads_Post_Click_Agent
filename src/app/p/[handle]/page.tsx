@@ -8,6 +8,9 @@ import { getUser, personaliseRail } from "@/lib/user";
 import { searchCatalog } from "@/lib/tools/core";
 import ConsoleEmit, { type PageEvent } from "@/components/console/ConsoleEmit";
 import { curatedOpener } from "@/lib/openers";
+import { cookies } from "next/headers";
+import { PREFS_COOKIE, readPreferencesCookie } from "@/lib/preferences";
+import { applyRailPreferences } from "@/lib/rail-preferences";
 
 type Props = { params: Promise<{ handle: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> };
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
@@ -79,10 +82,26 @@ export default async function Page({ params, searchParams }: Props) {
     ? db.rails.rails[group.id]?.items ?? []
     : searchCatalog(db, "", { similar_to: handle, category: j.category, limit: 4 }).results.map((r) => ({ sku: r.sku, reason: "", pinned: false }));
   // personalised for the logged-in shopper: drop what she owns, favour her sizes, add a chain for her pendant
-  const railRaw =
+  const personalisedRail =
     group && user
       ? personaliseRail(railBase.map((r) => r.sku), group.candidate_skus, group.hero_sku, user, db.rules.rail_size).map((sku) => ({ sku, reason: "", pinned: railBase.find((r) => r.sku === sku)?.pinned ?? false }))
       : railBase;
+  const preferences = arm === "C" ? readPreferencesCookie((await cookies()).get(PREFS_COOKIE)?.value) : {};
+  const railUpdated = Object.values(preferences).some((value) => value !== undefined && value !== "");
+  const railRaw = railUpdated
+    ? applyRailPreferences(db, personalisedRail, {
+        ...preferences,
+        category: preferences.category ?? (group ? undefined : j.category),
+      }, {
+        hero: handle,
+        candidates: group ? group.candidate_skus : db.products.map((p) => p.handle),
+        groupId: group?.id,
+        ownedSkus: user?.ownedSkus,
+        maxEarringCm: user?.maxEarringCm,
+        pincode: user?.address.pincode ?? "411038",
+        size: group ? db.rules.rail_size : 4,
+      })
+    : personalisedRail;
   const linkQuery = group ? `?ad_group=${group.id}${armParam ? `&arm=${arm}` : ""}${viaChatgpt ? "&via=chatgpt" : ""}` : armParam ? `?arm=${arm}` : "";
   const opener = group ? db.openers.openers[group.id] : null;
   const more = db.products
@@ -110,6 +129,7 @@ export default async function Page({ params, searchParams }: Props) {
           ? { adGroupId: null, chip: null, opener: `${user ? "Welcome back. " : ""}Questions about the ${product.title}? Ask about size, materials, delivery or returns.`, railTitle: "You may also like", pending: false }
           : null,
     rail: railRaw.map((r) => ({ card: cards[r.sku], reason: r.reason, pinned: r.pinned })),
+    railUpdated,
     more,
     cards,
     linkQuery,
@@ -123,6 +143,7 @@ export default async function Page({ params, searchParams }: Props) {
     ev({ kind: "agent_off", title: `Agent off on this arm (${arm}), standard page shown`, detail: arm === "A" ? "Control arm A: no ad context, no curated rail, no Cosmos AI" : "Arm B: curated page without Cosmos AI", source: "rule", status: "info", data: { arm } });
   }
   if (arm !== "A" && props.context) {
+    if (railUpdated) ev({ kind: "rail_rule", title: "Recommendations updated from chat", detail: `${railRaw.length} match(es); ${group ? "ad candidate pool" : "catalogue"} and brand rules respected`, source: "session", status: "ok", data: { preferences } });
     const railSource = group ? db.rails.producer : null;
     const baseSkus = railBase.map((r) => r.sku);
     for (const [i, r] of railRaw.entries()) {
@@ -134,14 +155,14 @@ export default async function Page({ params, searchParams }: Props) {
       ev({
         kind: "rail",
         title: `Rail ${i + 1}: ${db.products.find((x) => x.handle === r.sku)?.title ?? r.sku}`,
-        detail: pinned ? "Pinned to slot 1 by the brand" : added ? (owned ? "Added: goes with the pendant she owns" : "Added from the ad group's candidates (AI-matched offline)") : fromGroup ? base?.reason || "AI-curated for this ad" : "Same-category neighbour (search_catalog similar_to)",
-        source: pinned ? "rule" : added ? "login" : fromGroup ? "ai" : "code",
+        detail: railUpdated ? r.reason || "Matches the saved chat preferences" : pinned ? "Pinned to slot 1 by the brand" : added ? (owned ? "Added: goes with the pendant she owns" : "Added from the ad group's candidates (AI-matched offline)") : fromGroup ? base?.reason || "AI-curated for this ad" : "Same-category neighbour (search_catalog similar_to)",
+        source: pinned ? "rule" : railUpdated ? "session" : added ? "login" : fromGroup ? "ai" : "code",
         status: "ok",
         data: { sku: r.sku, ...(fromGroup && railSource ? { producer: `${railSource.mode} · ${railSource.model ?? ""} · ${railSource.prompt_version}` } : {}) },
       });
     }
     if (group) for (const rule of db.rails.rails[group.id]?.rules_applied ?? []) if (rule.action !== "pinned") ev({ kind: "rail_rule", title: `Brand rule: ${rule.action} ${db.products.find((x) => x.handle === rule.sku)?.title ?? rule.sku}`, detail: rule.why, source: "rule", status: "info", data: { sku: rule.sku } });
-    if (group && user) {
+    if (group && user && !railUpdated) {
       for (const sku of baseSkus.filter((h) => !railRaw.some((r) => r.sku === h))) {
         const t = db.products.find((x) => x.handle === sku);
         const reason = user.ownedSkus.includes(sku) ? "she already owns it" : (t?.metafields.jewellery.outer_diameter_cm ?? t?.metafields.jewellery.drop_length_cm ?? 0) > 3 ? "over her size preference (3cm)" : "rail size";
@@ -168,7 +189,7 @@ export default async function Page({ params, searchParams }: Props) {
       chrome={viaChatgpt ? { kind: "webview", backHref: `/chatgpt${backConv ? `?c=${backConv}` : ""}`, domain: "cosmos.example" } : undefined}
       label={`Shopper view · arm ${arm}${group ? ` · ad group: ${group.name}` : arm === "A" ? " · standard page" : " · direct visit (no ad)"}${one(sp.oppref) ? ` · oppref ${one(sp.oppref)}` : ""}`}>
       <ProductPage key={handle} {...props} />
-      <ConsoleEmit id={`${handle}|${group?.id ?? ""}|${arm}|${user ? 1 : 0}`} page={`Product: ${product.title}`} events={consoleEvents} agentPausable={arm === "C"} />
+      <ConsoleEmit id={`${handle}|${group?.id ?? ""}|${arm}|${user ? 1 : 0}|${JSON.stringify(preferences)}`} page={`Product: ${product.title}`} events={consoleEvents} agentPausable={arm === "C"} />
     </PhoneFrame>
   );
 }

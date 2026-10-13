@@ -175,7 +175,7 @@ export type LastTool = { tool: string; output: Record<string, unknown> | null };
  */
 export function followUpChips(last: LastTool[], ctx: ChipContext, used: Set<string>): string[] {
   const out: string[] = [];
-  const has = (t: string) => last.find((x) => x.tool === t)?.output ?? null;
+  const has = (t: string) => last.findLast((x) => x.tool === t)?.output ?? null;
   const onProduct = ctx.kind === "product" && !!ctx.product;
   const delivery = has("check_delivery");
   const insight = has("get_return_insight");
@@ -191,13 +191,15 @@ export function followUpChips(last: LastTool[], ctx: ChipContext, used: Set<stri
   } else if (has("get_offer")) {
     out.push("Can I pay cash on delivery?", ctx.kind === "bag" ? "When will my order arrive?" : "When will it arrive?");
   } else if (has("search_catalog")) {
-    out.push("Under ₹2,000", "Show more");
+    const search = has("search_catalog")!;
+    if (search.count !== 0) out.push("Under ₹2,000");
+    if (search.has_more !== false && search.count !== 0) out.push("Show more");
   } else if (careLine) {
     out.push(onProduct ? "Show me similar pieces" : "Gift under ₹2,000");
   }
   // same rules as the starters: a delivery/offer chip needs a product or a bag, never a water chip here
   return [...new Set(out)]
-    .filter((t) => !used.has(norm(t)))
+    .filter((t) => t === "Show more" || !used.has(norm(t)))
     .filter((t) => ctx.kind !== "home" && ctx.kind !== "category" ? true : !/^(when will it arrive|any offers|can i pay cash)/i.test(t))
     .slice(0, 3);
 }

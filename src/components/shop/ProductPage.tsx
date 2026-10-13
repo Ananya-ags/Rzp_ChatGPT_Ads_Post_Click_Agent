@@ -28,6 +28,7 @@ export type ProductPageProps = {
   // chips come from chips.ts (rules), the same set on the page card and in the chat sheet
   context: null | { adGroupId: string | null; chip: string | null; opener: string; railTitle: string; pending: boolean };
   rail: { card: CardVM; reason: string; pinned: boolean }[];
+  railUpdated: boolean;
   more: CardVM[]; // uncurated list for the standard page
   cards: Record<string, CardVM>;
   simulatedNote: string;
@@ -102,12 +103,17 @@ export default function ProductPage(p: ProductPageProps) {
       </section>
 
       {/* curated rail (arms B, C) or uncurated list (arm A) */}
-      {p.arm !== "A" && p.rail.length > 0 ? (
-        <section className="mt-6">
-          <h2 className="px-4 font-display text-[18px]">{p.context?.railTitle ?? "Picked for you"}</h2>
+      {p.arm !== "A" && (p.rail.length > 0 || p.railUpdated) ? (
+        <section className="mt-6" aria-label="Product recommendations">
+          <h2 className="px-4 font-display text-[18px]">{p.railUpdated ? "Updated from your chat" : p.context?.railTitle ?? "Picked for you"}</h2>
+          {p.railUpdated && p.rail.length === 0 && (
+            <p role="status" className="mt-2 px-4 text-[13px] text-muted">
+              {p.context?.adGroupId ? "No pieces in this ad's selection match your preferences." : "No pieces match your preferences."} Try a different budget, occasion or category.
+            </p>
+          )}
           <div className="mt-2.5 flex gap-2.5 overflow-x-auto px-4 pb-1 no-scrollbar">
             {p.rail.map((r) => (
-              <MiniProduct key={r.card.handle} card={r.card} />
+              <MiniProduct key={r.card.handle} card={r.card} note={p.railUpdated ? r.reason : undefined} />
             ))}
           </div>
         </section>
@@ -142,7 +148,7 @@ export default function ProductPage(p: ProductPageProps) {
           <p className="mt-3 text-[14.5px] leading-relaxed text-ink">{p.context.opener}</p>
           {p.user?.nudgePrepaid && (
             <p className="mt-2 rounded-lg bg-white/80 px-3 py-2 text-[12.5px] text-gold-deep">
-              ✦ Pay online at checkout and get an <b>extra 5% off</b> your order.
+              ✦ Check your online offers at checkout. Store caps apply.
             </p>
           )}
           <div className="mt-3 flex flex-wrap gap-2">
@@ -220,7 +226,7 @@ export default function ProductPage(p: ProductPageProps) {
             arm: p.arm,
             pincode: p.user?.pincode ?? null,
             loggedIn: !!p.user,
-            opener: p.user?.nudgePrepaid ? `Welcome back, ${p.user.firstName}. Tip: pay online at checkout and you get an extra 5% off your order.` : p.context.opener,
+            opener: p.user?.nudgePrepaid ? `Welcome back, ${p.user.firstName}. Check your online offers at checkout. Store caps apply.` : p.context.opener,
             linkQuery: p.linkQuery,
           }}
         />

@@ -1,12 +1,21 @@
 /**
  * `npm run evals:report`: rebuilds evals/results/summary.json from the saved runs, then writes docs/EVALS.md from it.
+ * `--run <name>` instead writes the separate latest report using that run and its saved case snapshot.
  * Nothing is typed by hand: re-run the evals, then this, and the document follows.
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { buildSummary } from "./summary";
+import { writeLatestReport } from "./latest-report";
 
 const ROOT = join(__dirname, "..", "..");
+const runArg = process.argv.indexOf("--run");
+if (runArg !== -1) {
+  const name = process.argv[runArg + 1];
+  if (!name) throw new Error("--run requires a saved run name");
+  writeLatestReport(ROOT, name);
+  process.exit(0);
+}
 const s = buildSummary();
 writeFileSync(join(ROOT, "evals/results/summary.json"), JSON.stringify(s, null, 2) + "\n");
 

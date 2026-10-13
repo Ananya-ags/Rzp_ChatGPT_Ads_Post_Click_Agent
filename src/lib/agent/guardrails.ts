@@ -28,8 +28,9 @@ export type OutputCheck = { name: string; pass: boolean; detail: string };
 export const REGULATED: { name: string; re: RegExp; backedBy?: "water_resistant" | "nickel_free" }[] = [
   { name: "hypoallergenic", re: /\bhypo-?allergenic\b/gi },
   { name: "nickel-free", re: /\b(?:100%\s+)?nickel[- ]free\b/gi, backedBy: "nickel_free" },
-  { name: "waterproof", re: /\b(?:fully\s+|100%\s+)?(?:water-?proof|water-resistant|shower-?proof|swim-?proof)\b/gi, backedBy: "water_resistant" },
+  { name: "waterproof", re: /\b(?:fully\s+|100%\s+)?(?:water-?proof|water[- ]resistant|shower-?proof|swim-?proof)\b/gi, backedBy: "water_resistant" },
   { name: "shower-safe", re: /\b(?:you can|safe to|fine to|ok(?:ay)? to) (?:shower|swim|bathe)\b|\bshower-?safe\b|\bsafe in the (?:shower|pool|sea)\b/gi, backedBy: "water_resistant" },
+  { name: "water-safe", re: /\b(?:safe|fine|ok(?:ay)?) (?:with|in) water\b|\bwater[- ]safe\b|\b(?:showers?|swimming|bathing) (?:is|are) (?:safe|fine|ok(?:ay)?)\b/gi, backedBy: "water_resistant" },
   { name: "real/solid gold", re: /\b(?:real|solid|pure)\s+gold\b/gi },
   { name: "hallmarked", re: /\bhallmark(?:ed|ing)?\b/gi },
   { name: "BIS", re: /\bBIS\b/g },
@@ -59,7 +60,8 @@ export function regulatedClaims(reply: string, sources: string, pageProduct: Pro
   const flat = sources.replace(/\s/g, "");
   const backed = (field?: "water_resistant" | "nickel_free") => !!field && (j?.[field] === true || flat.includes(`"${field}":true`));
   const found: string[] = [];
-  for (const sentence of reply.split(/(?<=[.!?])\s+/)) {
+  // A disclaimer before "but" does not qualify the reassurance that follows it.
+  for (const sentence of reply.split(/(?<=[.!?;])\s+|\b(?:but|however|nevertheless)\b[:,]?\s*/i)) {
     for (const r of REGULATED) {
       for (const m of sentence.matchAll(r.re)) {
         const idx = m.index ?? 0;
@@ -92,14 +94,21 @@ export const policyCovers = (policyText: string, topic: string) => policyText.to
 /** Self-contradiction: the reply opens with yes / haan / bilkul although get_return_insight's verdict is not_ideal. */
 export const opensWithYes = (reply: string) => /^\s*(?:yes|yeah|yep|sure|absolutely|definitely|haan|ha+n ji|bilkul|zaroor)\b/i.test(reply);
 
+/** Full and abbreviated month names denote the same date; neither changes the day or year. */
+export const normalizeMonthNames = (text: string) => text.replace(
+  /\b(January|February|March|April|May|June|July|August|September|October|November|December)\b/gi,
+  (month) => month[0].toUpperCase() + month.slice(1, 3).toLowerCase(),
+);
+
 /** Numbers/dates in the reply must appear (as whole numbers, not substrings) in a tool result or the page's facts. */
 export function outputChecks(reply: string, sources: string, rules: BrandRules, pageProduct: Product | null): OutputCheck[] {
   const checks: OutputCheck[] = [];
   // whole-number matching: "90" never matches inside "900", "0" never inside "90"
   const numbers = new Set((sources.replace(/,/g, "").match(/\d+(?:\.\d+)?/g) ?? []).map((n) => String(Number(n))));
-  const tokens = reply.match(/₹\s?\d[\d,]*(?:\.\d+)?|\b\d{1,2} (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b|\b\d+(?:\.\d+)?\s?(?:mm|cm|g|%)/g) ?? [];
+  const dateSources = normalizeMonthNames(sources);
+  const tokens = normalizeMonthNames(reply).match(/₹\s?\d[\d,]*(?:\.\d+)?|\b\d{1,2} (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b|\b\d+(?:\.\d+)?\s?(?:mm|cm|g|%)/g) ?? [];
   const ungrounded = tokens.filter((t) => {
-    if (/[A-Z][a-z]{2}$/.test(t)) return !new RegExp(`(?<!\\d)${t}\\b`).test(sources);
+    if (/[A-Z][a-z]{2}$/.test(t)) return !new RegExp(`(?<!\\d)${t}\\b`).test(dateSources);
     const bare = t.replace(/[₹,\s]/g, "").replace(/(mm|cm|g|%)$/, "");
     return !numbers.has(String(Number(bare)));
   });

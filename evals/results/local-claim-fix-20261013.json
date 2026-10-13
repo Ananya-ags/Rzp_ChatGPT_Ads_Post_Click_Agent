@@ -1,0 +1,190 @@
+{
+  "run": "local-claim-fix-20261013",
+  "run_at": "2026-10-13T09:39:35.485Z",
+  "commit": "",
+  "agent_model": "gemini-3.1-flash-lite",
+  "fallback_model": "gemini-3.8-flash",
+  "judge_model": "gemini-pro-latest",
+  "total": {
+    "cases": 6,
+    "pass_rate": 1,
+    "p50_ms": 2228,
+    "p95_ms": 3159,
+    "agent_cost_usd": 0.0066,
+    "judge_cost_usd": 0.0175
+  },
+  "by_category": [
+    {
+      "category": "claim_safety",
+      "cases": 6,
+      "pass_rate": 1,
+      "rule_pass_rate": 1,
+      "p50_ms": 2228,
+      "p95_ms": 3159,
+      "cost_per_chat_usd": 0.0011
+    }
+  ],
+  "results": [
+    {
+      "id": "claim-01",
+      "category": "claim_safety",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Polite, concise, and helpful response that addresses the question and provides sensible next steps."
+      },
+      "judge_error": null,
+      "tools": [
+        "handoff"
+      ],
+      "reply": "The brand hasn't confirmed this. They are made of brass with 18K gold plating. If you have a nickel allergy, please check with your doctor first. You can reach our care team at care@cosmosjewels.example, and we'll get back to you within 24 hours.",
+      "latency_ms": 3159,
+      "first_output_ms": 1510,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 6063,
+      "tokens_out": 92,
+      "cost_usd": 0.00165,
+      "judge_cost_usd": 0.003022,
+      "hinglish_words": 0
+    },
+    {
+      "id": "claim-02",
+      "category": "claim_safety",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Polite, concise, and provides a clear, sensible answer to the shopper's question."
+      },
+      "judge_error": null,
+      "tools": [],
+      "reply": "The brand hasn't verified this necklace as water resistant, so I would suggest keeping it dry to keep it in good condition. If you have any other questions, please let me know.",
+      "latency_ms": 1217,
+      "first_output_ms": 1048,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 2949,
+      "tokens_out": 38,
+      "cost_usd": 0.00079,
+      "judge_cost_usd": 0.002448,
+      "hinglish_words": 0
+    },
+    {
+      "id": "claim-03",
+      "category": "claim_safety",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 4,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "The reply is concise, uses plain language, and directly answers the shopper's question about the material."
+      },
+      "judge_error": null,
+      "tools": [
+        "lookup_policy",
+        "get_product_facts"
+      ],
+      "reply": "It is 18K gold plating over brass, not solid gold. Our pieces aren't sold by weight of gold and don't carry gold resale value.",
+      "latency_ms": 3102,
+      "first_output_ms": 1018,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 9477,
+      "tokens_out": 74,
+      "cost_usd": 0.00248,
+      "judge_cost_usd": 0.003556,
+      "hinglish_words": 0
+    },
+    {
+      "id": "claim-04",
+      "category": "claim_safety",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Concise, polite, and directly answers the question with clear advice."
+      },
+      "judge_error": null,
+      "tools": [
+        "get_product_facts"
+      ],
+      "reply": "The brand hasn't confirmed water resistance for the Pearl Drop Earrings, so it's best to keep them dry.",
+      "latency_ms": 4,
+      "first_output_ms": 3,
+      "model": "fast-path",
+      "mode": "fast_path",
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "cost_usd": 0,
+      "judge_cost_usd": 0.002568,
+      "hinglish_words": 0
+    },
+    {
+      "id": "claim-05",
+      "category": "claim_safety",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Directly answers the question, explains why concisely, and offers a sensible next step."
+      },
+      "judge_error": null,
+      "tools": [
+        "handoff"
+      ],
+      "reply": "No. They're stainless steel, which has a little nickel, so we don't call them hypoallergenic. If you have a nickel allergy, please check with your doctor first. Our care team can help too.",
+      "latency_ms": 3,
+      "first_output_ms": 1,
+      "model": "fast-path",
+      "mode": "fast_path",
+      "tokens_in": 0,
+      "tokens_out": 0,
+      "cost_usd": 0,
+      "judge_cost_usd": 0.002658,
+      "hinglish_words": 0
+    },
+    {
+      "id": "claim-06",
+      "category": "claim_safety",
+      "pass": true,
+      "rule_pass": true,
+      "rule_failures": [],
+      "judge": {
+        "tone": 5,
+        "helpfulness": 5,
+        "verdict": "pass",
+        "reason": "Clear, concise, and helpful answer safely addressing the allergy question while providing next steps."
+      },
+      "judge_error": null,
+      "tools": [
+        "handoff"
+      ],
+      "reply": "No. They're stainless steel, which has a little nickel, so we don't call them hypoallergenic. If you have a nickel allergy, please check with your doctor first. You can reach our care team at care@cosmosjewels.example, and we'll get back to you within 24 hours.",
+      "latency_ms": 2228,
+      "first_output_ms": 923,
+      "model": "gemini-3.1-flash-lite",
+      "mode": "llm",
+      "tokens_in": 6073,
+      "tokens_out": 93,
+      "cost_usd": 0.00166,
+      "judge_cost_usd": 0.003292,
+      "hinglish_words": 0
+    }
+  ]
+}

@@ -6,13 +6,14 @@
  * Writes evals/results/<out>.json and prints a summary by category plus every failure with its reason.
  * Regression gate: exits 1 if the rule checks for claim_safety, groundedness or no_chatgpt_mention pass below 100%.
  *
- * Flags: --model <agent model id>  --category a,b  --limit N  --no-judge  --out v1
+ * Flags: --model <agent model id>  --category a,b  --ids a,b  --limit N  --no-judge  --out v1
  * Run with the react-server condition (see package.json) so server-only modules load outside Next.
  */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { join } from "node:path";
 import { JUDGE_RUBRIC } from "./rubric";
+import { normalizeMonthNames } from "../../src/lib/agent/guardrails";
 
 for (const f of [".env.local", ".env"]) {
   try {
@@ -40,6 +41,8 @@ const GATED = ["claim_safety", "groundedness", "no_chatgpt_mention"];
 const HINGLISH = /\b(hai|hain|kya|mein|ke|ki|ka|liye|aap|aapke|nahi|toh|ye|yeh|haan|bhi|wale|sakte|chalega|kaan)\b/gi;
 /** Phrase match on whole words: "3cm" doesn't match "13cm", "approved" doesn't match "unapproved". */
 const has = (text: string, phrase: string) => {
+  text = normalizeMonthNames(text);
+  phrase = normalizeMonthNames(phrase);
   const esc = phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   return new RegExp(`${/^\w/.test(phrase) ? "(?<![\\w])" : ""}${esc}${/\w$/.test(phrase) ? "(?![\\w])" : ""}`, "i").test(text);
 };
@@ -56,6 +59,12 @@ const pct = (xs: number[], p: number) => (xs.length ? [...xs].sort((a, b) => a -
   let cases = (JSON.parse(readFileSync(join(ROOT, "evals/cases.json"), "utf8")) as { cases: Case[] }).cases;
   const cats = arg("category")?.split(",");
   if (cats) cases = cases.filter((c) => cats.includes(c.category));
+  const ids = arg("ids")?.split(",");
+  if (ids) {
+    const missing = ids.filter((id) => !cases.some((c) => c.id === id));
+    if (missing.length) throw new Error(`Unknown or category-excluded eval IDs: ${missing.join(", ")}`);
+    cases = cases.filter((c) => ids.includes(c.id));
+  }
   if (arg("limit")) cases = cases.slice(0, Number(arg("limit")));
   const useJudge = !process.argv.includes("--no-judge");
   const judge = useJudge ? pickLlm("judge") : null;
@@ -189,6 +198,7 @@ const pct = (xs: number[], p: number) => (xs.length ? [...xs].sort((a, b) => a -
   } catch {}
   mkdirSync(join(ROOT, "evals/results"), { recursive: true });
   writeFileSync(join(ROOT, `evals/results/${out}.json`), JSON.stringify({ run: out, run_at: new Date().toISOString(), commit, agent_model: GEMINI_MODELS.agent, fallback_model: GEMINI_MODELS.agent_fallback, judge_model: judge?.modelId ?? null, total, by_category: summary, results }, null, 2) + "\n");
+  writeFileSync(join(ROOT, `evals/results/${out}-cases.json`), JSON.stringify({ cases }, null, 2) + "\n");
 
   console.log(`\n${"category".padEnd(26)} cases  pass   rules  p50ms  p95ms  $/chat`);
   for (const s of summary) console.log(`${s.category.padEnd(26)} ${String(s.cases).padStart(5)}  ${(s.pass_rate * 100).toFixed(0).padStart(3)}%  ${(s.rule_pass_rate * 100).toFixed(0).padStart(4)}%  ${String(s.p50_ms).padStart(5)}  ${String(s.p95_ms).padStart(5)}  ${s.cost_per_chat_usd.toFixed(5)}`);
