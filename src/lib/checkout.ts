@@ -152,9 +152,27 @@ export function predictKept(q: Quote, adGroupId: string | null) {
   };
 }
 
-/** Magic Checkout's line_items format (prices in paise), used in the order notes now and as order fields with Magic. */
+/**
+ * Magic Checkout's line_items format (prices in paise), used in the order notes now and as order fields with Magic.
+ * offer_price is what each unit actually costs after offers (the order amount spread over the lines in proportion
+ * to their price, so shipping, wallet and fees are included), and line_items_total equals the order amount.
+ */
 export function lineItems(q: Quote) {
   const db = getDb();
-  const items = q.lines.map((l) => ({ sku: l.sku, variant_id: l.variant_id, name: l.title, price: l.unit_inr * 100, offer_price: l.unit_inr * 100, tax_amount: 0, quantity: l.qty, product_url: `/p/${l.sku}`, image_url: db.manifest.products[l.sku]?.front.kind === "photo" ? `/${db.manifest.products[l.sku]?.front.file}` : "" }));
-  return { line_items: items, line_items_total: q.subtotal_inr * 100 };
+  const amount = q.payable_inr * 100;
+  const base = q.lines.map((l) => l.line_inr * 100);
+  const sumBase = base.reduce((a, b) => a + b, 0) || 1;
+  // per-unit offer price, rounded down; the leftover paise go to whole units (single-unit lines take any remainder)
+  const unit = q.lines.map((l, i) => Math.floor((base[i] * amount) / sumBase / l.qty));
+  let left = amount - unit.reduce((s, u, i) => s + u * q.lines[i].qty, 0);
+  for (let pass = 0; pass < 2 && left > 0; pass++)
+    q.lines.forEach((l, i) => {
+      const add = Math.floor(left / l.qty);
+      if (add > 0 && (pass === 1 || l.qty === 1)) {
+        unit[i] += add;
+        left -= add * l.qty;
+      }
+    });
+  const items = q.lines.map((l, i) => ({ sku: l.sku, variant_id: l.variant_id, name: l.title, price: l.unit_inr * 100, offer_price: unit[i], tax_amount: 0, quantity: l.qty, product_url: `/p/${l.sku}`, image_url: db.manifest.products[l.sku]?.front.kind === "photo" ? `/${db.manifest.products[l.sku]?.front.file}` : "" }));
+  return { line_items: items, line_items_total: amount };
 }

@@ -822,3 +822,8 @@ Limits: physical iPhone/Safari keyboard behaviour is not verified; mobile keyboa
   - **Iframe:** the Razorpay modal opens and a payment verifies with the shop inside a same-origin iframe, so /demo needs no change for that.
   - The key secret appears in no server log, the browser bundle or the build output.
   - Codex's chat-browser test 18/18, 390px flows 27/27, bag UI 7/7, validator and lint clean.
+
+## 13 Oct 2026: Checkout fixes (notes match the charged amount, demo phone prefill, screenshots)
+- **Order notes:** each line item's `offer_price` is now what a unit actually costs after offers. The order amount (offers, wallet, shipping and fees included) is spread over the lines in proportion to their price, with leftover paise going to whole units. `line_items_total` equals the order amount. Checked on a 2-line order: Σ offer_price × qty = line_items_total = amount = 589,700 paise.
+- **Demo shopper (9999999999):** Razorpay rejects the fictional number as a mobile, so only name and email are prefilled and Razorpay's window asks for a number. Real numbers still pass with +91.
+- **Screenshots:** the checkout screenshots are in docs/screenshots/checkout/. Checkout browser test 29/29, payments 7/7 after the change.

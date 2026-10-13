@@ -33,6 +33,7 @@ export async function POST(req: Request) {
   const session = cookie(req, "cosmos_vid") ?? `s_${randomBytes(6).toString("hex")}`;
   const receipt = `csm_${Date.now().toString(36)}_${randomBytes(3).toString("hex")}`;
   const li = lineItems(q);
+  const phone = clip(body.contact?.phone, 20).replace(/\D/g, "").slice(-10);
   const prediction = predictKept(q, adGroupSlug);
 
   // attribution hook: Razorpay notes (string values, ≤256 chars, ≤15 keys)
@@ -85,8 +86,9 @@ export async function POST(req: Request) {
       notes: order.notes, // as Razorpay stored them (no secrets)
       key_id: publicKeyId(),
       magic_checkout_enabled: magicCheckoutEnabled(),
-      // Razorpay wants the number with its country code
-      prefill: { name: record.contact.name, contact: `+91${clip(body.contact?.phone, 20).replace(/\D/g, "").slice(-10)}`, email: clip(body.contact?.email, 80) },
+      // Razorpay wants the number with its country code. The fictional demo number isn't a valid mobile for Razorpay,
+      // so for the demo shopper only name and email are passed and the window asks for a number.
+      prefill: phone === db.shoppers.tier3_demo.demo_login_phone ? { name: record.contact.name, email: clip(body.contact?.email, 80) } : { name: record.contact.name, contact: `+91${phone}`, email: clip(body.contact?.email, 80) },
       token: signRecord({ ...record, kind: "razorpay", order_id: order.id }),
       quote: publicQuote(q),
     });
