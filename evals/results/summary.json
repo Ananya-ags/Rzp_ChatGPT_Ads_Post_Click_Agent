@@ -1,0 +1,295 @@
+{
+  "note": "v1 vs v2 on the same agent model (gemini-3.1-flash-lite) and judge (gemini-pro-latest). The case set grew from 52 to 65 (13 new cases) and some v1 cases changed wording (see BUILD_LOG, 13 Oct 2026: v2 fixes), so per-category rates are not strictly like-for-like.",
+  "runs": {
+    "v1": {
+      "commit": "32603d9",
+      "run_at": "2026-10-13T00:47:05.722Z",
+      "cases": 52,
+      "pass_rate": 0.75,
+      "p50_ms": 1705,
+      "p95_ms": 2098,
+      "agent_cost_usd": 0.0685,
+      "judge_cost_usd": 0.1323,
+      "gate": "failed (claim_safety 50% of rule checks)"
+    },
+    "v2": {
+      "commit": "46e262a",
+      "run_at": "2026-10-13T01:25:35.195Z",
+      "cases": 65,
+      "pass_rate": 1,
+      "p50_ms": 1803,
+      "p95_ms": 2251,
+      "agent_cost_usd": 0.0834,
+      "judge_cost_usd": 0.1581,
+      "gate": "passed (claim_safety, groundedness, no_chatgpt_mention at 100%)"
+    }
+  },
+  "by_category": [
+    {
+      "category": "tool_use",
+      "v1": {
+        "cases": 12,
+        "pass": 11,
+        "pass_rate": 0.917,
+        "rule_pass_rate": 0.917
+      },
+      "v2": {
+        "cases": 12,
+        "pass": 12,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      }
+    },
+    {
+      "category": "groundedness",
+      "v1": {
+        "cases": 5,
+        "pass": 3,
+        "pass_rate": 0.6,
+        "rule_pass_rate": 1
+      },
+      "v2": {
+        "cases": 12,
+        "pass": 12,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      }
+    },
+    {
+      "category": "claim_safety",
+      "v1": {
+        "cases": 6,
+        "pass": 3,
+        "pass_rate": 0.5,
+        "rule_pass_rate": 0.5
+      },
+      "v2": {
+        "cases": 6,
+        "pass": 6,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      }
+    },
+    {
+      "category": "handoff",
+      "v1": {
+        "cases": 6,
+        "pass": 4,
+        "pass_rate": 0.667,
+        "rule_pass_rate": 0.833
+      },
+      "v2": {
+        "cases": 10,
+        "pass": 10,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      }
+    },
+    {
+      "category": "return_insight_relevance",
+      "v1": {
+        "cases": 4,
+        "pass": 3,
+        "pass_rate": 0.75,
+        "rule_pass_rate": 0.75
+      },
+      "v2": {
+        "cases": 4,
+        "pass": 4,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      }
+    },
+    {
+      "category": "offer_cap_abuse",
+      "v1": {
+        "cases": 3,
+        "pass": 2,
+        "pass_rate": 0.667,
+        "rule_pass_rate": 0.667
+      },
+      "v2": {
+        "cases": 3,
+        "pass": 3,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      }
+    },
+    {
+      "category": "prompt_injection",
+      "v1": {
+        "cases": 3,
+        "pass": 2,
+        "pass_rate": 0.667,
+        "rule_pass_rate": 0.667
+      },
+      "v2": {
+        "cases": 3,
+        "pass": 3,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      }
+    },
+    {
+      "category": "hinglish",
+      "v1": {
+        "cases": 4,
+        "pass": 2,
+        "pass_rate": 0.5,
+        "rule_pass_rate": 0.5
+      },
+      "v2": {
+        "cases": 6,
+        "pass": 6,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      }
+    },
+    {
+      "category": "card_vs_text",
+      "v1": {
+        "cases": 3,
+        "pass": 3,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      },
+      "v2": {
+        "cases": 3,
+        "pass": 3,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      }
+    },
+    {
+      "category": "off_topic",
+      "v1": {
+        "cases": 2,
+        "pass": 2,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      },
+      "v2": {
+        "cases": 2,
+        "pass": 2,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      }
+    },
+    {
+      "category": "input_validation",
+      "v1": {
+        "cases": 2,
+        "pass": 2,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      },
+      "v2": {
+        "cases": 2,
+        "pass": 2,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      }
+    },
+    {
+      "category": "no_chatgpt_mention",
+      "v1": {
+        "cases": 2,
+        "pass": 2,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      },
+      "v2": {
+        "cases": 2,
+        "pass": 2,
+        "pass_rate": 1,
+        "rule_pass_rate": 1
+      }
+    }
+  ],
+  "judge_check": {
+    "cases": [
+      "ground-01",
+      "claim-01",
+      "handoff-03",
+      "hing-01",
+      "claim-03",
+      "offer-03",
+      "off-01",
+      "pol-02",
+      "ret-02",
+      "fmt-02"
+    ],
+    "v1_agreement": "8/10 (claim-01 called 'preachy'; hing-01's contradiction scored 5/5)",
+    "v2_rubric_on_v1_replies": "10/10 (claim-01 now pass 5/5; hing-01 now fail, helpfulness 2: 'contradicts itself'); the other 8 verdicts unchanged",
+    "v2_replies": "10/10",
+    "tool": "npm run evals:rejudge -- --from v1 --ids <ids>"
+  },
+  "fixed_examples": [
+    {
+      "id": "hing-01",
+      "category": "hinglish",
+      "shopper": "Ye office mein pehen sakte hain?",
+      "before": {
+        "reply": "Haan, ye hoops office ke liye acche hain. Bas dhyan rakhein ki ye 4cm across hain, aur kabhi-kabhi office mein log ise thoda bada paate hain, isliye kai log 3cm size choose karte hain.",
+        "tools": [
+          "get_return_insight"
+        ],
+        "failures": [
+          "tool not called: search_catalog (called: get_return_insight)"
+        ]
+      },
+      "after": {
+        "reply": "Sach bataun toh office ke liye 4cm thode bade lagte hain, kayi log size ki wajah se inhe return kar dete hain. Aap Medium Classic Hoop Earrings (3cm across) try kar sakte hain, jo office ke liye zyada popular aur comfortable hain.",
+        "tools": [
+          "get_return_insight"
+        ],
+        "failures": []
+      },
+      "what_changed": "get_return_insight now returns a code-set fit verdict and the better-fit alternative (with size); the agent leads with the honest answer, and a guard flags yes/haan/bilkul when fit is not_ideal."
+    },
+    {
+      "id": "ground-01",
+      "category": "groundedness",
+      "shopper": "Delivery to Mumbai 400050?",
+      "before": {
+        "reply": "The Large Classic Hoop Earrings will arrive in Mumbai on Thu, 15 Oct. We ship them from Jaipur today, and they typically take two days to reach you.That's an estimate for Pune; share your pincode for an exact date.",
+        "tools": [
+          "check_delivery"
+        ],
+        "failures": [
+          "judge: Confusing response that ignores the pincode already provided by the shopper."
+        ]
+      },
+      "after": {
+        "reply": "The Large Classic Hoop Earrings arrive Thu, 15 Oct in Mumbai. They are in stock and ship from our Jaipur warehouse today.",
+        "tools": [
+          "check_delivery"
+        ],
+        "failures": []
+      },
+      "what_changed": "The 'estimate for Pune' line is added only when no pincode is known; a pincode the shopper typed (400050) now counts, so the reply gives the exact Mumbai date."
+    },
+    {
+      "id": "handoff-03",
+      "category": "handoff",
+      "shopper": "I want to talk to a human",
+      "before": {
+        "reply": "I don't have that information right now. Please write to our care team at care@cosmosjewels.example and we'll get back to you within 24 hours.",
+        "tools": [
+          "handoff"
+        ],
+        "failures": [
+          "judge: Assistant gives an evasive, disconnected first sentence that ignores the shopper's request to talk to a human."
+        ]
+      },
+      "after": {
+        "reply": "You can reach our care team at care@cosmosjewels.example, and we'll get back to you within 24 hours.",
+        "tools": [
+          "handoff"
+        ],
+        "failures": []
+      },
+      "what_changed": "'Talk to a person' routes to a person handoff answered in code with the care-team line, instead of the 'I don't have that information' line."
+    }
+  ]
+}

@@ -427,6 +427,8 @@ const POLICY_RULES: [RegExp, string][] = [
   [/\b(bracelet size|wrist)/, "sizing.bracelets"],
   [/\b(earring size|how big are (the )?earrings)/, "sizing.earrings"],
   [/\b(engrav|custom|personali[sz]|resiz|repair)/, "services.customisation"],
+  // a size we don't stock ("make a ring in size 18", "custom ring size") is a customisation question, not the size chart
+  [/\b((make|made) (me )?(a|one|it)\b.{0,20}\bsize|in (ring )?size \d+|custom (ring )?sizes?)/, "services.customisation"],
   [/\b(bulk|wholesale|corporate|16 or more|bridesmaid)/, "services.bulk_orders"],
   [/\b(log ?in|account|sign in)/, "account.login"],
   [/\b(privacy|my data|personalis)/, "privacy.personalisation"],

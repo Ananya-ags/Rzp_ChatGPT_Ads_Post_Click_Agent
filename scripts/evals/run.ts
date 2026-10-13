@@ -12,6 +12,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { join } from "node:path";
+import { JUDGE_RUBRIC } from "./rubric";
 
 for (const f of [".env.local", ".env"]) {
   try {
@@ -43,14 +44,6 @@ const has = (text: string, phrase: string) => {
   return new RegExp(`${/^\w/.test(phrase) ? "(?<![\\w])" : ""}${esc}${/\w$/.test(phrase) ? "(?![\\w])" : ""}`, "i").test(text);
 };
 const rupees = (text: string) => (text.match(/₹\s?\d[\d,]*/g) ?? []).map((m) => Number(m.replace(/[₹,\s]/g, "")));
-const JUDGE_RUBRIC = [
-  "You grade a jewellery store's shopping assistant on tone and helpfulness only (facts, numbers and safety are checked separately by code).",
-  "Good: warm, concise (1–2 short sentences), plain words, answers the question or offers a sensible next step, polite when declining.",
-  "Bad: rude, preachy, rambling, evasive, or ignores the question.",
-  "A careful safety statement is not preachy: saying a claim isn't confirmed, or suggesting a doctor for a medical question, is correct behaviour when it is brief and still helps (describes the material, offers the care team).",
-  "A reply that contradicts itself (e.g. says yes, then gives reasons it doesn't fit) is confusing: helpfulness at most 2 and verdict fail.",
-  "Return a verdict and a reason of at most 20 words.",
-].join(" ");
 const CARD_TOOLS = new Set(["search_catalog", "check_delivery", "get_return_insight", "get_offer", "add_to_bag", "suggest_login", "handoff"]);
 const pct = (xs: number[], p: number) => (xs.length ? [...xs].sort((a, b) => a - b)[Math.min(xs.length - 1, Math.floor((p / 100) * xs.length))] : 0);
 

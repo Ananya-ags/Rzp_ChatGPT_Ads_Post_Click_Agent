@@ -17,6 +17,7 @@
     "models": "tsx scripts/list-models.ts",
     "policies": "tsx scripts/build-policies.ts",
     "evals": "tsx --conditions=react-server scripts/evals/run.ts",
+    "evals:rejudge": "tsx --conditions=react-server scripts/evals/rejudge.ts",
     "test:claims": "tsx scripts/tests/claims.test.ts"
   },
   "dependencies": {

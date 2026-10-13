@@ -69,7 +69,7 @@ export function parseDeadline(text: string, now: Date): string | null {
 }
 
 // store policy questions → lookup_policy (returns, refunds, exchanges, shipping costs/abroad, warranty, care, gold, gifting)
-export const POLICY = /\b(return(s|ed|ing)?|refund(s|ed)?|exchange|warranty|guarantee|care for|clean(ing)?|polish|real gold|solid gold|pure gold|hallmark(ed)?|international|abroad|outside india|overseas|ship(ping)? (to|outside|abroad)|shipping (charges?|fees?|cost)|delivery charges?|free shipping|gift ?wrap|gift (box|note|message)|gifting|cancel(lation)?|ring size|size chart|bulk|wholesale|corporate|loyalty|points|rewards?|subscription|subscribe|membership|stores?|showroom|outlet|visit (you|your)|emi|instal+ments?|pay later|resiz\w*|wapas|wapsi)\b/i;
+export const POLICY = /\b(return(s|ed|ing)?|refund(s|ed)?|exchange|warranty|guarantee|care for|clean(ing)?|polish|real gold|solid gold|pure gold|hallmark(ed)?|international|abroad|outside india|overseas|ship(ping)? (to|outside|abroad)|shipping (charges?|fees?|cost)|delivery charges?|free shipping|gift ?wrap|gift (box|note|message)|gifting|cancel(lation)?|ring size|size chart|bulk|wholesale|corporate|loyalty|points|rewards?|subscription|subscribe|membership|stores?|showroom|outlet|visit (you|your)|emi|instal+ments?|pay later|resiz\w*|custom (sizes?|rings?|made|designs?)|made to measure|(make|made) (me )?(a|one|it) .{0,20}\bsize|in (ring )?size \d+|wapas|wapsi)\b/i;
 // a clear request to add something to the bag (never inferred)
 export const ADD_TO_BAG = /\b(add|put)\b[^?]*\b(bag|cart|basket)\b|\b(i'?ll take|i will take|buy (it|this|these|them|the)|order (it|this|these|them))\b/i;
 // "what goes with what I own" (a login trigger)
