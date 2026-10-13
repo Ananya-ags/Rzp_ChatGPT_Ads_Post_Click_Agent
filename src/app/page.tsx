@@ -8,6 +8,7 @@ const NEW_AD_PROPOSALS = ProposalsSchema.parse(proposalsJson).proposals.filter((
 
 const LINKS = [
   { href: "/shop", title: "Store home", body: "The Cosmos shop: every piece by category, the same for every visitor. Open any product to ask Cosmos AI." },
+  { href: "/demo", title: "Guided demo with the under-the-hood view (desktop)", body: "The shop in a phone on the left, and on the right a live log of every decision: page curation, chat tools and guardrails, checkout and the order outcome." },
   { href: "/chatgpt", title: "Guided demo", body: "Start in the mock ChatGPT, tap a sponsored card and land on the adapted page." },
   { href: "/p/ciel-hoops-40mm?ad_group=waterproof-everyday-under-5k", title: "Try it yourself", body: "The waterproof-everyday ad's page, with the agent." },
   { href: "/p/ciel-hoops-40mm?ad_group=wedding-guest-gift", title: "Same SKU, wedding ad", body: "Same product, different context, rail and opener." },

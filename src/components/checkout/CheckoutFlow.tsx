@@ -10,6 +10,10 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { readState, writeState } from "@/lib/state";
 import { saveOrder, type ConfirmedOrder } from "@/lib/orders";
+import { consoleListening, emit } from "@/lib/console/emit";
+
+/** AI console (/demo) checkout events; no-ops unless the console is listening. */
+const logStep = (title: string, e: Partial<Parameters<typeof emit>[0]> = {}) => emit({ journey_step: "checkout", kind: "step", title, source: "code", status: "ok", ...e });
 
 type Quote = {
   lines: { sku: string; title: string; qty: number; unit_inr: number; line_inr: number }[];
@@ -132,11 +136,17 @@ export default function CheckoutFlow(p: {
   const digits = phone.replace(/\D/g, "").slice(-10);
   const submitPhone = async () => {
     setContactNote(null);
-    if (p.loggedIn) return setStep(1);
+    if (p.loggedIn) {
+      logStep("Contact: logged-in shopper, saved details ready", { source: "login" });
+      return setStep(1);
+    }
     const r = await (await fetch("/api/checkout/otp", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ phone: digits }) })).json();
     if (!r.ok) return setContactNote(r.error);
-    if (r.recognised) setOtpSent(true);
-    else {
+    if (r.recognised) {
+      setOtpSent(true);
+      logStep("Contact: phone recognised by the network (simulated) → OTP sent", { source: "login", status: "info" });
+    } else {
+      logStep("Contact: guest checkout (number not recognised, no OTP)", { source: "session" });
       setPrefill(null);
       setUseSaved(false);
       setStep(1); // guest checkout: no OTP
@@ -145,7 +155,11 @@ export default function CheckoutFlow(p: {
   const submitOtp = async () => {
     setContactNote(null);
     const r = await (await fetch("/api/checkout/otp", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ phone: digits, otp }) })).json();
-    if (!r.ok) return setContactNote(r.error ?? "That code isn't right. Try again.");
+    if (!r.ok) {
+      logStep("Contact: wrong OTP → calm inline message", { source: "login", status: "caught" });
+      return setContactNote(r.error ?? "That code isn't right. Try again.");
+    }
+    logStep("Contact: OTP verified → saved name, address and ₹300 wallet found (simulated)", { source: "login" });
     setPrefill(r.prefill);
     setUseSaved(true);
     writeState({ loggedIn: true });
@@ -161,6 +175,15 @@ export default function CheckoutFlow(p: {
       if (!addr.name.trim() || !addr.line1.trim() || !addr.city.trim()) return setAddrNote("Please fill in your name, address and city.");
       if (!/^\d{6}$/.test(addr.pincode)) return setAddrNote("Enter a 6-digit pincode.");
     }
+    logStep(`Address: ${useSaved && prefill ? "saved address" : "new address"} ${pincode ?? ""} → arrives ${quote?.arrives_label ?? "?"}`, { source: useSaved && prefill ? "login" : "session", detail: `COD ${quote?.cod.eligible ? "eligible" : "not eligible"} · delivery from checkDelivery (slowest item sets the date)` });
+    // the internal RTO reasoning, fetched for the console only (never rendered to the shopper)
+    if (consoleListening())
+      void fetch("/api/checkout/quote", { method: "POST", headers: { "content-type": "application/json", "x-cosmos-console": "1" }, body: JSON.stringify({ pincode, method: "online", walletOn, bankCard, coupon, adGroupId: p.adGroupId, giftWrap: p.giftWrap }) })
+        .then((r) => r.json())
+        .then((q: { console?: { rto_risk: string; nudge: string; pincode_risk_score: number; from_history: string | null } }) => {
+          if (q.console) logStep(`RTO risk ${q.console.rto_risk} (internal, never shown to the shopper)`, { source: "rule", status: "info", detail: `${q.console.nudge} · pincode score ${q.console.pincode_risk_score}${q.console.from_history ? ` · order history: ${q.console.from_history}` : ""}` });
+        })
+        .catch(() => {});
     setStep(2);
   };
 
@@ -174,10 +197,14 @@ export default function CheckoutFlow(p: {
     const r = await (await fetch("/api/checkout/verify", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) })).json().catch(() => ({ ok: false }));
     if (!r.ok) {
       setBusy(false);
+      logStep("Signature check failed → no confirmation", { status: "caught", source: "rule" });
       setPayNote("We couldn't confirm the payment. Your bag is safe; please try again.");
       return;
     }
-    finish(r.order as ConfirmedOrder);
+    const ord = r.order as ConfirmedOrder;
+    logStep(ord.kind === "razorpay" ? "Payment signature verified (HMAC-SHA256, server)" : ord.kind === "cod" ? "COD order placed" : "Simulated payment completed", { source: "rule", detail: ord.kind === "razorpay" ? `payment ${ord.id}` : undefined });
+    logStep(`Confirmation: ${ord.id} · ₹${ord.payable_inr.toLocaleString("en-IN")} · ${ord.payment_method}`, { journey_step: "order" });
+    finish(ord);
   };
   const createOrder = async (forceMock = false) => {
     const contact = { name: prefill?.name ?? addr.name, phone: digits, email };
@@ -192,10 +219,16 @@ export default function CheckoutFlow(p: {
     // online in test mode: Checkout.js must load first, else this payment is simulated (mock) with a note
     const jsOk = !isCod && quote.payments_mode === "test" ? await loadCheckoutJs() : true;
     const o = await createOrder(!isCod && quote.payments_mode === "test" && !jsOk).catch(() => ({ ok: false }));
+    logStep(`Payment method: ${METHODS.find((m) => m.id === method)?.label ?? method}`, { source: "session", detail: `Pay ₹${isCod ? quote.cod_payable_inr : quote.online_payable_inr}` });
     if (!o.ok) {
       setBusy(false);
+      logStep("Order not created", { status: "caught", detail: o.error });
       return setPayNote(o.error ?? "We couldn't start the payment. Please try again.");
     }
+    if (o.kind === "razorpay")
+      logStep(`Razorpay order created: ${o.order_id} · ₹${(o.amount / 100).toLocaleString("en-IN")} (amount from the server)`, { detail: `notes: ad_group_id ${o.notes?.ad_group_id} · oppref ${o.notes?.oppref} · arm ${o.notes?.arm} · line_items_total ${o.notes?.line_items_total}`, data: { order_id: o.order_id, amount: o.amount, notes: o.notes } });
+    else if (o.kind === "cod") logStep(`Cash on delivery order ${o.order_id} (no Razorpay call)`, { detail: "+₹49 fee, online offers removed" });
+    else logStep(`Simulated order ${o.order_id} (mock mode)`, { status: "fallback", detail: o.fallback === "checkout_js_unavailable" ? "Checkout.js couldn't load" : "No test keys" });
     if (o.kind === "cod") return verify({ token: o.token });
     if (o.kind === "mock") {
       setBusy(false);
@@ -214,6 +247,7 @@ export default function CheckoutFlow(p: {
       config: { display: { blocks: { upi: { name: "Pay with UPI", instruments: [{ method: "upi" }] } }, sequence: ["block.upi"], preferences: { show_default_blocks: true } } },
       modal: {
         ondismiss: () => {
+          logStep("Payment cancelled in Razorpay → back to payment (\"Try UPI?\"), bag intact", { status: "fallback", source: "session" });
           setBusy(false);
           setPayNote("Payment didn't go through. Try UPI?");
           setMethod("upi");
@@ -407,7 +441,14 @@ export default function CheckoutFlow(p: {
             </form>
             {quote.coupon && <p className={`text-[12.5px] ${quote.coupon.valid ? "text-success" : "text-muted"}`} role="status">{quote.coupon.message}</p>}
             {quote.saved_inr > 0 && <p className="rounded-lg bg-success/5 px-3 py-2 text-[13.5px] font-medium text-success">You save {inr(quote.saved_inr)}</p>}
-            <button onClick={() => setStep(3)} className="h-12 w-full rounded-full bg-ink text-[14px] font-medium text-ivory">
+            <button
+              onClick={() => {
+                logStep(`Offers: ${quote.applied.map((a) => `${a.label} −₹${a.amount_inr}`).join(" + ") || "none"}${quote.wallet.on && quote.wallet.usable_inr ? ` · wallet −₹${quote.wallet.usable_inr}` : ""}`, { source: "rule", detail: `Capped at ${quote.cap.max_pct}% or ₹${quote.cap.max_flat_inr} in code · wallet ${quote.wallet.on ? `−₹${quote.wallet.usable_inr}` : "off"}${quote.coupon ? ` · coupon ${quote.coupon.code}: ${quote.coupon.valid ? "applied" : "not valid"}` : ""} · you save ₹${quote.saved_inr}` });
+                if (quote.prepaid_nudge) logStep(`RTO nudge shown: "${quote.prepaid_nudge.text}"`, { source: "rule", status: "info", detail: "COD stays available; the reason is never shown to the shopper" });
+                setStep(3);
+              }}
+              className="h-12 w-full rounded-full bg-ink text-[14px] font-medium text-ivory"
+            >
               Continue to payment
             </button>
           </div>

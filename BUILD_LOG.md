@@ -827,3 +827,27 @@ Limits: physical iPhone/Safari keyboard behaviour is not verified; mobile keyboa
 - **Order notes:** each line item's `offer_price` is now what a unit actually costs after offers. The order amount (offers, wallet, shipping and fees included) is spread over the lines in proportion to their price, with leftover paise going to whole units. `line_items_total` equals the order amount. Checked on a 2-line order: Σ offer_price × qty = line_items_total = amount = 589,700 paise.
 - **Demo shopper (9999999999):** Razorpay rejects the fictional number as a mobile, so only name and email are prefilled and Razorpay's window asks for a number. Real numbers still pass with +91.
 - **Screenshots:** the checkout screenshots are in docs/screenshots/checkout/. Checkout browser test 29/29, payments 7/7 after the change.
+
+## 13 Oct 2026: AI console ("under the hood") at /demo
+- **What:** /demo (desktop only) shows the real site in a phone-frame iframe on the left, starting at the mock ChatGPT screen, and on the right a live decision log. The log is grouped by page visit, with source badges (AI / code / rule / login-cookie-session), status icons (ok / caught / fallback), click-to-expand details, filters (All · AI decisions · Tools · Guardrails · Checkout), a sticky session card, a totals strip, a "Restart session" button, a stand-in merchant approve, and "Simulate a slip".
+- **Why a structured decision log, not raw reasoning:** each step is shown as trigger → decision (the tool's why line) → tool(args) → result → checks → latency. That is auditable, short enough to read in a recording, and never exposes model reasoning or the system prompt. A caught error shows up as a feature ("Claim check caught … → safe reply sent"), not something hidden.
+- **The why on tools:** the console's decision line is each tool's `why`, written by code from the tool's own result (e.g. "Misses 2026-10-18; 2 in-time alternative(s) found in code"). I did not add a model-filled `why` argument: that would change the agent's tool schemas and token use, and possibly eval results, and this step had to leave the chat unchanged. Whether a tool was forced is logged from the route's "routed intent" check.
+- **BroadcastChannel, only when listening:**
+  - The site emits on `BroadcastChannel("cosmos-console")` only while a console has pinged in the last 4 seconds (it pings every second and answers the site's ping at once). Events from the first 2 seconds of a page load wait in memory, then are dropped if no console answered.
+  - Verified: a passive listener without the handshake saw only the site's ping, 0 events, and nothing was stored.
+  - **Sources:** a site-wide bridge in the root layout (arrival, session, page views, bag and login changes); the product page (rail decisions with reasons, brand rules, login personalisation, opener source, arm A/B); two one-line hooks in ChatProvider (message, route, tools, guardrails, usage); checkout steps; and the order outcome.
+- **Desktop only:** below 1024px or on touch devices, /demo shows "The under-the-hood view is designed for desktop. Open the shop instead →". The console never renders on shop pages or on mobile.
+- **Decisions I made:**
+  - **Colours:** Razorpay navy #072654 and blue #3395FF, taken from Razorpay's public logo and defined once as tokens. No logo, wordmark or dashboard layout.
+  - **"Caught" state:** the live route flags a failed claim check but doesn't rewrite a reply that has already streamed. "Simulate a slip" runs the real claim checker on a canned unsafe draft, labelled as simulated.
+  - **Opener source:** the pipeline's curated opener moved to `src/lib/openers.ts` so a page can tell the AI line from the fallback (pipeline unchanged, not re-run).
+  - **Ad IDs:** the ChatGPT card carries the Engage `ad_group_id`, so the bridge accepts it as well as the slug.
+  - **Restart:** clears session cookies, including the httpOnly ones, via `/api/demo/reset`, plus session storage and demo state (approvals included), then reloads the frame at /chatgpt.
+  - **Internal RTO reason:** fetched with an `x-cosmos-console` header only while the console listens; shoppers never get it.
+  - **Merchant events** come from the stand-in approve in the console header. The steel rail was built offline by the pipeline, so "Rail built" reports that rail and doesn't rebuild it live.
+  - **Reloads:** a hard reload inside the frame logs the arrival again, since the first-arrival flag lives in memory.
+- **Tests:**
+  - `npm run test:console-browser` at 1440px: 21/21. Covers the mobile gate, nothing logged on mock ChatGPT, and journeys 1–7 (office ad → return insight → add 3cm → real Test Mode payment inside the /demo iframe → order outcome; the 30mm delivery rescue; direct visit with the fast path; a claim-safe answer plus the simulated slip; arm A; logged-in personalisation with wallet and RTO; merchant approve → steel ad → its page).
+  - Regression: Codex chat-browser 18/18, 390px flows 27/27, bag UI 7/7, checkout browser 29/29, payments 7/7, chips 105/105, abuse 27, claims 29, validator and lint clean.
+  - Evals: 70/70 with the gate green (rule checks only, `--no-judge`, because the judge model's daily quota was used up).
+  - Screenshots are in docs/screenshots/console/.

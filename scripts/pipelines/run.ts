@@ -14,6 +14,7 @@ import { ROOT, loadDb, readJson } from "../../src/lib/data/disk";
 import * as S from "../../src/lib/schemas";
 import type { Product } from "../../src/lib/schemas";
 import { slice, byAdGroup } from "../../src/lib/metrics";
+import { curatedOpener } from "../../src/lib/openers";
 import { dryRun, forceRefresh, isDryRun, llmObject, printRunCost, producer, useLlm, PIPELINE_MODEL } from "./llm";
 
 const db = loadDb();
@@ -375,14 +376,8 @@ async function railsAndOpeners(enriched: S.Enriched) {
     // openers: the AI writes one shopper-facing sentence; the context chip and suggested chips stay curated in code,
     // because the guided demo and the fast path depend on their exact text
     const hero = P(g.hero_sku), hj = hero.metafields.jewellery;
-    const facts = [hj.water_resistant ? "verified water-resistant" : null, `${hj.base_metal}${hj.plating ? ` with ${hj.plating}` : ""}`].filter(Boolean).join(", ");
-    const OPEN: Record<string, string> = {
-      "waterproof-everyday-under-5k": `Looking for gold you can shower and gym in? ${hero.title} are ${facts}, at ₹${Number(hero.variants[0].price).toLocaleString("en-IN")}. Want help picking the right size?`,
-      "wedding-guest-gift": `Shopping for a wedding? ${hero.title} photograph beautifully, and we've picked festive pieces below. Gift wrap and a handwritten note are available.`,
-      "office-minimal": `Something light for long workdays? ${hero.title} sit close to the lobe at ${hj.outer_diameter_cm}cm and are ${facts}.`,
-      "stainless-steel-earrings": `${hero.title} are ${hj.base_metal} all the way through, with ${hj.plating}. Ask me anything about the metal.`,
-    };
-    const fallbackOpener = OPEN[g.id] ?? `Here's ${hero.title}.`;
+    // the curated line lives in src/lib/openers.ts so the AI console can tell an AI opener from the fallback
+    const fallbackOpener = curatedOpener(g.id, hero);
     let opener = fallbackOpener;
     let usedAi5 = false;
     if (useLlm) try {

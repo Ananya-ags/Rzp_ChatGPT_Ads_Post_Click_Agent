@@ -19,6 +19,7 @@ import { parseSavedChat, type SavedChat, type ChatDivider } from "@/lib/chat-ses
 import { usePathname } from "next/navigation";
 import { readState, writeState, type CartLine } from "@/lib/state";
 import { chatEnded } from "@/lib/agent/abuse";
+import { consoleData, consoleMessage } from "@/lib/console/chatEvents";
 import type { CardVM } from "@/lib/view";
 import type { PageKind } from "@/lib/agent/chips";
 
@@ -102,6 +103,7 @@ export default function ChatProvider({ cards, children }: { cards: Record<string
     // data parts from the agent: a new bag (header count updates at once, plus a toast) and saved preferences
     onData: (part) => {
       if (!acceptingData.current) return;
+      consoleData(part); // AI console (/demo) only; a no-op without it
       if (part.type === "data-cart") {
         const d = part.data as { cart: CartLine[]; added: { title: string; qty: number } };
         writeState({ cart: d.cart });
@@ -212,6 +214,7 @@ export default function ChatProvider({ cards, children }: { cards: Record<string
         loginOffered: st.loginOffered,
         path: `${location.pathname}${location.search}`,
       };
+      consoleMessage(text); // AI console (/demo) only; a no-op without it
       void sendMessage({ text: text.trim().slice(0, 500) }, { body: { context } }).finally(() => { requestBusy.current = false; });
     },
     [ready, page, adGroupId, status, sendMessage],

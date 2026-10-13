@@ -24,7 +24,8 @@
     "test:payments": "tsx --conditions=react-server scripts/tests/payments.test.ts",
     "test:chips": "tsx --conditions=react-server scripts/tests/chips.test.ts",
     "test:chat-browser": "node scripts/tests/chat-browser.mjs",
-    "test:checkout-browser": "node scripts/tests/checkout-browser.mjs"
+    "test:checkout-browser": "node scripts/tests/checkout-browser.mjs",
+    "test:console-browser": "node scripts/tests/console-browser.mjs"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.78",

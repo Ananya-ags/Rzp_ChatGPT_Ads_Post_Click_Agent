@@ -5,6 +5,7 @@
  * the "cosmos-console" BroadcastChannel for the AI console (attribution, predicted returns and kept revenue).
  * All storage is in try/catch: blocked storage (private mode, iframes) never breaks the confirmation.
  */
+import { emit } from "./console/emit";
 
 export type OrderLine = { sku: string; title: string; qty: number; unit_inr: number; line_inr: number; care: string };
 export type ConfirmedOrder = {
@@ -55,11 +56,11 @@ export function saveOrder(o: ConfirmedOrder) {
     const list = JSON.parse(window.sessionStorage.getItem(EVENTS) ?? "[]");
     window.sessionStorage.setItem(EVENTS, JSON.stringify([...list, event].slice(-50)));
   } catch {}
-  try {
-    const ch = new BroadcastChannel("cosmos-console");
-    ch.postMessage(event);
-    ch.close();
-  } catch {}
+  // the AI console's view of the outcome (a no-op unless the console is listening)
+  const items = o.prediction.items.map((i) => `${i.sku} ${Math.round(i.return_probability * 100)}%`).join(", ");
+  emit({ journey_step: "order", kind: "attribution", title: o.attribution.ad_group === "direct" ? "Order attributed: direct visit (no ad)" : `Order attributed to ${o.attribution.ad_group} via oppref ${o.attribution.oppref ?? "(none)"}`, detail: `campaign ${o.attribution.campaign_id} · ad group ${o.attribution.ad_group_id} · arm ${o.attribution.arm} · ${o.payment_method}`, source: "session", status: "ok", data: o.attribution });
+  emit({ journey_step: "order", kind: "returns", title: `Predicted return probability: ${items}`, detail: o.prediction.items.map((i) => i.source).join(" · "), source: "code", status: "info", data: { items: o.prediction.items } });
+  emit({ journey_step: "order", kind: "kept", title: `Predicted kept revenue ₹${o.prediction.predicted_kept_revenue_inr.toLocaleString("en-IN")}`, detail: `paid ₹${o.prediction.paid_inr.toLocaleString("en-IN")} − refunds ₹${o.prediction.predicted_refunds_inr.toLocaleString("en-IN")} − RTO ₹${o.prediction.predicted_rto_inr.toLocaleString("en-IN")} (RTO probability ${Math.round(o.prediction.rto_probability * 100)}%)`, source: "code", status: "ok", data: o.prediction });
 }
 
 export const findOrder = (id: string) => readOrders().find((o) => o.id === id) ?? null;
