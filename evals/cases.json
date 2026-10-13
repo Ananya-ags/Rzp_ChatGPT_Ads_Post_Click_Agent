@@ -48,11 +48,9 @@
         }
       ],
       "expected_tools": [
-        "check_delivery",
-        "search_catalog",
         "check_delivery"
       ],
-      "tools_ordered": true,
+      "tools_ordered": false,
       "must_include": [
         "21 Oct",
         "Everyday Tube Hoop",

@@ -145,12 +145,34 @@ export function searchCatalog(db: Db, query: string, f: SearchFilters = {}) {
 
 /* ───────────────────────── check_delivery ───────────────────────── */
 
+/**
+ * Delivery date for a SKU to a pincode. With a deadline the item misses, it also returns `alternatives`: up to 3
+ * similar pieces (same category and subtype, in stock, price within ±20%) that arrive by the deadline, found by
+ * searchCatalog. Delivery rescue is computed here in code; the agent only explains it.
+ */
 export function checkDelivery(db: Db, sku: string, pincode: string, deadline?: string | null) {
   const p = findProduct(db, sku);
   if (!p) return { error: `Unknown SKU ${sku}` };
   if (!/^\d{6}$/.test(pincode)) return { error: "Pincode must be 6 digits" };
   const e = estimateDelivery(p, pincode, db.logistics, db.now, deadline ?? null);
-  return { ...e, title: p.title, ships_label: formatDay(e.ships_on), arrives_label: formatDay(e.arrives_on), deadline: deadline ?? null };
+  const base = { ...e, title: p.title, size: sizeText(p.metafields.jewellery), ships_label: formatDay(e.ships_on), arrives_label: formatDay(e.arrives_on), deadline: deadline ?? null };
+  if (!deadline || e.meets_deadline !== false) return { ...base, alternatives: [], summary: deliverySummary(base, []) };
+  const j = p.metafields.jewellery, pr = price(p);
+  const alternatives = searchCatalog(db, "", { similar_to: sku, category: j.category, subtype: j.subtype, deliver_to_pincode: pincode, deliver_by: deadline, limit: 20 })
+    .results.filter((r) => r.sku !== sku && r.in_stock && !r.made_to_order && Math.abs(r.price_inr - pr) <= pr * 0.2)
+    .slice(0, 3)
+    .map((r) => ({ sku: r.sku, title: r.title, price_inr: r.price_inr, size: r.size, arrives_on: r.arrives_on!, arrives_label: r.arrives_label!, meets_deadline: true }));
+  return { ...base, alternatives, summary: deliverySummary(base, alternatives) };
+}
+
+/** The delivery facts as one plain sentence, written in code for the agent to quote (dates never come from the model). */
+function deliverySummary(d: { title: string; arrives_label: string; city: string; deadline: string | null; meets_deadline: boolean | null }, alternatives: { title: string; size: string | null; price_inr: number; arrives_label: string }[]) {
+  const verb = /s$/i.test(d.title) ? "arrive" : "arrives";
+  if (!d.deadline || d.meets_deadline !== false) return `The ${d.title} ${verb} ${d.arrives_label} in ${d.city}${d.deadline ? `, in time for ${formatDay(d.deadline).replace(/^\w+, /, "")}` : ""}.`;
+  const by = formatDay(d.deadline).replace(/^\w+, /, "");
+  // size leads the name ("the 2.8cm Everyday Tube Hoop Earrings") so it stays attached when the agent quotes it
+  const alts = alternatives.map((a) => `the ${a.size ? `${a.size.replace(/ (across|long)$/, "")} ` : ""}${a.title} (₹${a.price_inr.toLocaleString("en-IN")}) arrive${/s$/i.test(a.title) ? "" : "s"} ${a.arrives_label}`);
+  return `The ${d.title} ${verb} ${d.arrives_label} in ${d.city}, after the ${by} deadline.${alts.length ? ` In time: ${alts.join("; ")}.` : " Nothing similar arrives in time."}`;
 }
 
 /* ───────────────────────── get_offer ───────────────────────── */

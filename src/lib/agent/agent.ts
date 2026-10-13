@@ -38,7 +38,7 @@ export function buildTools(db: core.Db, ctx: ChatContext) {
       execute: async ({ query, ...f }) => core.searchCatalog(db, query, { ...f, limit: f.limit ?? 3 }),
     }),
     check_delivery: tool({
-      description: "Exact delivery date for a SKU to a pincode on the demo clock, optionally against a deadline. Never guess dates.",
+      description: "Exact delivery date for a SKU to a pincode on the demo clock, optionally against a deadline (YYYY-MM-DD). The result's `summary` states the facts: quote its dates. If the item misses the deadline, say its arrival date, then offer the `alternatives` (similar in-stock pieces that arrive in time) by name, size and date; don't search again. Never guess dates.",
       inputSchema: z.object({ sku: z.string(), pincode: z.string().regex(/^\d{6}$/), deadline: z.string().optional().describe("YYYY-MM-DD") }),
       execute: async ({ sku, pincode, deadline }) => core.checkDelivery(db, sku, pincode, deadline ?? null),
     }),
@@ -85,7 +85,7 @@ Rules (non-negotiable):
 8. Off-topic requests (weather, homework, politics, other brands): one friendly line, then offer to help with jewellery. Never call handoff for these.
 9. Sensitive ears, itching, allergies or nickel: answer honestly from nickel_free (false: "No, it contains a little nickel"; null: "The brand hasn't confirmed this") and state the metal (each earring is one metal throughout). Never call a piece hypoallergenic or nickel-free. Always add "If you have a nickel allergy, please check with your doctor first." and the care line from handoff.
 
-Style: keep it simple. Answer first, in 1–2 short sentences (about 35 words at most), using everyday words and no jargon. Give sizes in cm, exactly as a product's "size" field says (e.g. "3cm across", "4.8cm long"); never use mm. Tool results render as cards, so don't repeat card details. Reply in the shopper's language; for Hinglish reply in natural Hinglish. Use the shopper's pincode when known for delivery questions; otherwise ask for it.
+Style: plain text only (no markdown, bullets, bold or headings; the chat shows text as written). Keep it simple. Answer first, in 1–2 short sentences (about 35 words at most), using everyday words and no jargon. Give sizes in cm, exactly as a product's "size" field says (e.g. "3cm across", "4.8cm long"); never use mm. Tool results render as cards, so don't repeat card details. Reply in the shopper's language; for Hinglish reply in natural Hinglish. Use the shopper's pincode when known for delivery questions; otherwise ask for it.
 Policies: ${policies.return_window_days}-day returns, exchange allowed, ${policies.anti_tarnish_warranty_months}-month anti-tarnish warranty on steel pieces, free shipping over ₹${policies.free_shipping_threshold_inr} (else ₹${policies.shipping_fee_inr}), COD fee ₹${policies.cod_fee_inr}, gift wrap ₹${policies.gift_wrap_inr} with a free note. Support: email only, ${db.brand.support.email}; we reply ${db.brand.support.reply}. There is no phone, WhatsApp or chat line; never offer one. When you call handoff, give its care line as written.`;
 
   const context = `Today is ${formatDay("2026-10-13")} 2026, 10:00 IST (demo clock); warehouse in Jaipur ships same day before 14:00.

@@ -1,10 +1,11 @@
 {
   "producer": {
     "stage": "return-reasons",
-    "mode": "heuristic",
-    "model": null,
+    "mode": "ai",
+    "model": "gemini-3.5-flash-lite",
     "prompt_version": "returns-v1",
-    "note": "Rule-based fallback (no API key). Re-run `npm run pipelines` with ANTHROPIC_API_KEY for the AI version."
+    "run_at": "2026-10-13T00:23:45.276Z",
+    "note": "AI output; attributes are unverified until the brand confirms them."
   },
   "skus": {
     "ciel-hoops-40mm": {
@@ -15,32 +16,20 @@
             {
               "theme": "size_bigger",
               "label": "Looked bigger than expected",
-              "count": 12,
-              "share": 0.6
-            },
-            {
-              "theme": "other",
-              "label": "Other",
-              "count": 2,
-              "share": 0.1
+              "count": 14,
+              "share": 0.7
             },
             {
               "theme": "gift_not_liked",
               "label": "Gift not liked",
-              "count": 2,
-              "share": 0.1
+              "count": 3,
+              "share": 0.15
             },
             {
               "theme": "changed_mind",
               "label": "Changed mind",
               "count": 2,
               "share": 0.1
-            },
-            {
-              "theme": "size_smaller",
-              "label": "Wanted bigger",
-              "count": 1,
-              "share": 0.05
             },
             {
               "theme": "quality",
@@ -50,7 +39,7 @@
             }
           ],
           "top_theme": "size_bigger",
-          "typical_quote": "Way bigger than the photo. Looked huge on me.",
+          "typical_quote": "4cm is BIG. Should have checked the size properly",
           "better_fit_sku": "ciel-hoops-30mm",
           "better_fit_reason": "Same hoop style, 3cm instead of 4cm; lower returns in this context"
         },
@@ -60,14 +49,8 @@
             {
               "theme": "size_bigger",
               "label": "Looked bigger than expected",
-              "count": 3,
-              "share": 0.6
-            },
-            {
-              "theme": "size_smaller",
-              "label": "Wanted bigger",
-              "count": 1,
-              "share": 0.2
+              "count": 4,
+              "share": 0.8
             },
             {
               "theme": "quality",
@@ -77,7 +60,7 @@
             }
           ],
           "top_theme": "size_bigger",
-          "typical_quote": "Way bigger than the photo. Looked huge on me.",
+          "typical_quote": "Size dikhne mein chhota tha photo mein, actual mein bada hai",
           "better_fit_sku": "ciel-hoops-30mm",
           "better_fit_reason": "Same hoop style, 3cm instead of 4cm; lower returns in this context"
         },
@@ -87,18 +70,12 @@
             {
               "theme": "size_bigger",
               "label": "Looked bigger than expected",
-              "count": 8,
-              "share": 0.89
-            },
-            {
-              "theme": "other",
-              "label": "Other",
-              "count": 1,
-              "share": 0.11
+              "count": 9,
+              "share": 1
             }
           ],
           "top_theme": "size_bigger",
-          "typical_quote": "Too large and they kept getting caught in my hair",
+          "typical_quote": "4cm is BIG. Should have checked the size properly",
           "better_fit_sku": "ciel-hoops-30mm",
           "better_fit_reason": "Same hoop style, 3cm instead of 4cm; lower returns in this context"
         },
@@ -123,18 +100,12 @@
             {
               "theme": "gift_not_liked",
               "label": "Gift not liked",
-              "count": 2,
-              "share": 0.67
-            },
-            {
-              "theme": "other",
-              "label": "Other",
-              "count": 1,
-              "share": 0.33
+              "count": 3,
+              "share": 1
             }
           ],
           "top_theme": "gift_not_liked",
-          "typical_quote": "gift ki thi, pasand nahi aaye",
+          "typical_quote": "She already had similar hoops",
           "better_fit_sku": null,
           "better_fit_reason": null
         }
@@ -219,16 +190,10 @@
           "n_reasons": 3,
           "themes": [
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
-              "count": 1,
-              "share": 0.33
-            },
-            {
-              "theme": "changed_mind",
-              "label": "Changed mind",
-              "count": 1,
-              "share": 0.33
+              "theme": "other",
+              "label": "Other",
+              "count": 2,
+              "share": 0.67
             },
             {
               "theme": "late_delivery",
@@ -237,7 +202,7 @@
               "share": 0.33
             }
           ],
-          "top_theme": "quality",
+          "top_theme": "other",
           "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -246,13 +211,13 @@
           "n_reasons": 1,
           "themes": [
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 1
             }
           ],
-          "top_theme": "quality",
+          "top_theme": "other",
           "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -261,13 +226,13 @@
           "n_reasons": 1,
           "themes": [
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 1
             }
           ],
-          "top_theme": "changed_mind",
+          "top_theme": "other",
           "typical_quote": "Didn't suit me",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -288,8 +253,14 @@
             {
               "theme": "quality",
               "label": "Clasp / build issue",
-              "count": 2,
-              "share": 0.29
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 0.14
             },
             {
               "theme": "changed_mind",
@@ -340,13 +311,13 @@
           "n_reasons": 1,
           "themes": [
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 1
             }
           ],
-          "top_theme": "quality",
+          "top_theme": "other",
           "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -374,16 +345,22 @@
           "n_reasons": 8,
           "themes": [
             {
+              "theme": "other",
+              "label": "Other",
+              "count": 2,
+              "share": 0.25
+            },
+            {
               "theme": "changed_mind",
               "label": "Changed mind",
-              "count": 3,
-              "share": 0.38
+              "count": 2,
+              "share": 0.25
             },
             {
               "theme": "quality",
               "label": "Clasp / build issue",
-              "count": 2,
-              "share": 0.25
+              "count": 1,
+              "share": 0.13
             },
             {
               "theme": "late_delivery",
@@ -404,8 +381,8 @@
               "share": 0.13
             }
           ],
-          "top_theme": "changed_mind",
-          "typical_quote": "Changed my mind",
+          "top_theme": "other",
+          "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -415,12 +392,18 @@
             {
               "theme": "quality",
               "label": "Clasp / build issue",
-              "count": 2,
-              "share": 0.5
+              "count": 1,
+              "share": 0.25
             },
             {
               "theme": "late_delivery",
               "label": "Arrived too late",
+              "count": 1,
+              "share": 0.25
+            },
+            {
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.25
             },
@@ -432,7 +415,7 @@
             }
           ],
           "top_theme": "quality",
-          "typical_quote": "Too heavy for long wear",
+          "typical_quote": "Back kept falling off",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -440,8 +423,8 @@
           "n_reasons": 2,
           "themes": [
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.5
             },
@@ -452,7 +435,7 @@
               "share": 0.5
             }
           ],
-          "top_theme": "changed_mind",
+          "top_theme": "other",
           "typical_quote": "Didn't suit me",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -486,8 +469,8 @@
               "share": 0.25
             },
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.25
             },
@@ -559,12 +542,6 @@
               "share": 0.29
             },
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
-              "count": 2,
-              "share": 0.29
-            },
-            {
               "theme": "size_smaller",
               "label": "Wanted bigger",
               "count": 1,
@@ -573,6 +550,18 @@
             {
               "theme": "late_delivery",
               "label": "Arrived too late",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 0.14
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
               "count": 1,
               "share": 0.14
             },
@@ -598,8 +587,8 @@
               "share": 0.33
             },
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.33
             },
@@ -625,8 +614,14 @@
             {
               "theme": "changed_mind",
               "label": "Changed mind",
-              "count": 3,
-              "share": 0.38
+              "count": 2,
+              "share": 0.25
+            },
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 2,
+              "share": 0.25
             },
             {
               "theme": "size_smaller",
@@ -637,12 +632,6 @@
             {
               "theme": "colour",
               "label": "Colour different from photo",
-              "count": 1,
-              "share": 0.13
-            },
-            {
-              "theme": "quality",
-              "label": "Clasp / build issue",
               "count": 1,
               "share": 0.13
             },
@@ -660,7 +649,7 @@
             }
           ],
           "top_theme": "changed_mind",
-          "typical_quote": "Changed my mind",
+          "typical_quote": "Ordered two by mistake",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -680,8 +669,8 @@
               "share": 0.33
             },
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.33
             }
@@ -699,8 +688,8 @@
           "n_reasons": 4,
           "themes": [
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.25
             },
@@ -723,7 +712,7 @@
               "share": 0.25
             }
           ],
-          "top_theme": "changed_mind",
+          "top_theme": "other",
           "typical_quote": "Didn't suit me",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -732,13 +721,13 @@
           "n_reasons": 1,
           "themes": [
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 1
             }
           ],
-          "top_theme": "changed_mind",
+          "top_theme": "other",
           "typical_quote": "Didn't suit me",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -766,10 +755,16 @@
           "n_reasons": 6,
           "themes": [
             {
+              "theme": "other",
+              "label": "Other",
+              "count": 2,
+              "share": 0.33
+            },
+            {
               "theme": "changed_mind",
               "label": "Changed mind",
-              "count": 3,
-              "share": 0.5
+              "count": 2,
+              "share": 0.33
             },
             {
               "theme": "late_delivery",
@@ -782,16 +777,10 @@
               "label": "Colour different from photo",
               "count": 1,
               "share": 0.17
-            },
-            {
-              "theme": "quality",
-              "label": "Clasp / build issue",
-              "count": 1,
-              "share": 0.17
             }
           ],
-          "top_theme": "changed_mind",
-          "typical_quote": "Changed my mind",
+          "top_theme": "other",
+          "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -814,26 +803,20 @@
           "n_reasons": 3,
           "themes": [
             {
+              "theme": "other",
+              "label": "Other",
+              "count": 2,
+              "share": 0.67
+            },
+            {
               "theme": "colour",
               "label": "Colour different from photo",
               "count": 1,
               "share": 0.33
-            },
-            {
-              "theme": "quality",
-              "label": "Clasp / build issue",
-              "count": 1,
-              "share": 0.33
-            },
-            {
-              "theme": "changed_mind",
-              "label": "Changed mind",
-              "count": 1,
-              "share": 0.33
             }
           ],
-          "top_theme": "colour",
-          "typical_quote": "Color thoda alag tha photo se",
+          "top_theme": "other",
+          "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -860,20 +843,14 @@
           "n_reasons": 8,
           "themes": [
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
-              "count": 2,
-              "share": 0.25
-            },
-            {
               "theme": "colour",
               "label": "Colour different from photo",
               "count": 2,
               "share": 0.25
             },
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
+              "theme": "other",
+              "label": "Other",
               "count": 2,
               "share": 0.25
             },
@@ -884,14 +861,26 @@
               "share": 0.13
             },
             {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.13
+            },
+            {
               "theme": "size_smaller",
               "label": "Wanted bigger",
               "count": 1,
               "share": 0.13
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.13
             }
           ],
-          "top_theme": "quality",
-          "typical_quote": "Too heavy for long wear",
+          "top_theme": "colour",
+          "typical_quote": "Colour a bit more yellow than the photo",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -926,25 +915,25 @@
           "n_reasons": 4,
           "themes": [
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 2,
               "share": 0.5
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.25
             },
             {
               "theme": "colour",
               "label": "Colour different from photo",
               "count": 1,
               "share": 0.25
-            },
-            {
-              "theme": "changed_mind",
-              "label": "Changed mind",
-              "count": 1,
-              "share": 0.25
             }
           ],
-          "top_theme": "quality",
+          "top_theme": "other",
           "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -957,14 +946,8 @@
           "n_reasons": 8,
           "themes": [
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
-              "count": 2,
-              "share": 0.25
-            },
-            {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 2,
               "share": 0.25
             },
@@ -987,14 +970,26 @@
               "share": 0.13
             },
             {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.13
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.13
+            },
+            {
               "theme": "late_delivery",
               "label": "Arrived too late",
               "count": 1,
               "share": 0.13
             }
           ],
-          "top_theme": "changed_mind",
-          "typical_quote": "Ordered two by mistake",
+          "top_theme": "other",
+          "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -1014,8 +1009,8 @@
               "share": 0.25
             },
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.25
             },
@@ -1045,8 +1040,8 @@
               "share": 0.4
             },
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.2
             },
@@ -1072,8 +1067,8 @@
           "n_reasons": 2,
           "themes": [
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.5
             },
@@ -1084,7 +1079,7 @@
               "share": 0.5
             }
           ],
-          "top_theme": "quality",
+          "top_theme": "other",
           "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -1118,10 +1113,16 @@
               "share": 0.4
             },
             {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 0.2
+            },
+            {
               "theme": "changed_mind",
               "label": "Changed mind",
-              "count": 2,
-              "share": 0.4
+              "count": 1,
+              "share": 0.2
             },
             {
               "theme": "gift_not_liked",
@@ -1179,16 +1180,16 @@
           "n_reasons": 7,
           "themes": [
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 2,
               "share": 0.29
             },
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
-              "count": 2,
-              "share": 0.29
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.14
             },
             {
               "theme": "late_delivery",
@@ -1207,9 +1208,15 @@
               "label": "Wanted bigger",
               "count": 1,
               "share": 0.14
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 1,
+              "share": 0.14
             }
           ],
-          "top_theme": "quality",
+          "top_theme": "other",
           "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -1239,8 +1246,8 @@
           "n_reasons": 2,
           "themes": [
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.5
             },
@@ -1251,7 +1258,7 @@
               "share": 0.5
             }
           ],
-          "top_theme": "quality",
+          "top_theme": "other",
           "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -1264,22 +1271,28 @@
           "n_reasons": 8,
           "themes": [
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
-              "count": 3,
-              "share": 0.38
-            },
-            {
-              "theme": "quality",
-              "label": "Clasp / build issue",
-              "count": 2,
-              "share": 0.25
-            },
-            {
               "theme": "colour",
               "label": "Colour different from photo",
               "count": 2,
               "share": 0.25
+            },
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 2,
+              "share": 0.25
+            },
+            {
+              "theme": "changed_mind",
+              "label": "Changed mind",
+              "count": 2,
+              "share": 0.25
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.13
             },
             {
               "theme": "gift_not_liked",
@@ -1288,8 +1301,8 @@
               "share": 0.13
             }
           ],
-          "top_theme": "changed_mind",
-          "typical_quote": "Changed my mind",
+          "top_theme": "colour",
+          "typical_quote": "Colour a bit more yellow than the photo",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -1312,16 +1325,10 @@
           "n_reasons": 3,
           "themes": [
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
-              "count": 1,
-              "share": 0.33
-            },
-            {
-              "theme": "quality",
-              "label": "Clasp / build issue",
-              "count": 1,
-              "share": 0.33
+              "theme": "other",
+              "label": "Other",
+              "count": 2,
+              "share": 0.67
             },
             {
               "theme": "gift_not_liked",
@@ -1330,8 +1337,8 @@
               "share": 0.33
             }
           ],
-          "top_theme": "changed_mind",
-          "typical_quote": "Didn't suit me",
+          "top_theme": "other",
+          "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -1364,8 +1371,8 @@
           "n_reasons": 7,
           "themes": [
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 2,
               "share": 0.29
             },
@@ -1394,13 +1401,13 @@
               "share": 0.14
             },
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
+              "theme": "quality",
+              "label": "Clasp / build issue",
               "count": 1,
               "share": 0.14
             }
           ],
-          "top_theme": "quality",
+          "top_theme": "other",
           "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -1409,8 +1416,8 @@
           "n_reasons": 3,
           "themes": [
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.33
             },
@@ -1427,7 +1434,7 @@
               "share": 0.33
             }
           ],
-          "top_theme": "quality",
+          "top_theme": "other",
           "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -1455,14 +1462,14 @@
           "n_reasons": 7,
           "themes": [
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
-              "count": 3,
-              "share": 0.43
+              "theme": "other",
+              "label": "Other",
+              "count": 2,
+              "share": 0.29
             },
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "changed_mind",
+              "label": "Changed mind",
               "count": 2,
               "share": 0.29
             },
@@ -1477,10 +1484,16 @@
               "label": "Arrived too late",
               "count": 1,
               "share": 0.14
+            },
+            {
+              "theme": "quality",
+              "label": "Clasp / build issue",
+              "count": 1,
+              "share": 0.14
             }
           ],
-          "top_theme": "changed_mind",
-          "typical_quote": "Changed my mind",
+          "top_theme": "other",
+          "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -1488,8 +1501,8 @@
           "n_reasons": 4,
           "themes": [
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 2,
               "share": 0.5
             },
@@ -1500,13 +1513,13 @@
               "share": 0.25
             },
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
+              "theme": "quality",
+              "label": "Clasp / build issue",
               "count": 1,
               "share": 0.25
             }
           ],
-          "top_theme": "quality",
+          "top_theme": "other",
           "typical_quote": "Too heavy for long wear",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -1534,20 +1547,14 @@
           "n_reasons": 4,
           "themes": [
             {
-              "theme": "other",
-              "label": "Other",
-              "count": 1,
-              "share": 0.25
-            },
-            {
-              "theme": "fit",
-              "label": "Didn't fit",
-              "count": 1,
-              "share": 0.25
-            },
-            {
               "theme": "size_smaller",
               "label": "Wanted bigger",
+              "count": 2,
+              "share": 0.5
+            },
+            {
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.25
             },
@@ -1558,8 +1565,8 @@
               "share": 0.25
             }
           ],
-          "top_theme": "other",
-          "typical_quote": "Chain shorter than I thought",
+          "top_theme": "size_smaller",
+          "typical_quote": "Pendant smaller than expected",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -1567,13 +1574,13 @@
           "n_reasons": 1,
           "themes": [
             {
-              "theme": "other",
-              "label": "Other",
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
               "count": 1,
               "share": 1
             }
           ],
-          "top_theme": "other",
+          "top_theme": "size_smaller",
           "typical_quote": "Chain shorter than I thought",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -1586,8 +1593,8 @@
           "n_reasons": 4,
           "themes": [
             {
-              "theme": "fit",
-              "label": "Didn't fit",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.25
             },
@@ -1610,7 +1617,7 @@
               "share": 0.25
             }
           ],
-          "top_theme": "fit",
+          "top_theme": "other",
           "typical_quote": "Didn't go with my outfit",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -1619,8 +1626,8 @@
           "n_reasons": 2,
           "themes": [
             {
-              "theme": "fit",
-              "label": "Didn't fit",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.5
             },
@@ -1631,7 +1638,7 @@
               "share": 0.5
             }
           ],
-          "top_theme": "fit",
+          "top_theme": "other",
           "typical_quote": "Didn't go with my outfit",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -1644,22 +1651,16 @@
           "n_reasons": 7,
           "themes": [
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
+              "theme": "other",
+              "label": "Other",
               "count": 2,
               "share": 0.29
             },
             {
-              "theme": "fit",
-              "label": "Didn't fit",
-              "count": 1,
-              "share": 0.14
-            },
-            {
               "theme": "size_smaller",
               "label": "Wanted bigger",
-              "count": 1,
-              "share": 0.14
+              "count": 2,
+              "share": 0.29
             },
             {
               "theme": "gift_not_liked",
@@ -1674,14 +1675,14 @@
               "share": 0.14
             },
             {
-              "theme": "other",
-              "label": "Other",
+              "theme": "quality",
+              "label": "Clasp / build issue",
               "count": 1,
               "share": 0.14
             }
           ],
-          "top_theme": "quality",
-          "typical_quote": "Chain thoda patla laga",
+          "top_theme": "other",
+          "typical_quote": "Didn't go with my outfit",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -1691,8 +1692,8 @@
             {
               "theme": "size_smaller",
               "label": "Wanted bigger",
-              "count": 1,
-              "share": 0.25
+              "count": 2,
+              "share": 0.5
             },
             {
               "theme": "changed_mind",
@@ -1703,12 +1704,6 @@
             {
               "theme": "quality",
               "label": "Clasp / build issue",
-              "count": 1,
-              "share": 0.25
-            },
-            {
-              "theme": "other",
-              "label": "Other",
               "count": 1,
               "share": 0.25
             }
@@ -1728,8 +1723,8 @@
             {
               "theme": "too_long",
               "label": "Too long",
-              "count": 7,
-              "share": 0.58
+              "count": 6,
+              "share": 0.5
             },
             {
               "theme": "tangles",
@@ -1738,10 +1733,10 @@
               "share": 0.25
             },
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
-              "count": 1,
-              "share": 0.08
+              "theme": "other",
+              "label": "Other",
+              "count": 2,
+              "share": 0.17
             },
             {
               "theme": "quality",
@@ -1751,7 +1746,7 @@
             }
           ],
           "top_theme": "too_long",
-          "typical_quote": "The 50cm one is too long, wanted it shorter",
+          "typical_quote": "bahut lamba hai, office mein awkward lagta hai",
           "better_fit_sku": "luna-coin-pendant",
           "better_fit_reason": "Single 45cm chain sits higher than the 50cm layer"
         },
@@ -1761,18 +1756,24 @@
             {
               "theme": "too_long",
               "label": "Too long",
-              "count": 7,
-              "share": 0.78
+              "count": 6,
+              "share": 0.67
             },
             {
               "theme": "tangles",
               "label": "Tangles",
               "count": 2,
               "share": 0.22
+            },
+            {
+              "theme": "other",
+              "label": "Other",
+              "count": 1,
+              "share": 0.11
             }
           ],
           "top_theme": "too_long",
-          "typical_quote": "The 50cm one is too long, wanted it shorter",
+          "typical_quote": "bahut lamba hai, office mein awkward lagta hai",
           "better_fit_sku": "sol-snake-chain",
           "better_fit_reason": "Single 42cm chain sits higher than the 50cm layer"
         },
@@ -1786,8 +1787,8 @@
               "share": 0.5
             },
             {
-              "theme": "changed_mind",
-              "label": "Changed mind",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.5
             }
@@ -1822,30 +1823,18 @@
             {
               "theme": "size_smaller",
               "label": "Wanted bigger",
-              "count": 1,
-              "share": 0.2
-            },
-            {
-              "theme": "gift_not_liked",
-              "label": "Gift not liked",
-              "count": 1,
-              "share": 0.2
+              "count": 2,
+              "share": 0.4
             },
             {
               "theme": "other",
               "label": "Other",
-              "count": 1,
-              "share": 0.2
+              "count": 2,
+              "share": 0.4
             },
             {
-              "theme": "quality",
-              "label": "Clasp / build issue",
-              "count": 1,
-              "share": 0.2
-            },
-            {
-              "theme": "fit",
-              "label": "Didn't fit",
+              "theme": "gift_not_liked",
+              "label": "Gift not liked",
               "count": 1,
               "share": 0.2
             }
@@ -1874,13 +1863,13 @@
           "n_reasons": 1,
           "themes": [
             {
-              "theme": "other",
-              "label": "Other",
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
               "count": 1,
               "share": 1
             }
           ],
-          "top_theme": "other",
+          "top_theme": "size_smaller",
           "typical_quote": "Chain shorter than I thought",
           "better_fit_sku": null,
           "better_fit_reason": null
@@ -1892,6 +1881,12 @@
         "all": {
           "n_reasons": 5,
           "themes": [
+            {
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 2,
+              "share": 0.4
+            },
             {
               "theme": "gift_not_liked",
               "label": "Gift not liked",
@@ -1905,26 +1900,14 @@
               "share": 0.2
             },
             {
-              "theme": "fit",
-              "label": "Didn't fit",
-              "count": 1,
-              "share": 0.2
-            },
-            {
               "theme": "changed_mind",
               "label": "Changed mind",
               "count": 1,
               "share": 0.2
-            },
-            {
-              "theme": "size_smaller",
-              "label": "Wanted bigger",
-              "count": 1,
-              "share": 0.2
             }
           ],
-          "top_theme": "gift_not_liked",
-          "typical_quote": "Gift not liked",
+          "top_theme": "size_smaller",
+          "typical_quote": "Pendant smaller than expected",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -1938,8 +1921,8 @@
               "share": 0.33
             },
             {
-              "theme": "fit",
-              "label": "Didn't fit",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.33
             },
@@ -1981,8 +1964,8 @@
               "share": 0.25
             },
             {
-              "theme": "fit",
-              "label": "Didn't fit",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.25
             }
@@ -2015,10 +1998,10 @@
           "n_reasons": 4,
           "themes": [
             {
-              "theme": "other",
-              "label": "Other",
-              "count": 1,
-              "share": 0.25
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
+              "count": 2,
+              "share": 0.5
             },
             {
               "theme": "changed_mind",
@@ -2027,20 +2010,14 @@
               "share": 0.25
             },
             {
-              "theme": "size_smaller",
-              "label": "Wanted bigger",
-              "count": 1,
-              "share": 0.25
-            },
-            {
-              "theme": "fit",
-              "label": "Didn't fit",
+              "theme": "other",
+              "label": "Other",
               "count": 1,
               "share": 0.25
             }
           ],
-          "top_theme": "other",
-          "typical_quote": "Chain shorter than I thought",
+          "top_theme": "size_smaller",
+          "typical_quote": "Pendant smaller than expected",
           "better_fit_sku": null,
           "better_fit_reason": null
         },
@@ -2048,13 +2025,13 @@
           "n_reasons": 1,
           "themes": [
             {
-              "theme": "other",
-              "label": "Other",
+              "theme": "size_smaller",
+              "label": "Wanted bigger",
               "count": 1,
               "share": 1
             }
           ],
-          "top_theme": "other",
+          "top_theme": "size_smaller",
           "typical_quote": "Chain shorter than I thought",
           "better_fit_sku": null,
           "better_fit_reason": null

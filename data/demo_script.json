@@ -42,7 +42,7 @@
         "search_catalog"
       ],
       "cached_response": {
-        "text": "Honest answer: the 4cm hoops are big for office. 8 of 9 people who returned them from work said they looked bigger than expected. 64% of office keepers picked the Medium Classic Hoop Earrings instead, which are 3cm across.",
+        "text": "Honest answer: the 4cm hoops are big for office. 9 of 9 people who returned them from work said they looked bigger than expected. 64% of office keepers picked the Medium Classic Hoop Earrings instead, which are 3cm across.",
         "cards": [
           {
             "kind": "comparison",
@@ -75,7 +75,7 @@
               "sku": "ciel-hoops-40mm",
               "context": "office"
             },
-            "summary": "relevant · office returns 31% vs 17% overall · top reason \"Looked bigger than expected\" 8/9 · keepers 64% chose ciel-hoops-30mm"
+            "summary": "relevant · office returns 31% vs 17% overall · top reason \"Looked bigger than expected\" 9/9 · keepers 64% chose ciel-hoops-30mm"
           },
           {
             "tool": "search_catalog",
@@ -99,8 +99,6 @@
       "chip": "Need it in Pune by 18 Oct",
       "narration": "Medium (3cm) hoops miss (21 Oct); Everyday Tube Hoops (2.8cm) arrive 16 Oct.",
       "expected_tools": [
-        "check_delivery",
-        "search_catalog",
         "check_delivery"
       ],
       "cached_response": {
@@ -110,7 +108,8 @@
             "kind": "delivery",
             "skus": [
               "ciel-hoops-30mm",
-              "aria-hoops-28mm"
+              "aria-hoops-28mm",
+              "ciel-hoops-40mm"
             ],
             "data": {
               "pincode": "411038",
@@ -121,6 +120,10 @@
                   "meets": false
                 },
                 "aria-hoops-28mm": {
+                  "arrives": "2026-10-16",
+                  "meets": true
+                },
+                "ciel-hoops-40mm": {
                   "arrives": "2026-10-16",
                   "meets": true
                 }
@@ -136,29 +139,7 @@
               "pincode": "411038",
               "deadline": "2026-10-18"
             },
-            "summary": "✗ ships Sun, 18 Oct, arrives Wed, 21 Oct (made to order, 5-day dispatch); deadline 18 Oct"
-          },
-          {
-            "tool": "search_catalog",
-            "args": {
-              "query": "hoops",
-              "similar_to": "ciel-hoops-30mm",
-              "category": "earrings",
-              "max_outer_diameter_cm": 3,
-              "deliver_to_pincode": "411038",
-              "deliver_by": "2026-10-18",
-              "limit": 3
-            },
-            "summary": "aria-hoops-28mm arrives Fri, 16 Oct · ciel-huggies-20mm arrives Fri, 16 Oct · kira-twist-huggies arrives Fri, 16 Oct"
-          },
-          {
-            "tool": "check_delivery",
-            "args": {
-              "sku": "aria-hoops-28mm",
-              "pincode": "411038",
-              "deadline": "2026-10-18"
-            },
-            "summary": "✓ ships Tue, 13 Oct, arrives Fri, 16 Oct · ₹2,799"
+            "summary": "✗ ships Sun, 18 Oct, arrives Wed, 21 Oct (made to order, 5-day dispatch); deadline 18 Oct · alternatives: aria-hoops-28mm arrives Fri, 16 Oct (₹2,799) · ciel-hoops-40mm arrives Fri, 16 Oct (₹3,299)"
           }
         ]
       }
@@ -262,7 +243,7 @@
         "search_catalog"
       ],
       "cached_response": {
-        "text": "Sach bataun toh 4cm hoops office ke liye bade lagte hain. Office se return karne wale 9 mein se 8 ne kaha \"looked bigger than expected\". Office ke 64% keepers ne 3cm wale Medium Classic Hoop Earrings chune.",
+        "text": "Sach bataun toh 4cm hoops office ke liye bade lagte hain. Office se return karne wale 9 mein se 9 ne kaha \"looked bigger than expected\". Office ke 64% keepers ne 3cm wale Medium Classic Hoop Earrings chune.",
         "cards": [
           {
             "kind": "comparison",
@@ -295,7 +276,7 @@
               "sku": "ciel-hoops-40mm",
               "context": "office"
             },
-            "summary": "relevant · office returns 31% vs 17% overall · top reason \"Looked bigger than expected\" 8/9 · keepers 64% chose ciel-hoops-30mm"
+            "summary": "relevant · office returns 31% vs 17% overall · top reason \"Looked bigger than expected\" 9/9 · keepers 64% chose ciel-hoops-30mm"
           },
           {
             "tool": "search_catalog",

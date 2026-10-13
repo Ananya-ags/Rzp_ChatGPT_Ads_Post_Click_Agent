@@ -1,10 +1,11 @@
 {
   "producer": {
     "stage": "enrichment",
-    "mode": "heuristic",
-    "model": null,
+    "mode": "ai",
+    "model": "gemini-3.8-flash",
     "prompt_version": "enrich-v1",
-    "note": "Rule-based fallback (no API key). Re-run `npm run pipelines` with ANTHROPIC_API_KEY for the AI version."
+    "run_at": "2026-10-13T00:23:45.276Z",
+    "note": "AI output; attributes are unverified until the brand confirms them."
   },
   "items": [
     {
@@ -13,8 +14,8 @@
       "title": "Mini Huggie Earrings",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -25,8 +26,8 @@
       "title": "Twisted Huggie Earrings",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -37,8 +38,8 @@
       "title": "Teardrop Earrings",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -49,8 +50,8 @@
       "title": "Chain Threader Earrings",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -61,8 +62,8 @@
       "title": "Chain Threader Earrings",
       "attribute": "sweat_resistant",
       "proposed_value": true,
-      "source_phrase": "Swim, sweat, repeat.",
-      "confidence": 0.6,
+      "source_phrase": "sweat",
+      "confidence": 0.95,
       "unlocks": []
     },
     {
@@ -71,8 +72,8 @@
       "title": "Paperclip Chain Necklace",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -83,8 +84,8 @@
       "title": "Snake Chain Necklace",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -95,8 +96,8 @@
       "title": "Rope Chain Necklace",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -107,8 +108,8 @@
       "title": "Layered Chain Necklace Set",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -119,8 +120,8 @@
       "title": "Sun Coin Pendant Necklace",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -131,8 +132,8 @@
       "title": "Evil Eye Pendant Necklace",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -143,8 +144,8 @@
       "title": "Heart Pendant Necklace",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -155,8 +156,8 @@
       "title": "Dome Ring",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -167,21 +168,11 @@
       "title": "Classic Band Ring",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
-    },
-    {
-      "id": "atc-veda-band-ring-sweat_resistant",
-      "sku": "veda-band-ring",
-      "title": "Classic Band Ring",
-      "attribute": "sweat_resistant",
-      "proposed_value": true,
-      "source_phrase": "A 0.3cm everyday band that doesn't mind the pool, the kitchen or the gym.",
-      "confidence": 0.6,
-      "unlocks": []
     },
     {
       "id": "atc-veda-twist-ring-water_resistant",
@@ -189,8 +180,8 @@
       "title": "Twist Ring",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -201,8 +192,8 @@
       "title": "Signet Ring",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -213,8 +204,8 @@
       "title": "Open Cuff Bracelet",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -225,8 +216,8 @@
       "title": "Chain Bracelet",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]
@@ -237,8 +228,8 @@
       "title": "Hammered Cuff Bracelet",
       "attribute": "water_resistant",
       "proposed_value": true,
-      "source_phrase": "Waterproof and 18K gold plated stainless steel.",
-      "confidence": 0.8,
+      "source_phrase": "Waterproof",
+      "confidence": 1,
       "unlocks": [
         "prop-feed-waterproof"
       ]

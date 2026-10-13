@@ -57,18 +57,27 @@ export function ToolCard({ name, output, cards }: { name: string; output: Any; c
     case "check_delivery": {
       const ok = output.meets_deadline !== false;
       return (
-        <div className={`flex items-center gap-3 rounded-2xl border px-3 py-2.5 ${ok ? "border-success/30 bg-success/5" : "border-danger/30 bg-danger/5"}`}>
-          <span className={`grid size-7 place-items-center rounded-full text-[13px] text-white ${ok ? "bg-success" : "bg-danger"}`}>{ok ? "✓" : "✕"}</span>
-          <div className="text-[12.5px] leading-snug">
-            <p className="font-medium">
-              <Link href={href(output.sku)} className="underline underline-offset-2">{output.title}</Link>: arrives {output.arrives_label}
-            </p>
-            <p className="text-muted">
-              {output.city} {output.pincode} · ships {output.ships_label}
-              {output.made_to_order ? " · made to order" : ""}
-              {output.deadline ? ` · need by ${output.deadline.slice(8)} Oct` : ""}
-            </p>
+        <div className="space-y-2">
+          <div className={`flex items-center gap-3 rounded-2xl border px-3 py-2.5 ${ok ? "border-success/30 bg-success/5" : "border-danger/30 bg-danger/5"}`}>
+            <span className={`grid size-7 place-items-center rounded-full text-[13px] text-white ${ok ? "bg-success" : "bg-danger"}`}>{ok ? "✓" : "✕"}</span>
+            <div className="text-[12.5px] leading-snug">
+              <p className="font-medium">
+                <Link href={href(output.sku)} className="underline underline-offset-2">{output.title}</Link>: arrives {output.arrives_label}
+              </p>
+              <p className="text-muted">
+                {output.city} {output.pincode} · ships {output.ships_label}
+                {output.made_to_order ? " · made to order" : ""}
+                {output.deadline ? ` · need by ${output.deadline.slice(8)} Oct` : ""}
+              </p>
+            </div>
           </div>
+          {output.alternatives?.length > 0 && (
+            <div className="-mx-4 flex gap-2.5 overflow-x-auto px-4 pb-1 no-scrollbar">
+              {output.alternatives.filter((a: Any) => cards[a.sku]).map((a: Any) => (
+                <MiniProduct key={a.sku} card={cards[a.sku]} note={<span className="text-success">{a.size ? `${a.size} · ` : ""}Arrives {a.arrives_label}</span>} />
+              ))}
+            </div>
+          )}
         </div>
       );
     }

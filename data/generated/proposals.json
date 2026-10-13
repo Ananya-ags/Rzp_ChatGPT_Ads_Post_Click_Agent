@@ -1,10 +1,11 @@
 {
   "producer": {
     "stage": "proposals",
-    "mode": "heuristic",
-    "model": null,
+    "mode": "ai",
+    "model": "gemini-3.8-flash + gemini-3.5-flash-lite",
     "prompt_version": "proposals-v1",
-    "note": "Rule-based fallback (no API key). Re-run `npm run pipelines` with ANTHROPIC_API_KEY for the AI version."
+    "run_at": "2026-10-13T00:23:45.276Z",
+    "note": "AI output; attributes are unverified until the brand confirms them."
   },
   "proposals": [
     {
@@ -19,7 +20,7 @@
         },
         {
           "label": "Unmet by the catalogue",
-          "value": "96%"
+          "value": "100%"
         },
         {
           "label": "Conversion when asked",
@@ -35,10 +36,10 @@
         }
       ],
       "examples": [
+        "I react to most earrings, help",
         "sensitive ears wale ke liye kya acha hai",
         "mere kaan sensitive hain, koi studs batao",
-        "earrings that won't irritate piercings",
-        "studs that don't make my ears itch"
+        "earrings that won't irritate piercings"
       ],
       "confidence": 0.78,
       "impact": "New ad group for shoppers asking about sensitive ears; rail of stainless steel earrings",
@@ -67,11 +68,11 @@
         },
         {
           "label": "Shopper questions about water",
-          "value": "28"
+          "value": "30"
         },
         {
           "label": "Example phrases",
-          "value": "\"Waterproof and 18K gold plated stainless steel.\" · \"Waterproof and 18K gold plated stainless steel.\" · \"Waterproof and 18K gold plated stainless steel.\""
+          "value": "\"Waterproof\" · \"Waterproof\" · \"Waterproof\""
         }
       ],
       "examples": [
@@ -109,10 +110,10 @@
       }
     },
     {
-      "id": "prop-remove-sol-layered-chain-set-office-minimal",
+      "id": "prop-rule-exclude-sol-layered-chain-set-office-minimal",
       "type": "remove_from_rail",
-      "title": "Remove Layered Chain Necklace Set from the \"Office minimal\" rail",
-      "summary": "Returns are 22% from this context vs 8% overall. Top reason: \"too long\" (78%). Suggest Snake Chain Necklace instead.",
+      "title": "Keep Layered Chain Necklace Set out of the \"Office minimal\" rail as a brand rule",
+      "summary": "The AI already ranks it out of this rail; approving makes that permanent even if rankings change. Returns are 22% from this context vs 8% overall. Top reason: \"too long\" (67%). Suggest Snake Chain Necklace instead.",
       "evidence": [
         {
           "label": "Return rate, this context",
@@ -124,7 +125,11 @@
         },
         {
           "label": "Top reasons",
-          "value": "Too long 78%, Tangles 22%"
+          "value": "Too long 67%, Tangles 22%"
+        },
+        {
+          "label": "On the rail today",
+          "value": "No (AI ranked it out)"
         }
       ],
       "examples": [
@@ -135,7 +140,7 @@
       "confidence": 0.77,
       "impact": "Fewer returns in this context; kept revenue per click up",
       "apply": {
-        "action": "exclude_from_rail",
+        "action": "add_brand_rule_exclusion",
         "ad_group_id": "office-minimal",
         "sku": "sol-layered-chain-set",
         "replace_with": "sol-snake-chain"

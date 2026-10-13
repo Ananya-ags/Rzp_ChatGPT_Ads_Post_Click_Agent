@@ -10,7 +10,7 @@ const NO_CLAIM = ["guaranteed hypoallergenic", "100% waterproof forever", "ChatG
 const RAW: C[] = [
   // tool use
   { id: "tool-01", category: "tool_use", msg: "Will these work for office?", tools: ["get_return_insight", "search_catalog"], ordered: true, inc: ["3cm"], format: "card" },
-  { id: "tool-02", category: "tool_use", sku: "ciel-hoops-30mm", pin: "411038", msg: "Need it in Pune by 18 Oct", tools: ["check_delivery", "search_catalog", "check_delivery"], ordered: true, inc: ["21 Oct", "Everyday Tube Hoop", "16 Oct"], format: "card" },
+  { id: "tool-02", category: "tool_use", sku: "ciel-hoops-30mm", pin: "411038", msg: "Need it in Pune by 18 Oct", tools: ["check_delivery"], inc: ["21 Oct", "Everyday Tube Hoop", "16 Oct"], format: "card" },
   { id: "tool-03", category: "tool_use", pin: "560034", msg: "When will it reach 560034?", tools: ["check_delivery"], inc: ["16 Oct"], format: "either" },
   { id: "tool-04", category: "tool_use", msg: "Show me shower-safe earrings under ₹2,500", tools: ["search_catalog"], format: "card" },
   { id: "tool-05", category: "tool_use", msg: "Any offers on this?", tools: ["get_offer"], format: "either" },
@@ -89,7 +89,7 @@ export const DEMO_STEPS = [
   { id: "d2-ad-waterproof", surface: "product_page", ad_group: W, pincode: null, chip: null, narration: "Tap the waterproof-everyday ad: context chip, curated rail with reasons, opener.", expected_tools: [] },
   { id: "d3-ad-wedding", surface: "product_page", ad_group: WED, pincode: null, chip: null, narration: "Same SKU, wedding-guest ad: different chip, rail (pinned jhumka) and opener.", expected_tools: [] },
   { id: "d4-return-prevention", surface: "chat", ad_group: W, pincode: null, chip: "Will these work for office?", narration: "Return prevention: the 4cm hoops are often returned for looking bigger; most office keepers chose the 3cm.", expected_tools: ["get_return_insight", "search_catalog"] },
-  { id: "d5-delivery-rescue", surface: "chat", ad_group: W, pincode: "411038", chip: "Need it in Pune by 18 Oct", narration: "Medium (3cm) hoops miss (21 Oct); Everyday Tube Hoops (2.8cm) arrive 16 Oct.", expected_tools: ["check_delivery", "search_catalog", "check_delivery"] },
+  { id: "d5-delivery-rescue", surface: "chat", ad_group: W, pincode: "411038", chip: "Need it in Pune by 18 Oct", narration: "Medium (3cm) hoops miss (21 Oct); Everyday Tube Hoops (2.8cm) arrive 16 Oct.", expected_tools: ["check_delivery"] },
   { id: "d6-checkout", surface: "checkout", ad_group: W, pincode: "411038", chip: null, narration: "Add → Log in (99999 99999, OTP 123456) → Welcome back, Ananya → exact date to saved address, ₹300 wallet → test checkout.", expected_tools: ["get_offer", "create_checkout"] },
   { id: "d7-merchant", surface: "merchant", ad_group: null, pincode: null, chip: null, narration: "Kept revenue per click vs standard page; approve the '28 shoppers asked about sensitive ears' proposal: launch an all-steel earrings ad (no hypoallergenic claim).", expected_tools: [] },
   { id: "d8-loop", surface: "mock_chatgpt", ad_group: STEEL, pincode: null, chip: null, narration: "Back in the mock: the sensitive-ears conversation now shows the steel earrings ad; its page shows a rail of stainless steel earrings and answers 'Is it nickel-free?' honestly.", expected_tools: [] },

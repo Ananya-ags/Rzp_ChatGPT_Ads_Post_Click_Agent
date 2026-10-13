@@ -175,6 +175,10 @@ check(JSON.stringify(wpComputed) === JSON.stringify([...planted.waterproof_prose
 const separatePart = products.filter((p) => /\bposts?\b|titanium|surgical/i.test(p.body_html + JSON.stringify(p.metafields))).map((p) => p.handle);
 check(separatePart.length === 0, "every earring is one metal throughout (copy and metafields)", `a second metal is named for part of: ${separatePart.join(", ")}`);
 check(planted.vague_wording.length === 4, "4 vague-wording SKUs");
+// vague wording is never a claim: every vague-flagged extracted attribute must have value null (unknown)
+const enrichedGen = S.EnrichedSchema.parse(JSON.parse(readFileSync(join(ROOT, "data/generated/enriched_catalogue.json"), "utf8")));
+const vagueWithValue = Object.entries(enrichedGen.skus).flatMap(([sku, v]) => v.attributes.filter((a) => a.vague && a.value !== null).map((a) => `${sku}.${a.attribute}=${a.value}`));
+check(vagueWithValue.length === 0, "vague-flagged attributes are all null (unknown, never a claim)", `vague attributes with a value: ${vagueWithValue.join(", ")}`);
 for (const v of planted.vague_wording) {
   const p = P(v.sku);
   if (!p.body_html.toLowerCase().includes(v.phrase)) err(`${v.sku}: vague phrase "${v.phrase}" not in prose`);

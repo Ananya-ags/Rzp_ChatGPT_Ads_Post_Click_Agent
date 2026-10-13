@@ -445,17 +445,19 @@ export const PlantedFactsSchema = z.object({
 
 /* ───────────────────────── generated (pipeline outputs, never hand-edited) ───────────────────────── */
 
-export const ProducerSchema = z.object({ stage: z.string(), mode: z.enum(["llm", "heuristic"]), model: z.string().nullable(), prompt_version: z.string(), note: z.string() });
+export const ProducerSchema = z.object({ stage: z.string(), mode: z.enum(["ai", "heuristic"]), model: z.string().nullable(), prompt_version: z.string(), run_at: z.string().nullable().optional(), note: z.string() });
 
 export const ExtractedAttribute = z.object({
   attribute: z.string(),
-  value: z.union([z.string(), z.boolean(), z.number()]),
+  value: z.union([z.string(), z.boolean(), z.number()]).nullable(), // null = unknown (always the case for vague wording)
   source: z.object({ type: z.enum(["text", "image"]), phrase: z.string() }),
   confidence: z.number().min(0).max(1),
   verified: z.literal(false),
   vague: z.boolean(),
 });
-export const EnrichedSchema = z.object({ producer: ProducerSchema, skus: z.record(z.string(), z.object({ attributes: z.array(ExtractedAttribute) })) });
+/** Tags read from the product photo by the vision model: for discovery only, never shown as claims. */
+export const VisualTag = z.object({ tag: z.string(), kind: z.enum(["shape", "motif", "texture", "stone", "tone", "silhouette", "style"]), confidence: z.number().min(0).max(1), source: z.object({ type: z.literal("image"), file: z.string() }) });
+export const EnrichedSchema = z.object({ producer: ProducerSchema, skus: z.record(z.string(), z.object({ attributes: z.array(ExtractedAttribute), visual_tags: z.array(VisualTag).optional() })) });
 export type Enriched = z.infer<typeof EnrichedSchema>;
 
 export const AttributesToConfirmSchema = z.object({

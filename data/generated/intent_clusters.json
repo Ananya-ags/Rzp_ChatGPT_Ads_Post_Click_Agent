@@ -1,18 +1,19 @@
 {
   "producer": {
     "stage": "intent-clusters",
-    "mode": "heuristic",
-    "model": null,
+    "mode": "ai",
+    "model": "gemini-3.8-flash",
     "prompt_version": "intents-v1",
-    "note": "Rule-based fallback (no API key). Re-run `npm run pipelines` with ANTHROPIC_API_KEY for the AI version."
+    "run_at": "2026-10-13T00:23:45.276Z",
+    "note": "AI output; attributes are unverified until the brand confirms them."
   },
   "total_messages": 144,
   "clusters": [
     {
-      "id": "waterproof",
-      "label": "Waterproof / shower / sweat",
-      "count": 28,
-      "sessions": 28,
+      "id": "water_and_durability",
+      "label": "Water Resistance & Tarnish Durability",
+      "count": 30,
+      "sessions": 30,
       "sample_wordings": [
         "does it turn green",
         "can my kid wear them in the pool",
@@ -22,7 +23,7 @@
         "tarnish warranty?"
       ],
       "conversion_rate": 0.07,
-      "unmet_rate": 0.11,
+      "unmet_rate": 0.1,
       "hinglish_count": 3,
       "message_ids": [
         "msg_049",
@@ -51,28 +52,31 @@
         "msg_029",
         "msg_043",
         "msg_037",
+        "msg_032",
         "msg_038",
-        "msg_046"
+        "msg_046",
+        "msg_035"
       ],
       "catalogue_gap": false
     },
     {
-      "id": "hypoallergenic",
-      "label": "Sensitive ears / hypoallergenic",
+      "id": "allergy_and_sensitivity",
+      "label": "Allergy & Skin Sensitivity",
       "count": 28,
       "sessions": 28,
       "sample_wordings": [
+        "I react to most earrings, help",
         "sensitive ears wale ke liye kya acha hai",
         "mere kaan sensitive hain, koi studs batao",
         "earrings that won't irritate piercings",
         "studs that don't make my ears itch",
-        "ears swell with cheap earrings, are yours different",
-        "is stainless steel ok for allergies"
+        "ears swell with cheap earrings, are yours different"
       ],
       "conversion_rate": 0.04,
-      "unmet_rate": 0.96,
+      "unmet_rate": 1,
       "hinglish_count": 4,
       "message_ids": [
+        "msg_016",
         "msg_027",
         "msg_013",
         "msg_017",
@@ -97,32 +101,30 @@
         "msg_006",
         "msg_022",
         "msg_015",
-        "msg_097",
         "msg_020",
         "msg_011",
         "msg_008"
       ],
-      "catalogue_gap": true
+      "catalogue_gap": false
     },
     {
-      "id": "delivery",
-      "label": "Delivery by a date",
-      "count": 27,
-      "sessions": 27,
+      "id": "shipping_and_delivery",
+      "label": "Shipping, Timelines & Delivery",
+      "count": 26,
+      "sessions": 26,
       "sample_wordings": [
         "do you ship outside India",
-        "bhai ki shaadi hai, matching set milega kya",
         "can I get it in 2 days",
         "express shipping?",
         "need by Friday",
-        "track my order"
+        "track my order",
+        "will it reach in time for karva chauth"
       ],
       "conversion_rate": 0,
-      "unmet_rate": 0.22,
-      "hinglish_count": 4,
+      "unmet_rate": 0.19,
+      "hinglish_count": 3,
       "message_ids": [
         "msg_079",
-        "msg_117",
         "msg_075",
         "msg_065",
         "msg_060",
@@ -132,6 +134,7 @@
         "msg_111",
         "msg_071",
         "msg_068",
+        "msg_070",
         "msg_069",
         "msg_059",
         "msg_062",
@@ -146,25 +149,24 @@
         "msg_074",
         "msg_067",
         "msg_082",
-        "msg_127",
         "msg_061"
       ],
-      "catalogue_gap": false
+      "catalogue_gap": true
     },
     {
-      "id": "size_fit",
-      "label": "Size and fit",
-      "count": 21,
-      "sessions": 21,
+      "id": "sizing_and_fit",
+      "label": "Sizing, Dimensions & Fit",
+      "count": 20,
+      "sessions": 20,
       "sample_wordings": [
         "adjustable ring fits size 9?",
         "kitna lamba hai jhumka",
         "too heavy?",
         "for a petite person which hoop",
         "weight of each earring",
-        "exchange if she doesn't like it?"
+        "4cm vs 3cm which is better for office"
       ],
-      "conversion_rate": 0.1,
+      "conversion_rate": 0.05,
       "unmet_rate": 0,
       "hinglish_count": 2,
       "message_ids": [
@@ -173,9 +175,8 @@
         "msg_085",
         "msg_102",
         "msg_096",
-        "msg_113",
+        "msg_086",
         "msg_089",
-        "msg_070",
         "msg_091",
         "msg_088",
         "msg_090",
@@ -186,24 +187,24 @@
         "msg_103",
         "msg_099",
         "msg_087",
+        "msg_097",
         "msg_093",
-        "msg_126",
         "msg_084"
       ],
       "catalogue_gap": false
     },
     {
       "id": "other",
-      "label": "Other / off-topic",
+      "label": "General Queries & Chit-Chat",
       "count": 19,
       "sessions": 19,
       "sample_wordings": [
         "can you write my email",
         "how to clean",
         "can I talk to a human",
-        "I react to most earrings, help",
-        "tell me a joke",
-        "koi offer hai kya"
+        "is this real gold",
+        "do you sell gift cards",
+        "tell me a joke"
       ],
       "conversion_rate": 0.05,
       "unmet_rate": 0.63,
@@ -212,45 +213,45 @@
         "msg_132",
         "msg_135",
         "msg_144",
-        "msg_016",
+        "msg_122",
+        "msg_139",
         "msg_142",
         "msg_143",
         "msg_131",
         "msg_138",
-        "msg_086",
+        "msg_128",
         "msg_137",
         "msg_134",
         "msg_136",
         "msg_130",
         "msg_133",
-        "msg_032",
+        "msg_125",
         "msg_140",
         "msg_141",
-        "msg_035",
         "msg_129"
       ],
-      "catalogue_gap": false
+      "catalogue_gap": true
     },
     {
-      "id": "gifting",
-      "label": "Gifting",
+      "id": "gifting_and_packaging",
+      "label": "Gifting, Recommendations & Packaging",
       "count": 13,
       "sessions": 13,
       "sample_wordings": [
+        "bhai ki shaadi hai, matching set milega kya",
         "bhabhi ke liye gift chahiye",
         "something for a bridesmaid set of 4",
-        "do you sell gift cards",
         "anniversary gift idea",
         "can I add a note",
         "gift for mom who likes simple gold"
       ],
       "conversion_rate": 0,
       "unmet_rate": 0.15,
-      "hinglish_count": 1,
+      "hinglish_count": 2,
       "message_ids": [
+        "msg_117",
         "msg_114",
         "msg_116",
-        "msg_139",
         "msg_109",
         "msg_106",
         "msg_110",
@@ -265,32 +266,31 @@
       "catalogue_gap": false
     },
     {
-      "id": "returns_trust",
-      "label": "Returns and trust",
-      "count": 8,
-      "sessions": 8,
+      "id": "returns_and_warranty",
+      "label": "Returns, Exchanges & Warranty Claims",
+      "count": 7,
+      "sessions": 7,
       "sample_wordings": [
-        "is this real gold",
-        "is payment secure",
+        "exchange if she doesn't like it?",
         "return policy?",
         "refund kitne din mein aata hai",
         "can I return if it tarnishes",
-        "are you a genuine brand"
+        "what if it breaks",
+        "can I exchange size"
       ],
-      "conversion_rate": 0,
+      "conversion_rate": 0.14,
       "unmet_rate": 0,
       "hinglish_count": 1,
       "message_ids": [
-        "msg_122",
-        "msg_128",
+        "msg_113",
         "msg_120",
         "msg_124",
         "msg_119",
-        "msg_125",
         "msg_121",
+        "msg_126",
         "msg_123"
       ],
-      "catalogue_gap": false
+      "catalogue_gap": true
     }
   ]
 }

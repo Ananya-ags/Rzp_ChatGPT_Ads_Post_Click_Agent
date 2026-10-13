@@ -44,6 +44,17 @@ const CARE = /\b(engrav(e|ing)|customi[sz](e|ed|ation)|personali[sz](e|ed)|monog
 // "will these work for office / a wedding?" → return insight decides if the fit is right (return prevention)
 const FIT = /\b(work|wear|suit(able|s)?|good|ok(ay)?|fine|right|appropriate|chalega|pehen)\b[^?]*\b(office|work|wedding|party|interview|college|daily|everyday|festive)\b|\b(office|wedding)\b[^?]*\b(work|suit|ok(ay)?|fine|good|chalega|pehen)/i;
 
+const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+/** "by 18 Oct" / "before 20th October" → YYYY-MM-DD on or after the demo clock's date; null if no date is given. */
+export function parseDeadline(text: string, now: Date): string | null {
+  const m = text.match(/\b(\d{1,2})(?:st|nd|rd|th)?\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\b/i);
+  if (!m) return null;
+  const month = MONTHS.indexOf(m[2].toLowerCase()), day = Number(m[1]);
+  let year = now.getUTCFullYear();
+  if (new Date(Date.UTC(year, month, day)) < new Date(Date.UTC(year, now.getUTCMonth(), now.getUTCDate()))) year++;
+  return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
 export type ForcedTool = "get_offer" | "check_delivery" | "handoff" | "get_return_insight";
 
 /** The tool the model must call first, or null. Needs a page product (the tools take or concern its SKU). */

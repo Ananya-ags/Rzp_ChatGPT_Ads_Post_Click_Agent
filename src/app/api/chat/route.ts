@@ -4,7 +4,7 @@ import { buildTools, systemPrompt, type ChatContext } from "@/lib/agent/agent";
 import { AGENT, estimateCostUsd, llmSettings, pickFallbackLlm, pickLlm, type Llm } from "@/lib/ai/model";
 import { addSpend, overDailyBudget, spendToday } from "@/lib/ai/spend";
 import { inputCheck, outputChecks, redact } from "@/lib/agent/guardrails";
-import { ALLERGY, MAX_MESSAGE_CHARS, TEXT_ONLY_REPLY, TOO_LONG_REPLY, forcedTool, isFastPath, norm } from "@/lib/agent/intents";
+import { ALLERGY, MAX_MESSAGE_CHARS, TEXT_ONLY_REPLY, TOO_LONG_REPLY, forcedTool, isFastPath, norm, parseDeadline } from "@/lib/agent/intents";
 import { allowMessage, hasDemoBypass, visitorKey, VISITOR_COOKIE } from "@/lib/agent/rateLimit";
 import * as core from "@/lib/tools/core";
 import { userFromRequest } from "@/lib/user";
@@ -260,12 +260,20 @@ function routedAnswer(intent: NonNullable<ReturnType<typeof forcedTool>>, page: 
   }
   if (intent === "check_delivery") {
     const pin = ctx.pincode ?? "411038";
-    const d = core.checkDelivery(db, page.handle, pin);
+    const deadline = parseDeadline(userText, db.now);
+    const d = core.checkDelivery(db, page.handle, pin, deadline);
     if ("error" in d) return null;
-    return t("check_delivery", { sku: page.handle, pincode: pin }, `The ${page.title} arrive${/s$/i.test(page.title) ? "" : "s"} ${d.arrives_label} in ${d.city} if you order before 2pm today.${ctx.pincode ? "" : " That's an estimate for Pune; share your pincode for an exact date."}`);
+    return t("check_delivery", { sku: page.handle, pincode: pin, ...(deadline ? { deadline } : {}) }, deliveryText(d, !!ctx.pincode));
   }
   if (intent === "handoff") return t("handoff", { reason: "routed: care question" }, ALLERGY.test(userText) ? `${nickelAnswer(page)} ${carePointer()}` : db.rules.escalation.text);
   return null; // get_return_insight needs the model to judge fit
+}
+
+type DeliveryResult = Exclude<ReturnType<typeof core.checkDelivery>, { error: string }>;
+
+/** Delivery answer from check_delivery's code-written summary (incl. in-time alternatives), plus the estimate note. */
+function deliveryText(d: DeliveryResult, knownPincode: boolean): string {
+  return `${d.summary}${knownPincode ? "" : " That's an estimate for Pune; share your pincode for an exact date."}`;
 }
 
 /** "Our care team can help…" with the support email and reply time (for answers that aren't a dead end). */
@@ -297,8 +305,7 @@ function answerFromTools(log: { tool: string; output: unknown }[], knownPincode:
       const best = (o.applied as { label: string }[])[0];
       return `I can't create discounts; the store caps offers at ${cap.max_pct}% or ${inr(cap.max_flat_inr)}.${best ? ` What you do get: ${best.label.charAt(0).toLowerCase() + best.label.slice(1)}, so you'd pay ${inr(o.total_inr)}.` : ""}`;
     }
-    if (tool === "check_delivery")
-      return `The ${o.title} arrive${/s$/i.test(o.title) ? "" : "s"} ${o.arrives_label} in ${o.city}.${knownPincode ? "" : " That's an estimate for Pune; share your pincode for an exact date."}`;
+    if (tool === "check_delivery") return deliveryText(o as unknown as DeliveryResult, knownPincode);
     if (tool === "handoff") return page && ALLERGY.test(userText) ? `${nickelAnswer(page)} ${carePointer()}` : db.rules.escalation.text;
     if (tool === "get_return_insight") {
       const ri = output as unknown as { relevant: boolean; title: string; top_reason: { count: number; of: number; label: string } | null; keepers: { title: string; share_of_keepers: number } | null; context: string };

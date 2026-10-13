@@ -1,10 +1,11 @@
 {
   "producer": {
     "stage": "copy",
-    "mode": "heuristic",
-    "model": null,
-    "prompt_version": "openers-v1",
-    "note": "Rule-based fallback (no API key). Re-run `npm run pipelines` with ANTHROPIC_API_KEY for the AI version."
+    "mode": "ai",
+    "model": "gemini-3.8-flash",
+    "prompt_version": "openers-v2",
+    "run_at": "2026-10-13T00:23:45.276Z",
+    "note": "AI output; attributes are unverified until the brand confirms them."
   },
   "openers": {
     "waterproof-everyday-under-5k": {
@@ -18,7 +19,7 @@
     },
     "wedding-guest-gift": {
       "chip": "Wedding guest · gift-ready",
-      "opener": "Shopping for a wedding? Large Classic Hoop Earrings photograph beautifully, and we've picked festive pieces below. Gift wrap and a handwritten note are available.",
+      "opener": "Whether you are planning a festive wedding guest outfit or gifting a friend, how can we help with these Large Classic Hoop Earrings?",
       "suggested_chips": [
         "Suitable for wedding gift?",
         "Is gift wrap available?",
@@ -27,7 +28,7 @@
     },
     "office-minimal": {
       "chip": "Office · minimal & light",
-      "opener": "Something light for long workdays? Classic Huggie Earrings sit close to the lobe at 2cm and are verified water-resistant, stainless steel with 18k gold plating.",
+      "opener": "If you're looking for lightweight, minimal comfort for meetings and video calls, what would you like to know about our Classic Huggie Earrings?",
       "suggested_chips": [
         "How big do they look?",
         "Can I sleep in them?",

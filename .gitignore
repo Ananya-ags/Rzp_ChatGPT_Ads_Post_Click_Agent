@@ -45,3 +45,5 @@ next-env.d.ts
 
 # pipeline LLM output cache (local; re-run with --force to refresh)
 .cache/
+# rule-based pipeline outputs kept for comparison with the AI run
+/data/generated_heuristic_backup/

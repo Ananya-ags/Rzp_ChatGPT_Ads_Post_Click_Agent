@@ -1,42 +1,37 @@
 {
   "producer": {
     "stage": "rail-ranking",
-    "mode": "heuristic",
-    "model": null,
+    "mode": "ai",
+    "model": "gemini-3.8-flash",
     "prompt_version": "rails-v1",
-    "note": "Rule-based fallback (no API key). Re-run `npm run pipelines` with ANTHROPIC_API_KEY for the AI version."
+    "run_at": "2026-10-13T00:23:45.276Z",
+    "note": "AI output; attributes are unverified until the brand confirms them."
   },
   "rails": {
     "waterproof-everyday-under-5k": {
       "items": [
         {
           "rank": 1,
-          "sku": "ciel-hoops-30mm",
-          "reason": "Verified water-resistant · 3cm diameter · made to order (5-day dispatch)",
+          "sku": "ciel-huggies-20mm",
+          "reason": "Water-resistant, sweat-resistant everyday huggies with a 12-month anti-tarnish warranty.",
           "pinned": false
         },
         {
           "rank": 2,
-          "sku": "aria-hoops-28mm",
-          "reason": "Verified water-resistant · 2.8cm diameter",
+          "sku": "ciel-hoops-30mm",
+          "reason": "Classic 30mm hoops with verified water resistance and 12-month anti-tarnish warranty.",
           "pinned": false
         },
         {
           "rank": 3,
-          "sku": "ciel-huggies-20mm",
-          "reason": "Verified water-resistant · 2cm diameter",
+          "sku": "aria-hoops-28mm",
+          "reason": "Everyday 28mm hoops featuring sweat resistance and 12-month anti-tarnish warranty.",
           "pinned": false
         },
         {
           "rank": 4,
           "sku": "sol-paperclip-chain",
-          "reason": "45cm + 5cm · stainless steel, 18k gold plating",
-          "pinned": false
-        },
-        {
-          "rank": 5,
-          "sku": "luna-coin-pendant",
-          "reason": "45cm + 5cm · stainless steel, 18k gold plating",
+          "reason": "Layering paperclip chain with 12-month anti-tarnish warranty, waterproof per description.",
           "pinned": false
         }
       ],
@@ -63,26 +58,26 @@
         },
         {
           "rank": 2,
-          "sku": "maya-pearl-choker",
-          "reason": "35cm + 7cm · pearl · gift-ready",
+          "sku": "noor-temple-jhumkas",
+          "reason": "Statement textured gold vermeil jhumkas designed for festive wedding guest attire.",
           "pinned": false
         },
         {
           "rank": 3,
-          "sku": "noor-temple-jhumkas",
-          "reason": "5.5cm length · 925 silver, gold vermeil",
+          "sku": "maya-pearl-choker",
+          "reason": "Statement pearl choker suited for festive wedding guest wear and gifting.",
           "pinned": false
         },
         {
           "rank": 4,
           "sku": "mira-pearl-drops",
-          "reason": "3.5cm length · pearl · gift-ready",
+          "reason": "Classic polished pearl drop earrings suited for wedding guests and gifting.",
           "pinned": false
         },
         {
           "rank": 5,
           "sku": "kaya-hammered-cuff",
-          "reason": "Gift-ready · stainless steel, 18k gold plating",
+          "reason": "Hammered statement cuff bracelet, noted as waterproof per description.",
           "pinned": false
         }
       ],
@@ -103,32 +98,32 @@
       "items": [
         {
           "rank": 1,
-          "sku": "ciel-hoops-30mm",
-          "reason": "3cm diameter · 4.6g the pair · made to order (5-day dispatch)",
+          "sku": "elle-bezel-studs",
+          "reason": "Lightweight at 1.2 grams with minimal gold vermeil bezel design.",
           "pinned": false
         },
         {
           "rank": 2,
-          "sku": "elle-bezel-studs",
-          "reason": "0.5cm diameter · 1.2g the pair",
+          "sku": "tara-solitaire-studs",
+          "reason": "Minimal 1.6-gram studs with polished 18k gold plating for office wear.",
           "pinned": false
         },
         {
           "rank": 3,
-          "sku": "luna-coin-pendant",
-          "reason": "45cm + 5cm · stainless steel, 18k gold plating",
+          "sku": "ciel-hoops-30mm",
+          "reason": "Classic minimal 3cm hoops in polished 18k gold-plated stainless steel.",
           "pinned": false
         },
         {
           "rank": 4,
-          "sku": "mira-teardrop-drops",
-          "reason": "3cm length · 3g the pair",
+          "sku": "aria-hoops-28mm",
+          "reason": "Polished 18k gold-plated 2.8cm hoop earrings for everyday office wear.",
           "pinned": false
         },
         {
           "rank": 5,
-          "sku": "sol-layered-chain-set",
-          "reason": "50cm + 5cm · stainless steel, 18k gold plating",
+          "sku": "mira-teardrop-drops",
+          "reason": "Lightweight 3-gram minimal teardrop drops with push back closure.",
           "pinned": false
         }
       ],
@@ -138,32 +133,32 @@
       "items": [
         {
           "rank": 1,
-          "sku": "ciel-hoops-30mm",
-          "reason": "Stainless steel throughout · 3cm diameter · made to order (5-day dispatch)",
+          "sku": "kira-twist-huggies",
+          "reason": "Textured stainless steel huggies with 18k gold plating for everyday wear.",
           "pinned": false
         },
         {
           "rank": 2,
           "sku": "ciel-huggies-20mm",
-          "reason": "Stainless steel throughout · 2cm diameter",
+          "reason": "Everyday polished stainless steel huggies verified water and sweat resistant.",
           "pinned": false
         },
         {
           "rank": 3,
-          "sku": "ciel-hoops-40mm",
-          "reason": "Stainless steel throughout · 4cm diameter",
+          "sku": "aria-hoops-28mm",
+          "reason": "Classic stainless steel hoops with 18k gold plating for everyday styling.",
           "pinned": false
         },
         {
           "rank": 4,
-          "sku": "aria-hoops-28mm",
-          "reason": "Stainless steel throughout · 2.8cm diameter",
+          "sku": "mira-teardrop-drops",
+          "reason": "Everyday teardrop drop earrings crafted in 18k gold plated stainless steel.",
           "pinned": false
         },
         {
           "rank": 5,
-          "sku": "mira-teardrop-drops",
-          "reason": "Stainless steel throughout · 3cm length",
+          "sku": "sana-chain-threaders",
+          "reason": "Minimal stainless steel chain threaders with 18k gold plating.",
           "pinned": false
         }
       ],

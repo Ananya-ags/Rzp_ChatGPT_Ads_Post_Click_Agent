@@ -6,7 +6,7 @@ import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { ROOT, loadDb, readJson } from "../src/lib/data/disk";
 import { DemoScriptSchema } from "../src/lib/schemas";
-import { getReturnInsight, searchCatalog, checkDelivery, getOffer, findProduct, sizeText } from "../src/lib/tools/core";
+import { getReturnInsight, searchCatalog, checkDelivery, getOffer, findProduct } from "../src/lib/tools/core";
 
 const db = loadDb();
 const demo = DemoScriptSchema.parse(readJson("data/demo_script.json"));
@@ -40,19 +40,16 @@ function returnPrevention(hinglish: boolean): Cached {
 }
 
 function deliveryRescue(): Cached {
+  // check_delivery itself returns in-time alternatives when the deadline is missed (delivery rescue in code)
   const first = checkDelivery(db, "ciel-hoops-30mm", "411038", "2026-10-18");
   if ("error" in first) throw new Error(first.error);
-  const alt = searchCatalog(db, "hoops", { similar_to: "ciel-hoops-30mm", category: "earrings", max_outer_diameter_cm: 3, deliver_to_pincode: "411038", deliver_by: "2026-10-18", limit: 3 });
-  const pick = alt.results[0];
-  const second = checkDelivery(db, pick.sku, "411038", "2026-10-18");
-  if ("error" in second) throw new Error(second.error);
+  const alt = first.alternatives[0];
+  if (!alt) throw new Error("no alternative arrives by 18 Oct; check data");
   return {
-    text: `The ${findProduct(db, "ciel-hoops-30mm")!.metafields.jewellery.outer_diameter_cm}cm hoops are made to order, so they'd reach Pune on ${first.arrives_label}, after 18 Oct. The ${second.title} are in stock and arrive ${second.arrives_label}: a similar everyday hoop, ${sizeText(findProduct(db, pick.sku)!.metafields.jewellery)}, ${inr(pick.price_inr)}.`,
-    cards: [{ kind: "delivery", skus: ["ciel-hoops-30mm", pick.sku], data: { pincode: "411038", deadline: "2026-10-18", results: { "ciel-hoops-30mm": { arrives: first.arrives_on, meets: first.meets_deadline }, [pick.sku]: { arrives: second.arrives_on, meets: second.meets_deadline } } } }],
+    text: `The ${findProduct(db, "ciel-hoops-30mm")!.metafields.jewellery.outer_diameter_cm}cm hoops are made to order, so they'd reach Pune on ${first.arrives_label}, after 18 Oct. The ${alt.title} are in stock and arrive ${alt.arrives_label}: a similar everyday hoop, ${alt.size}, ${inr(alt.price_inr)}.`,
+    cards: [{ kind: "delivery", skus: ["ciel-hoops-30mm", ...first.alternatives.map((a) => a.sku)], data: { pincode: "411038", deadline: "2026-10-18", results: Object.fromEntries([["ciel-hoops-30mm", { arrives: first.arrives_on, meets: first.meets_deadline }], ...first.alternatives.map((a) => [a.sku, { arrives: a.arrives_on, meets: a.meets_deadline }])]) } }],
     trace: [
-      { tool: "check_delivery", args: { sku: "ciel-hoops-30mm", pincode: "411038", deadline: "2026-10-18" }, summary: `✗ ships ${first.ships_label}, arrives ${first.arrives_label} (made to order, ${first.dispatch_days}-day dispatch); deadline 18 Oct` },
-      { tool: "search_catalog", args: { query: "hoops", similar_to: "ciel-hoops-30mm", category: "earrings", max_outer_diameter_cm: 3, deliver_to_pincode: "411038", deliver_by: "2026-10-18", limit: 3 }, summary: alt.results.map((r) => `${r.sku} arrives ${r.arrives_label}`).join(" · ") },
-      { tool: "check_delivery", args: { sku: pick.sku, pincode: "411038", deadline: "2026-10-18" }, summary: `✓ ships ${second.ships_label}, arrives ${second.arrives_label} · ${inr(pick.price_inr)}` },
+      { tool: "check_delivery", args: { sku: "ciel-hoops-30mm", pincode: "411038", deadline: "2026-10-18" }, summary: `✗ ships ${first.ships_label}, arrives ${first.arrives_label} (made to order, ${first.dispatch_days}-day dispatch); deadline 18 Oct · alternatives: ${first.alternatives.map((a) => `${a.sku} arrives ${a.arrives_label} (${inr(a.price_inr)})`).join(" · ")}` },
     ],
   };
 }

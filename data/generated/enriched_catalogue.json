@@ -1,47 +1,810 @@
 {
   "producer": {
     "stage": "enrichment",
-    "mode": "heuristic",
-    "model": null,
+    "mode": "ai",
+    "model": "gemini-3.8-flash",
     "prompt_version": "enrich-v1",
-    "note": "Rule-based fallback (no API key). Re-run `npm run pipelines` with ANTHROPIC_API_KEY for the AI version. Image enrichment pending: product photos not yet sourced."
+    "run_at": "2026-10-13T00:23:45.276Z",
+    "note": "AI output; attributes are unverified until the brand confirms them. Visual tags for 35 products from front.jpg (vision-v1; discovery only, never claims)."
   },
   "skus": {
     "ciel-hoops-40mm": {
-      "attributes": []
+      "attributes": [],
+      "visual_tags": [
+        {
+          "tag": "hoop",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-40mm/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-40mm/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-40mm/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-40mm/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-40mm/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-40mm/front.jpg"
+          }
+        },
+        {
+          "tag": "classic",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-40mm/front.jpg"
+          }
+        }
+      ]
     },
     "ciel-hoops-30mm": {
-      "attributes": []
+      "attributes": [],
+      "visual_tags": [
+        {
+          "tag": "hoop",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-30mm/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-30mm/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.97,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-30mm/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-30mm/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-30mm/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-30mm/front.jpg"
+          }
+        },
+        {
+          "tag": "classic",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-hoops-30mm/front.jpg"
+          }
+        }
+      ]
     },
     "ciel-huggies-20mm": {
-      "attributes": []
+      "attributes": [],
+      "visual_tags": [
+        {
+          "tag": "huggie",
+          "kind": "silhouette",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-huggies-20mm/front.jpg"
+          }
+        },
+        {
+          "tag": "hoop",
+          "kind": "silhouette",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-huggies-20mm/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-huggies-20mm/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-huggies-20mm/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-huggies-20mm/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-huggies-20mm/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/ciel-huggies-20mm/front.jpg"
+          }
+        }
+      ]
     },
     "aria-hoops-28mm": {
-      "attributes": []
+      "attributes": [],
+      "visual_tags": [
+        {
+          "tag": "hoop",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/aria-hoops-28mm/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/aria-hoops-28mm/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/aria-hoops-28mm/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/aria-hoops-28mm/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/aria-hoops-28mm/front.jpg"
+          }
+        },
+        {
+          "tag": "classic",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/aria-hoops-28mm/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.85,
+          "source": {
+            "type": "image",
+            "file": "/images/products/aria-hoops-28mm/front.jpg"
+          }
+        }
+      ]
     },
     "noor-kundan-jhumkas": {
-      "attributes": []
+      "attributes": [],
+      "visual_tags": [
+        {
+          "tag": "jhumka",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-kundan-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-kundan-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "kundan",
+          "kind": "stone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-kundan-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "flower",
+          "kind": "motif",
+          "confidence": 0.93,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-kundan-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "teardrop",
+          "kind": "shape",
+          "confidence": 0.88,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-kundan-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "textured",
+          "kind": "texture",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-kundan-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "traditional",
+          "kind": "style",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-kundan-jhumkas/front.jpg"
+          }
+        }
+      ]
     },
     "noor-pearl-jhumkas": {
-      "attributes": []
+      "attributes": [],
+      "visual_tags": [
+        {
+          "tag": "jhumka",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-pearl-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "drop",
+          "kind": "silhouette",
+          "confidence": 0.93,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-pearl-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-pearl-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "pearl",
+          "kind": "stone",
+          "confidence": 0.97,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-pearl-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-pearl-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "dome",
+          "kind": "shape",
+          "confidence": 0.91,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-pearl-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "traditional",
+          "kind": "style",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-pearl-jhumkas/front.jpg"
+          }
+        }
+      ]
     },
     "noor-mini-jhumkas": {
-      "attributes": []
+      "attributes": [],
+      "visual_tags": [
+        {
+          "tag": "jhumka",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-mini-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-mini-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "textured",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-mini-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-mini-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "drop",
+          "kind": "silhouette",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-mini-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "traditional",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-mini-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "dome",
+          "kind": "shape",
+          "confidence": 0.88,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-mini-jhumkas/front.jpg"
+          }
+        }
+      ]
     },
     "noor-temple-jhumkas": {
-      "attributes": []
+      "attributes": [],
+      "visual_tags": [
+        {
+          "tag": "jhumka",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-temple-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-temple-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "temple",
+          "kind": "style",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-temple-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "lakshmi",
+          "kind": "motif",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-temple-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "bell",
+          "kind": "shape",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-temple-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "textured",
+          "kind": "texture",
+          "confidence": 0.88,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-temple-jhumkas/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/noor-temple-jhumkas/front.jpg"
+          }
+        }
+      ]
     },
     "tara-solitaire-studs": {
-      "attributes": []
+      "attributes": [],
+      "visual_tags": [
+        {
+          "tag": "stud",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-solitaire-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-solitaire-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-solitaire-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "cz sparkle",
+          "kind": "stone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-solitaire-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "solitaire",
+          "kind": "style",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-solitaire-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-solitaire-studs/front.jpg"
+          }
+        }
+      ]
     },
     "tara-pearl-studs": {
-      "attributes": []
+      "attributes": [],
+      "visual_tags": [
+        {
+          "tag": "stud",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-pearl-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "pearl",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-pearl-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-pearl-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-pearl-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-pearl-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "classic",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-pearl-studs/front.jpg"
+          }
+        }
+      ]
     },
     "tara-heart-studs": {
-      "attributes": []
+      "attributes": [],
+      "visual_tags": [
+        {
+          "tag": "heart",
+          "kind": "shape",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-heart-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "heart",
+          "kind": "motif",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-heart-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "stud",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-heart-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-heart-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-heart-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-heart-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.85,
+          "source": {
+            "type": "image",
+            "file": "/images/products/tara-heart-studs/front.jpg"
+          }
+        }
+      ]
     },
     "elle-bezel-studs": {
-      "attributes": []
+      "attributes": [],
+      "visual_tags": [
+        {
+          "tag": "stud",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/elle-bezel-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/elle-bezel-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/elle-bezel-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "cz sparkle",
+          "kind": "stone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/elle-bezel-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/elle-bezel-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "solitaire",
+          "kind": "style",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/elle-bezel-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/elle-bezel-studs/front.jpg"
+          }
+        }
+      ]
     },
     "kira-mini-huggies": {
       "attributes": [
@@ -50,11 +813,76 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "huggie",
+          "kind": "silhouette",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-mini-huggies/front.jpg"
+          }
+        },
+        {
+          "tag": "hoop",
+          "kind": "silhouette",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-mini-huggies/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-mini-huggies/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-mini-huggies/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-mini-huggies/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-mini-huggies/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-mini-huggies/front.jpg"
+          }
         }
       ]
     },
@@ -65,11 +893,76 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "huggie",
+          "kind": "silhouette",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-twist-huggies/front.jpg"
+          }
+        },
+        {
+          "tag": "hoop",
+          "kind": "silhouette",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-twist-huggies/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-twist-huggies/front.jpg"
+          }
+        },
+        {
+          "tag": "twisted rope",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-twist-huggies/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-twist-huggies/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-twist-huggies/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kira-twist-huggies/front.jpg"
+          }
         }
       ]
     },
@@ -77,14 +970,79 @@
       "attributes": [
         {
           "attribute": "water_resistant",
-          "value": "partial (vague wording)",
+          "value": null,
           "source": {
             "type": "text",
-            "phrase": "Water friendly-ish for a quick wash, but treat her gently."
+            "phrase": "Water friendly-ish for a quick wash"
           },
-          "confidence": 0.3,
+          "confidence": 0.6,
           "verified": false,
           "vague": true
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "drop",
+          "kind": "silhouette",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-pearl-drops/front.jpg"
+          }
+        },
+        {
+          "tag": "pearl",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-pearl-drops/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-pearl-drops/front.jpg"
+          }
+        },
+        {
+          "tag": "teardrop",
+          "kind": "shape",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-pearl-drops/front.jpg"
+          }
+        },
+        {
+          "tag": "bar",
+          "kind": "shape",
+          "confidence": 0.88,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-pearl-drops/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-pearl-drops/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.85,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-pearl-drops/front.jpg"
+          }
         }
       ]
     },
@@ -95,11 +1053,85 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "teardrop",
+          "kind": "shape",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-teardrop-drops/front.jpg"
+          }
+        },
+        {
+          "tag": "waterdrop",
+          "kind": "motif",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-teardrop-drops/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-teardrop-drops/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-teardrop-drops/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-teardrop-drops/front.jpg"
+          }
+        },
+        {
+          "tag": "drop",
+          "kind": "silhouette",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-teardrop-drops/front.jpg"
+          }
+        },
+        {
+          "tag": "stud",
+          "kind": "silhouette",
+          "confidence": 0.85,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-teardrop-drops/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/mira-teardrop-drops/front.jpg"
+          }
         }
       ]
     },
@@ -110,9 +1142,9 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
         },
@@ -121,11 +1153,67 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Swim, sweat, repeat."
+            "phrase": "sweat"
           },
-          "confidence": 0.6,
+          "confidence": 0.95,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "threader",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sana-chain-threaders/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sana-chain-threaders/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sana-chain-threaders/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sana-chain-threaders/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sana-chain-threaders/front.jpg"
+          }
+        },
+        {
+          "tag": "drop",
+          "kind": "silhouette",
+          "confidence": 0.88,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sana-chain-threaders/front.jpg"
+          }
         }
       ]
     },
@@ -133,14 +1221,79 @@
       "attributes": [
         {
           "attribute": "plating",
-          "value": "unspecified gold tone (vague wording)",
+          "value": null,
           "source": {
             "type": "text",
-            "phrase": "Cute little flowers, 1cm, with a gold-toned finish."
+            "phrase": "gold-toned finish"
           },
-          "confidence": 0.3,
+          "confidence": 0.8,
           "verified": false,
           "vague": true
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "flower",
+          "kind": "shape",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/lia-flower-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "floral",
+          "kind": "motif",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/lia-flower-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "stud",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/lia-flower-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/lia-flower-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/lia-flower-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/lia-flower-studs/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/lia-flower-studs/front.jpg"
+          }
         }
       ]
     },
@@ -151,11 +1304,76 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "chain",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-paperclip-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "paperclip",
+          "kind": "motif",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-paperclip-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-paperclip-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-paperclip-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-paperclip-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "rectangle",
+          "kind": "shape",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-paperclip-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-paperclip-chain/front.jpg"
+          }
         }
       ]
     },
@@ -166,11 +1384,67 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-snake-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "chain",
+          "kind": "silhouette",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-snake-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-snake-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-snake-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "snake chain",
+          "kind": "motif",
+          "confidence": 0.85,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-snake-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-snake-chain/front.jpg"
+          }
         }
       ]
     },
@@ -181,11 +1455,67 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "chain",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-rope-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "twisted rope",
+          "kind": "texture",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-rope-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-rope-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-rope-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-rope-chain/front.jpg"
+          }
+        },
+        {
+          "tag": "classic",
+          "kind": "style",
+          "confidence": 0.88,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-rope-chain/front.jpg"
+          }
         }
       ]
     },
@@ -196,11 +1526,67 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "chain",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-layered-chain-set/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-layered-chain-set/front.jpg"
+          }
+        },
+        {
+          "tag": "layered",
+          "kind": "style",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-layered-chain-set/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-layered-chain-set/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-layered-chain-set/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/sol-layered-chain-set/front.jpg"
+          }
         }
       ]
     },
@@ -211,11 +1597,85 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-coin-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "pendant",
+          "kind": "silhouette",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-coin-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "chain",
+          "kind": "silhouette",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-coin-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-coin-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "coin",
+          "kind": "shape",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-coin-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "sunburst",
+          "kind": "motif",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-coin-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "textured",
+          "kind": "texture",
+          "confidence": 0.88,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-coin-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-coin-pendant/front.jpg"
+          }
         }
       ]
     },
@@ -226,11 +1686,76 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "evil eye",
+          "kind": "motif",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-evil-eye-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "pendant",
+          "kind": "silhouette",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-evil-eye-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "chain",
+          "kind": "silhouette",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-evil-eye-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-evil-eye-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-evil-eye-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.85,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-evil-eye-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.85,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-evil-eye-pendant/front.jpg"
+          }
         }
       ]
     },
@@ -241,11 +1766,76 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "heart",
+          "kind": "motif",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-heart-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "pendant",
+          "kind": "silhouette",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-heart-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "chain",
+          "kind": "silhouette",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-heart-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-heart-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-heart-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-heart-pendant/front.jpg"
+          }
+        },
+        {
+          "tag": "minimal",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/luna-heart-pendant/front.jpg"
+          }
         }
       ]
     },
@@ -253,14 +1843,70 @@
       "attributes": [
         {
           "attribute": "nickel_free",
-          "value": "unclear (vague wording)",
+          "value": null,
           "source": {
             "type": "text",
-            "phrase": "Skin-safe for most, and pretty much made for lehengas and sarees."
+            "phrase": "Skin-safe for most"
           },
-          "confidence": 0.25,
+          "confidence": 0.6,
           "verified": false,
           "vague": true
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "pearl",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/maya-pearl-choker/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/maya-pearl-choker/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/maya-pearl-choker/front.jpg"
+          }
+        },
+        {
+          "tag": "chain",
+          "kind": "silhouette",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/maya-pearl-choker/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/maya-pearl-choker/front.jpg"
+          }
+        },
+        {
+          "tag": "classic",
+          "kind": "style",
+          "confidence": 0.85,
+          "source": {
+            "type": "image",
+            "file": "/images/products/maya-pearl-choker/front.jpg"
+          }
         }
       ]
     },
@@ -271,11 +1917,76 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "ring",
+          "kind": "silhouette",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-dome-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-dome-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-dome-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "dome",
+          "kind": "shape",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-dome-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-dome-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-dome-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "chunky",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-dome-ring/front.jpg"
+          }
         }
       ]
     },
@@ -286,22 +1997,78 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
         },
         {
           "attribute": "sweat_resistant",
-          "value": true,
+          "value": null,
           "source": {
             "type": "text",
-            "phrase": "A 0.3cm everyday band that doesn't mind the pool, the kitchen or the gym."
+            "phrase": "gym"
           },
           "confidence": 0.6,
           "verified": false,
-          "vague": false
+          "vague": true
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "ring",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-band-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-band-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-band-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-band-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-band-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-band-ring/front.jpg"
+          }
         }
       ]
     },
@@ -309,25 +2076,90 @@
       "attributes": [
         {
           "attribute": "water_resistant",
-          "value": "partial (vague wording)",
+          "value": null,
           "source": {
             "type": "text",
-            "phrase": "Water friendly for handwashing."
+            "phrase": "Water friendly for handwashing"
           },
-          "confidence": 0.3,
+          "confidence": 0.7,
           "verified": false,
           "vague": true
         },
         {
           "attribute": "plating",
-          "value": "unspecified gold tone (vague wording)",
+          "value": null,
           "source": {
             "type": "text",
-            "phrase": "A 0.6cm American diamond solitaire on a slim gold-toned band."
+            "phrase": "gold-toned band"
           },
-          "confidence": 0.3,
+          "confidence": 0.8,
           "verified": false,
           "vague": true
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "ring",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-cz-solitaire-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-cz-solitaire-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "cz sparkle",
+          "kind": "stone",
+          "confidence": 0.96,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-cz-solitaire-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-cz-solitaire-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-cz-solitaire-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "solitaire",
+          "kind": "style",
+          "confidence": 0.94,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-cz-solitaire-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "minimal",
+          "kind": "style",
+          "confidence": 0.88,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-cz-solitaire-ring/front.jpg"
+          }
         }
       ]
     },
@@ -338,11 +2170,76 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "ring",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-twist-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-twist-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "twisted rope",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-twist-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-twist-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "textured",
+          "kind": "texture",
+          "confidence": 0.88,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-twist-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-twist-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-twist-ring/front.jpg"
+          }
         }
       ]
     },
@@ -353,11 +2250,76 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "ring",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-signet-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-signet-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-signet-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-signet-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-signet-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "brushed",
+          "kind": "texture",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-signet-ring/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.85,
+          "source": {
+            "type": "image",
+            "file": "/images/products/veda-signet-ring/front.jpg"
+          }
         }
       ]
     },
@@ -368,11 +2330,67 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "cuff",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-cuff/front.jpg"
+          }
+        },
+        {
+          "tag": "bracelet",
+          "kind": "silhouette",
+          "confidence": 0.97,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-cuff/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-cuff/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-cuff/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.92,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-cuff/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-cuff/front.jpg"
+          }
         }
       ]
     },
@@ -383,16 +2401,137 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "bracelet",
+          "kind": "silhouette",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-chain-bracelet/front.jpg"
+          }
+        },
+        {
+          "tag": "chain",
+          "kind": "silhouette",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-chain-bracelet/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-chain-bracelet/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-chain-bracelet/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-chain-bracelet/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-chain-bracelet/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.8,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-chain-bracelet/front.jpg"
+          }
         }
       ]
     },
     "kaya-tennis-bracelet": {
-      "attributes": []
+      "attributes": [],
+      "visual_tags": [
+        {
+          "tag": "bracelet",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-tennis-bracelet/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-tennis-bracelet/front.jpg"
+          }
+        },
+        {
+          "tag": "cz sparkle",
+          "kind": "stone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-tennis-bracelet/front.jpg"
+          }
+        },
+        {
+          "tag": "tennis",
+          "kind": "style",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-tennis-bracelet/front.jpg"
+          }
+        },
+        {
+          "tag": "round",
+          "kind": "shape",
+          "confidence": 0.9,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-tennis-bracelet/front.jpg"
+          }
+        },
+        {
+          "tag": "polished",
+          "kind": "texture",
+          "confidence": 0.88,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-tennis-bracelet/front.jpg"
+          }
+        }
+      ]
     },
     "kaya-hammered-cuff": {
       "attributes": [
@@ -401,11 +2540,67 @@
           "value": true,
           "source": {
             "type": "text",
-            "phrase": "Waterproof and 18K gold plated stainless steel."
+            "phrase": "Waterproof"
           },
-          "confidence": 0.8,
+          "confidence": 1,
           "verified": false,
           "vague": false
+        }
+      ],
+      "visual_tags": [
+        {
+          "tag": "cuff",
+          "kind": "silhouette",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-hammered-cuff/front.jpg"
+          }
+        },
+        {
+          "tag": "bracelet",
+          "kind": "silhouette",
+          "confidence": 0.98,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-hammered-cuff/front.jpg"
+          }
+        },
+        {
+          "tag": "hammered",
+          "kind": "texture",
+          "confidence": 0.99,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-hammered-cuff/front.jpg"
+          }
+        },
+        {
+          "tag": "yellow gold",
+          "kind": "tone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-hammered-cuff/front.jpg"
+          }
+        },
+        {
+          "tag": "none",
+          "kind": "stone",
+          "confidence": 0.95,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-hammered-cuff/front.jpg"
+          }
+        },
+        {
+          "tag": "minimalist",
+          "kind": "style",
+          "confidence": 0.85,
+          "source": {
+            "type": "image",
+            "file": "/images/products/kaya-hammered-cuff/front.jpg"
+          }
         }
       ]
     }

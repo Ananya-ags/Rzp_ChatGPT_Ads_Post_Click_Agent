@@ -500,3 +500,48 @@ Running log of which AI tool did what, key prompts, rejected AI output and decis
 - `next build`, `tsc`, `eslint` and `validate-data` (76 passed, 0 errors) are clean.
 
 **Recommendation:** enable billing with a budget alert before judging. The free tier caps 3.8 Flash at 20 requests/day and adds latency spikes. The fast path and quick answers keep the demo working regardless.
+
+## 13 Oct 2026: Paid tier, forced tools kept, delivery rescue in code
+- **Paid tier confirmed:** `npm run ai:check` passes on all five roles: agent 3.1 Flash-Lite 1.0s; fallback 3.8 Flash 1.9s; pipeline 3.8 Flash 2.5s; pipeline fallback 3.5 Flash-Lite 0.7s; judge `gemini-pro-latest` 3.9s (callable now).
+- **The 7 test messages** (Flash-Lite main) all pass with direct model answers: first token 0.8–2.1s, $0.0076 for the run.
+- **Finding:** Flash-Lite skipped tools when not forced, so routed intents are forced in code.
+  - Unforced, (a) "will these work for office?" got "great office choice" without `get_return_insight`, and (f) guessed the engraving policy.
+  - Kept, at the user's decision: `get_return_insight` for occasion fit; `handoff` for nickel/allergy, engraving/customisation, order status and human requests (G16); `get_offer` and `check_delivery` as before.
+- **Delivery rescue moved into code** (`checkDelivery` in `tools/core.ts`):
+  - With a missed deadline, it calls `searchCatalog` for up to 3 similar pieces (same category and subtype, in stock, price within ±20%) that arrive in time, and returns them as `alternatives`.
+  - It also returns a code-written `summary`, with the size leading each alternative's name.
+  - The agent only quotes; the delivery card shows the alternatives as product cards with size and date. A plain-text rule was added to the prompt because Flash-Lite used markdown the chat shows raw.
+  - On `/p/ciel-hoops-30mm`, "need it in Pune by 18 Oct" passed **3/3**: "arrive in Pune on 21 Oct, which is after your 18 Oct deadline. The 2.8cm Everyday Tube Hoop Earrings … arrive on 16 Oct". About 1.0s first output and $0.0013 each.
+  - Eval `tool-02` and demo step d5 now expect just `check_delivery`.
+- **Pipeline tooling:**
+  - `--dry-run` estimates calls, tokens and cost with no API calls and no writes.
+  - A new vision stage (`vision-v1`) tags each `front.jpg` from the photo alone (discovery only, never claims).
+  - Producer stamps now say `mode: "ai"` with model, prompt version and `run_at`. The heuristic backup is in `data/generated_heuristic_backup/` (git-ignored).
+
+## 13 Oct 2026: AI pipelines run (Gemini text + vision), with guards
+- **Run:**
+  - The dry run estimated 46 calls, ~$0.35 (up to $0.69).
+  - The real run took 46 calls, **$0.20**, 4m50s. The returns stage fell back to 3.5 Flash-Lite after 3.8 Flash's JSON couldn't be parsed.
+  - Fix re-runs: 6 calls, **$0.06** (openers v2, plus 2 rail calls whose inputs changed when the vague values became null). The final re-run was 46/46 cache hits, $0.
+  - Every generated file now says `mode: "ai"` with its own stage's model(s), prompt version and `run_at`. The rule-based outputs are kept in `data/generated_heuristic_backup/` (git-ignored).
+- **Vision (`vision-v1`):** all 35 `front.jpg` photos were tagged by 3.8 Flash at medium media resolution, from the photo alone (no title). Lia → flower; Kira/Veda twists → twisted rope; the pendant → evil eye. Discovery only, never claims.
+- **What the AI changed versus heuristic mode:**
+  - **Rails:** all four re-ranked. The AI leaves the Layered Set out of "Office minimal" and leads the steel rail with the Twisted Huggies; its reasons stay within the claims rules.
+  - **Return reasons:** 40mm office is now 9 of 9 "looked bigger" (was 8 of 9). Kept, and the demo cache was rebuilt, so every cached answer says 9 of 9.
+  - **Clusters:** the same 7 themes under new names; sensitive ears is still 28.
+  - **Attributes to confirm:** 20 → 19.
+- **Openers:**
+  - The AI now writes one shopper-facing sentence (≤25 words; echoes the ad's intent; no spec list; no water unless the context is about water).
+  - The context chip and suggested chips stay curated in code (`CONTEXT_CHIP`, `SUGGESTED_CHIPS`), because the guided demo, cached answers and fast path depend on their exact text.
+  - A code guard rejects an AI opener that breaks these rules or makes a health claim. Two were rejected and use the curated line: the waterproof one (a spec list) and the steel one ("won't itch sensitive ears", a skin promise).
+- **Layered-set proposal:** it's now built from the ad group's candidate list, so it survives any ranking: "Keep Layered Chain Necklace Set out of the 'Office minimal' rail as a brand rule". The AI already ranks it out; approving makes that permanent. Evidence unchanged: 22% office returns vs 8% overall, top reason "too long".
+- **Rejected AI output:** the AI turned "skin-safe for most" into nickel_free = true and "water friendly-ish" into water_resistant = true. We rejected both: vague wording means unknown, never a claim. Now enforced in code (vague → `value: null`, `vague: true`, with the source phrase) and in the validator (fails if any vague-flagged attribute has a value).
+- **Tooling:** per-stage model stamps; image input sent as a "file" part (the "image" part is deprecated).
+- **Planted facts, all holding:**
+  1. 40mm office insight: 9 of 9 looked bigger; 64% of keepers chose the 3cm.
+  2. 30mm misses 18 Oct → Aria 2.8cm arrives 16 Oct.
+  3. "28 shoppers asked about sensitive ears", with the 8 steel earrings.
+  4. Waterproof ×18.
+  5. Layered set kept out of Office minimal.
+  6. Wedding pause.
+- **Verified:** validator 77 passed, 0 errors; `next build` clean; click-through 42/42; loop 17/17.
