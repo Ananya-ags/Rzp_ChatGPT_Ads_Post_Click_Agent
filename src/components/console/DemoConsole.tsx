@@ -192,14 +192,14 @@ function Console({ merchant, evalsUrl }: { merchant: Merchant[]; evalsUrl: strin
   return (
     <main className="flex h-dvh overflow-hidden" style={{ background: C.bg, color: C.text }}>
       {/* LEFT: the real site in a phone frame */}
-      <section className="flex shrink-0 items-center justify-center px-6" style={{ width: 390 * scale + 76 }} aria-label="Shopper's phone">
+      <section className="flex min-w-0 flex-1 items-center justify-center px-6" aria-label="Shopper's phone">
         <div style={{ width: 390 + 28, height: 844 + 28, transform: `scale(${scale})`, transformOrigin: "center" }} className="shrink-0 rounded-[48px] bg-[#111] p-[14px] shadow-2xl">
           <iframe key={frameKey} ref={frameRef} src="/chatgpt" title="Cosmos shop (shopper view)" className="h-[844px] w-[390px] rounded-[36px] bg-white" />
         </div>
       </section>
 
       {/* RIGHT: the console */}
-      <section className="flex min-w-0 flex-1 flex-col border-l" style={{ borderColor: C.line, background: C.panel }} aria-label="Under the hood">
+      <section className="flex min-w-0 shrink-0 flex-col border-l" style={{ width: "clamp(480px, 45vw, 640px)", borderColor: C.line, background: C.panel }} aria-label="Under the hood">
         <header className="flex flex-wrap items-center gap-3 px-5 py-3 text-white" style={{ background: C.navy }}>
           <h1 className="text-[17px] font-semibold tracking-tight">Under the hood · Cosmos AI agent</h1>
           <span className="rounded-full px-2 py-0.5 text-[12px] font-medium" style={{ background: C.blue }}>
@@ -223,7 +223,7 @@ function Console({ merchant, evalsUrl }: { merchant: Merchant[]; evalsUrl: strin
         </header>
 
         {/* 1. session card (sticky) */}
-        <div className="grid grid-cols-3 gap-x-6 gap-y-1.5 border-b px-5 py-3 text-[13.5px] xl:grid-cols-6" style={{ borderColor: C.line, background: "#F8FAFD" }}>
+        <div className="grid grid-cols-3 gap-x-6 gap-y-1.5 border-b px-5 py-3 text-[13.5px]" style={{ borderColor: C.line, background: "#F8FAFD" }}>
           {[
             ["Source", session.source],
             ["Ad group", session.adGroup],
@@ -246,7 +246,7 @@ function Console({ merchant, evalsUrl }: { merchant: Merchant[]; evalsUrl: strin
         {/* filters */}
         <div className="flex items-center gap-2 border-b px-5 py-2" style={{ borderColor: C.line }} role="tablist" aria-label="Filter events">
           {FILTERS.map((f) => (
-            <button key={f.id} role="tab" aria-selected={filter === f.id} onClick={() => setFilter(f.id)} className="rounded-full px-3 py-1 text-[13.5px] font-medium" style={filter === f.id ? { background: C.navy, color: "#fff" } : { color: C.muted }}>
+            <button key={f.id} role="tab" aria-selected={filter === f.id} onClick={() => setFilter(f.id)} className="whitespace-nowrap rounded-full px-3 py-1 text-[13.5px] font-medium" style={filter === f.id ? { background: C.navy, color: "#fff" } : { color: C.muted }}>
               {f.label}
             </button>
           ))}
@@ -262,7 +262,7 @@ function Console({ merchant, evalsUrl }: { merchant: Merchant[]; evalsUrl: strin
             const el = e.currentTarget;
             follow.current = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
           }}
-          className="min-h-0 flex-1 overflow-y-auto px-5 pb-3"
+          className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-5 pb-3"
           aria-live="polite"
         >
           {events.length === 0 && <p className="py-8 text-[14px]" style={{ color: C.muted }}>Waiting for the shopper to reach the Cosmos site…</p>}
@@ -287,7 +287,7 @@ function Console({ merchant, evalsUrl }: { merchant: Merchant[]; evalsUrl: strin
                         <span className="grid size-[18px] shrink-0 place-items-center rounded-full text-[12px] font-bold text-white" style={{ background: st.color }} aria-label={st.label}>
                           {st.icon}
                         </span>
-                        <span className="min-w-0 flex-1 break-words" style={{ color: e.status === "caught" ? "#92400E" : C.text }}>
+                        <span className="min-w-0 flex-1 [overflow-wrap:anywhere]" style={{ color: e.status === "caught" ? "#92400E" : C.text }}>
                           {e.title}
                         </span>
                         {e.latency_ms !== undefined && e.latency_ms > 0 && (
@@ -299,7 +299,7 @@ function Console({ merchant, evalsUrl }: { merchant: Merchant[]; evalsUrl: strin
                       </button>
                       {isOpen && (
                         <div className="mb-2 ml-[150px] rounded-md px-3 py-2 text-[13.5px]" style={{ background: "#F6F8FC", color: C.text }}>
-                          {e.detail && <p className="mb-1">{e.detail}</p>}
+                          {e.detail && <p className="mb-1 [overflow-wrap:anywhere]">{e.detail}</p>}
                           {e.data && (
                             <dl className="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-0.5">
                               {Object.entries(e.data)
@@ -308,7 +308,7 @@ function Console({ merchant, evalsUrl }: { merchant: Merchant[]; evalsUrl: strin
                                 .map(([k, v]) => (
                                   <div key={k} className="contents">
                                     <dt style={{ color: C.muted }}>{k}</dt>
-                                    <dd className="min-w-0 break-words font-mono text-[12.5px]">{fmt(v)}</dd>
+                                    <dd className="min-w-0 font-mono text-[12.5px] [overflow-wrap:anywhere]">{fmt(v)}</dd>
                                   </div>
                                 ))}
                             </dl>
