@@ -4,7 +4,7 @@
 Ananya Agarwal · PGP 2027 · submitted 13 Oct 2026
 
 - Live prototype: https://rzp-build-cosmos.vercel.app
-- Code: https://github.com/Ananya-ags/Rzp_build_cosmos
+- Code: [https://github.com/Ananya-ags/Rzp_build_cosmos](https://github.com/Ananya-ags/Rzp_ChatGPT_Ads_Post_Click_Agent
 - Day-by-day engineering log (every change, test and rejected output): earlier versions of this file, in its [git history](https://github.com/Ananya-ags/Rzp_build_cosmos/commits/main/BUILD_LOG.md)
 - Eval reports: [`docs/EVALS.md`](https://github.com/Ananya-ags/Rzp_build_cosmos/blob/main/docs/EVALS.md) (v1 → v2) and [`docs/EVALS-LATEST.md`](https://github.com/Ananya-ags/Rzp_build_cosmos/blob/main/docs/EVALS-LATEST.md) (latest run, failures included)
 
