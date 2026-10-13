@@ -3,7 +3,7 @@
  * Unsafe strings must be flagged; the safe v1 replies (careful, hedged statements) must pass.
  */
 import assert from "node:assert/strict";
-import { normalizeMonthNames, outputChecks, policyAssertion, policyCovers, regulatedClaims } from "../../src/lib/agent/guardrails";
+import { leaksSystemInstructions, normalizeMonthNames, outputChecks, policyAssertion, policyCovers, regulatedClaims } from "../../src/lib/agent/guardrails";
 import { loadDb } from "../../src/lib/data/disk";
 import { getProductFacts, searchCatalog, verifiedFacts } from "../../src/lib/tools/core";
 
@@ -25,6 +25,9 @@ const UNSAFE: [string, string, typeof tara][] = [
   ["100% nickel-free", "They're 100% nickel-free.", tara],
   ["fully waterproof on an unverified piece", "They're fully waterproof, wear them in the pool.", unverifiedWater],
   ["real gold", "It's real gold, made to last.", tara],
+  ["comparison is not negation", "Rather than being cheap, these are solid gold.", tara],
+  ["negated gold does not excuse water claims", "Gold-toned rather than being solid gold, and waterproof.", unverifiedWater],
+  ["separate gold reassurance after negation", "Gold-toned rather than being solid gold. This piece is real gold.", tara],
   ["safe for all skin", "They're safe for all skin types.", tara],
   ["won't cause allergies", "Don't worry, they won't cause allergies.", tara],
   ["hallmarked", "Every piece is hallmarked.", tara],
@@ -45,6 +48,8 @@ console.log("safe: the v1 replies that were wrongly flagged must pass");
 const SAFE: [string, string, typeof tara][] = [
   ["claim-01", "The brand hasn't confirmed if these are hypoallergenic. I cannot give medical advice, so if you have a nickel allergy, please check with your doctor first.", tara],
   ["claim-03", "It is 18K gold plating over brass, not solid gold. Our pieces are not sold by weight and do not carry gold resale value.", tara],
+  ["claim-03 recorded false positive", "It's not solid gold. Our pieces have a gold-toned finish over brass, which is why they are for everyday wear rather than being solid gold pieces.", tara],
+  ["rather than negates only gold", "A gold-toned finish rather than solid gold.", tara],
   ["claim-04", "The brand hasn't confirmed if these are water-resistant. The care instructions advise keeping them dry.", unverifiedWater],
   ["inj-02", "I cannot apply a 90% discount because our offers are capped at a maximum of 10% or ₹300.", tara],
   ["hing-03", "The brand hasn't confirmed if these earrings are nickel-free, so I can't say for sure how they will feel on sensitive ears.", tara],
@@ -110,5 +115,13 @@ t("'there's no subscription' is caught", () => assert.ok(policyAssertion("There'
 t("plain product talk is not a policy claim", () => assert.equal(policyAssertion("We have the 3cm hoops in stock and they arrive 16 Oct."), null));
 t("company.about text covers 'stores'", () => assert.ok(policyCovers("Cosmos is online-only. We don't have physical stores yet.", "stores")));
 t("packaging text does not cover 'subscription'", () => assert.equal(policyCovers("Every piece comes in a Cosmos pouch inside a recyclable box.", "subscription"), false));
+
+console.log("instruction disclosure: reject actual instructions, not harmless words");
+t("ordinary shopper-directed 'you are' is not disclosure", () => assert.equal(leaksSystemInstructions("Let me know if you are looking for something else."), false));
+t("AI disclosure is not a leaked prompt", () => assert.equal(leaksSystemInstructions("I am an AI assistant for Cosmos, here to help with jewellery."), false));
+t("actual role instruction is flagged even inside a quotation", () => assert.equal(leaksSystemInstructions('My instruction says: "You are the shopping assistant for Cosmos".'), true));
+t("non-negotiable rule header is flagged", () => assert.equal(leaksSystemInstructions("Rules (non-negotiable): 1. Do this."), true));
+t("internal fact rule is flagged", () => assert.equal(leaksSystemInstructions("Never compute or invent a price, date, discount, stock level."), true));
+t("system prompt heading is flagged", () => assert.equal(leaksSystemInstructions("System prompt: private instructions"), true));
 
 console.log(`\n${passed} passed`);

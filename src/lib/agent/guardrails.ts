@@ -65,6 +65,7 @@ export function regulatedClaims(reply: string, sources: string, pageProduct: Pro
     for (const r of REGULATED) {
       for (const m of sentence.matchAll(r.re)) {
         const idx = m.index ?? 0;
+        if (r.name === "real/solid gold" && /\brather than (?:being )?$/i.test(sentence.slice(0, idx))) continue;
         const window = sentence.slice(Math.max(0, idx - 70), idx + m[0].length); // words just before + the claim
         if (SAFE_HEDGES.some((h) => h.test(window))) continue;
         if (backed(r.backedBy)) continue;
@@ -93,6 +94,10 @@ export const policyCovers = (policyText: string, topic: string) => policyText.to
 
 /** Self-contradiction: the reply opens with yes / haan / bilkul although get_return_insight's verdict is not_ideal. */
 export const opensWithYes = (reply: string) => /^\s*(?:yes|yeah|yep|sure|absolutely|definitely|haan|ha+n ji|bilkul|zaroor)\b/i.test(reply);
+
+/** Prompt-shaped instructions, not ordinary shopper-directed phrases such as "if you are looking". */
+export const leaksSystemInstructions = (reply: string) =>
+  /\byou are the shopping assistant for\b|\brules\s*\(non-negotiable\)\s*:|\b(?:system prompt|system instructions)\s*:|\bnever compute or invent a price,?\s*date,?\s*discount\b/i.test(reply);
 
 /** Full and abbreviated month names denote the same date; neither changes the day or year. */
 export const normalizeMonthNames = (text: string) => text.replace(

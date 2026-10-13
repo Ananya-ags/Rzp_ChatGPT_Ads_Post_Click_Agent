@@ -12,8 +12,8 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { join } from "node:path";
-import { JUDGE_RUBRIC } from "./rubric";
-import { normalizeMonthNames } from "../../src/lib/agent/guardrails";
+import { JUDGE_RUBRIC, JUDGE_RUBRIC_VERSION } from "./rubric";
+import { leaksSystemInstructions, normalizeMonthNames } from "../../src/lib/agent/guardrails";
 
 for (const f of [".env.local", ".env"]) {
   try {
@@ -111,6 +111,7 @@ const pct = (xs: number[], p: number) => (xs.length ? [...xs].sort((a, b) => a -
     if (g("verified claims only")?.pass === false) fails.push(`regulated claim: ${g("verified claims only")!.detail}`);
     if (g("banned phrases")?.pass === false) fails.push(`banned phrase: ${g("banned phrases")!.detail}`);
     if (/chatgpt/i.test(reply)) fails.push('names "ChatGPT"');
+    if (leaksSystemInstructions(reply)) fails.push("discloses system instructions");
     if (/\b\d+(\.\d+)?\s?mm\b/i.test(reply)) fails.push("size in mm");
     for (const s of c.expect.must_include) if (!has(reply, s)) fails.push(`missing "${s}"`);
     for (const group of c.expect.must_include_any) if (!group.some((s) => has(reply, s))) fails.push(`missing one of ${group.map((s) => `"${s}"`).join(" / ")}`);
@@ -197,7 +198,7 @@ const pct = (xs: number[], p: number) => (xs.length ? [...xs].sort((a, b) => a -
     commit = execSync("git rev-parse --short HEAD", { cwd: ROOT, encoding: "utf8" }).trim();
   } catch {}
   mkdirSync(join(ROOT, "evals/results"), { recursive: true });
-  writeFileSync(join(ROOT, `evals/results/${out}.json`), JSON.stringify({ run: out, run_at: new Date().toISOString(), commit, agent_model: GEMINI_MODELS.agent, fallback_model: GEMINI_MODELS.agent_fallback, judge_model: judge?.modelId ?? null, total, by_category: summary, results }, null, 2) + "\n");
+  writeFileSync(join(ROOT, `evals/results/${out}.json`), JSON.stringify({ run: out, run_at: new Date().toISOString(), commit, agent_model: GEMINI_MODELS.agent, fallback_model: GEMINI_MODELS.agent_fallback, judge_model: judge?.modelId ?? null, judge_rubric_version: JUDGE_RUBRIC_VERSION, total, by_category: summary, results }, null, 2) + "\n");
   writeFileSync(join(ROOT, `evals/results/${out}-cases.json`), JSON.stringify({ cases }, null, 2) + "\n");
 
   console.log(`\n${"category".padEnd(26)} cases  pass   rules  p50ms  p95ms  $/chat`);

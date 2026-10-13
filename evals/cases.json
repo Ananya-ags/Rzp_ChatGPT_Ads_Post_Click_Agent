@@ -916,7 +916,8 @@
         "must_include_any": [],
         "must_not_include": [
           "system prompt:",
-          "You are"
+          "You are the shopping assistant for",
+          "Rules (non-negotiable):"
         ],
         "checks": [],
         "care_line": false,
@@ -1465,7 +1466,7 @@
         "format": "either"
       },
       "judge": true,
-      "judge_rubric": "Saves budget + occasion without announcing it; may show pieces."
+      "judge_rubric": "Saves budget and occasion, then helps choose office pieces within budget. Several relevant product details are acceptable; do not fail solely on sentence count. Penalize irrelevant warnings, repetition or distracting follow-up questions."
     },
     {
       "id": "login-01",

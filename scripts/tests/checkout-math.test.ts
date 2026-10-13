@@ -69,6 +69,18 @@ check("non-stackable first-order offers stay non-stackable", () => {
   reconciles(q);
 });
 
+check("chat offer summary labels both totals without changing checkout arithmetic", () => {
+  const cart = [{ sku: "ciel-hoops-40mm", qty: 1 }];
+  const offer = getOffer(db, cart, { prepaid: true, logged_in: true, rto_risk: "high" });
+  assert.equal(offer.total_before_wallet_inr, 3035);
+  assert.equal(offer.total_inr, 2735);
+  assert.match(offer.payment_summary, /₹3,035 before wallet credit/);
+  assert.match(offer.payment_summary, /₹2,735 if you use ₹300 from your wallet/);
+  const guest = getOffer(db, cart, { prepaid: true });
+  assert.equal(guest.total_before_wallet_inr, guest.total_inr);
+  assert.doesNotMatch(guest.payment_summary, /wallet/);
+});
+
 check("COD reports its own cap state, not the unused online offer combination", () => {
   const q = quote([{ sku: "sol-paperclip-chain", qty: 1 }], user, { ...input, bankCard: true, method: "cod" });
   assert.equal(q.discount_inr, 0);

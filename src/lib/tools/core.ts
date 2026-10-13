@@ -287,6 +287,12 @@ export function getOffer(db: Db, cart: CartLine[], ctx: OfferContext = {}) {
   const walletBalance = ctx.logged_in ? db.shoppers.tier3_demo.loyalty_wallet_inr : 0;
   const walletUsable = walletOffer ? Math.min(walletBalance, Math.floor(((subtotal - discount) * walletOffer.value) / 100)) : 0;
   const ship = subtotal >= db.brand.policies.free_shipping_threshold_inr ? 0 : db.brand.policies.shipping_fee_inr;
+  const beforeWallet = subtotal - discount + ship;
+  const total = beforeWallet - walletUsable;
+  const inr = (value: number) => `₹${value.toLocaleString("en-IN")}`;
+  const paymentSummary = walletUsable > 0
+    ? `After ${inr(discount)} in offers, it's ${inr(beforeWallet)} before wallet credit, or ${inr(total)} if you use ${inr(walletUsable)} from your wallet.`
+    : `After ${inr(discount)} in offers, the total is ${inr(total)}.`;
   const requested = ctx.requested_discount_pct ?? null;
   return {
     why: `Offers computed in code; cap ${caps.max_pct}% / ₹${caps.max_flat_inr}${ctx.requested_discount_pct ? `; requested ${ctx.requested_discount_pct}% not allowed` : ""}`,
@@ -297,7 +303,9 @@ export function getOffer(db: Db, cart: CartLine[], ctx: OfferContext = {}) {
     ineligible,
     wallet: { balance_inr: walletBalance, usable_inr: walletUsable, note: walletBalance ? "Loyalty wallet is stored value, not a discount" : null },
     shipping_inr: ship,
-    total_inr: subtotal - discount - walletUsable + ship,
+    total_before_wallet_inr: beforeWallet,
+    total_inr: total,
+    payment_summary: paymentSummary,
     requested_discount: requested === null ? null : { pct: requested, allowed: requested <= caps.max_pct && requested * subtotal / 100 <= capInr, message: `Discounts are set by the store and capped at ${caps.max_pct}% or ₹${caps.max_flat_inr}. The assistant cannot create or change them.` },
   };
 }

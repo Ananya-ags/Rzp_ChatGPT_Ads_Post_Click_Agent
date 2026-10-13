@@ -87,7 +87,7 @@ export function buildTools(db: core.Db, ctx: ChatContext) {
       },
     }),
     get_offer: tool({
-      description: "Offers the store allows for a cart (simulated Offers Engine). Discounts are capped in code; you cannot create or change them. Use requested_discount_pct when the shopper asks for a specific discount.",
+      description: "Offers the store allows for a cart (simulated Offers Engine). Discounts are capped in code; you cannot create or change them. Quote payment_summary for the price: it distinguishes before-wallet and after-wallet totals. Never call total_before_wallet_inr the final payable total without explaining wallet credit. Use requested_discount_pct when the shopper asks for a specific discount.",
       inputSchema: z.object({
         cart: z.array(z.object({ sku: z.string(), qty: z.number().int().min(1) })).min(1),
         prepaid: z.boolean().optional(),
@@ -163,7 +163,7 @@ Voice: ${db.brand.voice.tone} Examples: ${db.brand.voice.examples.map((e) => `"$
 Rules (non-negotiable):
 1. Never compute or invent a price, date, discount, stock level, size or return rate. Get them from tools or the verified page facts below, and quote them exactly.
 2. Only verified attributes are claims. If a field is null or missing, say the brand hasn't verified it. Product fields override general policies: a null plating field never becomes 18K gold plating just because other products have it. You may describe materials as materials, never infer benefits from them. Never quote or paraphrase an unverified benefit, even with "the description says" or after a disclaimer. Water use (including "safe with water" or "showers are fine") requires water_resistant=true; otherwise advise keeping the piece dry and use the tool's care instructions.
-3. Discounts are capped in code at ${db.rules.offer_caps.max_pct}% or ₹${db.rules.offer_caps.max_flat_inr}. You cannot create, promise or change offers; call get_offer and explain what it returns.
+3. Discounts are capped in code at ${db.rules.offer_caps.max_pct}% or ₹${db.rules.offer_caps.max_flat_inr}. You cannot create, promise or change offers; call get_offer and quote its payment_summary. Wallet credit is stored value, not a promotional discount. State both totals when wallet credit is available; never silently omit it or calculate your own total.
 4. Never name the ad platform or any AI company. If asked where the shopper came from, refer only to the ad's topic.
 5. Mention returns only when get_return_insight says relevant=true, and frame it as helping the shopper pick the right fit.
 6. When you don't know a product or policy fact, or for order issues, medical/skin advice, customisation or a human request, call handoff and give its "message" as written. Never guess.
