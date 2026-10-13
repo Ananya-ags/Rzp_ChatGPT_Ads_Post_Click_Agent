@@ -18,6 +18,7 @@
     "policies": "tsx scripts/build-policies.ts",
     "evals": "tsx --conditions=react-server scripts/evals/run.ts",
     "evals:rejudge": "tsx --conditions=react-server scripts/evals/rejudge.ts",
+    "evals:report": "tsx scripts/evals/report.ts",
     "test:claims": "tsx scripts/tests/claims.test.ts",
     "test:abuse": "tsx scripts/tests/abuse.test.ts",
     "test:chips": "tsx --conditions=react-server scripts/tests/chips.test.ts",

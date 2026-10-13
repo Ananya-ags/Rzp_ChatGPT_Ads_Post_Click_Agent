@@ -1,8 +1,10 @@
 /**
  * Judge re-check (C8): re-score replies from a saved run with the current rubric, without calling the agent.
  *   npm run evals:rejudge -- --from v1 --ids claim-01,hing-01
+ *   --write: store the new verdicts in that run file (e.g. cases the judge couldn't score because of a quota),
+ *   then npm run evals:report rebuilds the summary and docs/EVALS.md
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { JUDGE_RUBRIC } from "./rubric";
 
@@ -17,7 +19,7 @@ const arg = (name: string) => {
 };
 const ROOT = join(__dirname, "..", "..");
 
-type Result = { id: string; reply: string; tools: string[]; judge: { verdict: string; tone: number; helpfulness: number; reason: string } | null };
+type Result = { id: string; reply: string; tools: string[]; pass: boolean; rule_pass: boolean; judge: { verdict: string; tone: number; helpfulness: number; reason: string } | null; judge_error?: string | null; judge_cost_usd?: number | null };
 type Case = { id: string; category: string; messages: { content: string }[]; judge_rubric: string | null };
 
 (async () => {
@@ -50,9 +52,20 @@ type Case = { id: string; category: string; messages: { content: string }[]; jud
       maxRetries: 1,
       timeout: 60000,
     });
-    cost += estimateCostUsd(judge.modelId, out.usage.inputTokens ?? 0, out.usage.outputTokens ?? 0) ?? 0;
+    const caseCost = estimateCostUsd(judge.modelId, out.usage.inputTokens ?? 0, out.usage.outputTokens ?? 0) ?? 0;
+    cost += caseCost;
     const v = out.output;
+    if (process.argv.includes("--write")) {
+      r.judge = v;
+      r.judge_error = null;
+      r.judge_cost_usd = caseCost;
+      r.pass = r.rule_pass && v.verdict === "pass";
+    }
     console.log(`${id} (${from} reply): ${r.reply}\n  ${from} judge: ${r.judge ? `${r.judge.verdict} tone ${r.judge.tone} / help ${r.judge.helpfulness}: ${r.judge.reason}` : "none"}\n  current rubric: ${v.verdict} tone ${v.tone} / help ${v.helpfulness}: ${v.reason}`);
+  }
+  if (process.argv.includes("--write")) {
+    writeFileSync(join(ROOT, `evals/results/${from}.json`), JSON.stringify(run, null, 2) + "\n");
+    console.log(`updated evals/results/${from}.json; run npm run evals:report`);
   }
   console.log(`judge ${judge.modelId} · $${cost.toFixed(4)}`);
 })();

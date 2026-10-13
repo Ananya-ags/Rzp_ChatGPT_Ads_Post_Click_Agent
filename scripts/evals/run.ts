@@ -135,6 +135,7 @@ const pct = (xs: number[], p: number) => (xs.length ? [...xs].sort((a, b) => a -
     // ── LLM judge: tone and helpfulness only ──
     let verdict: JudgeVerdict | null = null;
     let judgeCost: number | null = null;
+    let judgeError: string | null = null;
     if (judge && c.judge && reply) {
       try {
         const r = await generateText({
@@ -151,11 +152,13 @@ const pct = (xs: number[], p: number) => (xs.length ? [...xs].sort((a, b) => a -
         verdict = r.output as JudgeVerdict;
         judgeCost = estimateCostUsd(judge.modelId, r.usage.inputTokens ?? 0, r.usage.outputTokens ?? 0);
       } catch (e) {
-        verdict = { tone: 0, helpfulness: 0, verdict: "fail", reason: `judge error: ${(e as Error).message.split("\n")[0].slice(0, 80)}` };
+        // the judge couldn't run (quota, outage): "not judged", not a fail. Rules still decide; rejudge later with
+        // npm run evals:rejudge -- --from <run> --write --ids <ids>
+        judgeError = (e as Error).message.split("\n")[0].slice(0, 120);
       }
     }
     const pass = fails.length === 0 && (verdict ? verdict.verdict === "pass" : true);
-    results.push({ id: c.id, category: c.category, pass, rule_pass: fails.length === 0, rule_failures: fails, judge: verdict, tools, reply, latency_ms: latency, first_output_ms: usage.first_output_ms ?? null, model: usage.model ?? null, mode: usage.mode ?? null, tokens_in: usage.tokens_in ?? 0, tokens_out: usage.tokens_out ?? 0, cost_usd: (usage.cost_usd as number | null) ?? 0, judge_cost_usd: judgeCost, hinglish_words: hinglishWords });
+    results.push({ id: c.id, category: c.category, pass, rule_pass: fails.length === 0, rule_failures: fails, judge: verdict, judge_error: judgeError, tools, reply, latency_ms: latency, first_output_ms: usage.first_output_ms ?? null, model: usage.model ?? null, mode: usage.mode ?? null, tokens_in: usage.tokens_in ?? 0, tokens_out: usage.tokens_out ?? 0, cost_usd: (usage.cost_usd as number | null) ?? 0, judge_cost_usd: judgeCost, hinglish_words: hinglishWords });
     process.stdout.write(pass ? "." : "F");
   }
   console.log("");
