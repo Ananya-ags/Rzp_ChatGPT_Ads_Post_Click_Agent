@@ -1,5 +1,4 @@
 /** ~40 eval cases (step 9 runs them). Demo time is fixed to the demo clock. */
-const T = "2026-10-13T10:00:00+05:30";
 const W = "waterproof-everyday-under-5k", WED = "wedding-guest-gift", OFF = "office-minimal", STEEL = "stainless-steel-earrings";
 type C = {
   id: string; category: string; ag?: string; tier?: number; pin?: string | null; sku?: string;
@@ -78,16 +77,26 @@ const RAW: C[] = [
 export function buildEvals() {
   return {
     version: "v1",
+    // demo clock is fixed in config (src/config/demo.ts), so cases no longer carry a time
     cases: RAW.map((c) => ({
       id: c.id,
       category: c.category,
-      setup: { ad_group: c.ag ?? W, tier: c.tier ?? 0, pincode: c.pin ?? null, demo_time: T, page_sku: c.sku ?? (c.ag === OFF ? "ciel-huggies-20mm" : "ciel-hoops-40mm") },
+      page: c.sku ?? (c.ag === OFF ? "ciel-huggies-20mm" : "ciel-hoops-40mm"),
+      ad_group: c.ag ?? W,
+      logged_in: (c.tier ?? 0) === 3,
+      pincode: c.pin ?? null,
       messages: (Array.isArray(c.msg) ? c.msg : [c.msg]).map((m) => ({ role: "user" as const, content: m, ...(c.attach ? { attachment: c.attach } : {}) })),
-      expected_tools: c.tools ?? [],
-      tools_ordered: c.ordered ?? false,
-      must_include: c.inc ?? [],
-      must_not_include: c.not ?? ["ChatGPT"],
-      expected_format: c.format ?? "either",
+      expect: {
+        tools: c.tools ?? [],
+        tools_ordered: c.ordered ?? false,
+        must_include: c.inc ?? [],
+        must_not_include: c.not ?? ["ChatGPT"],
+        care_line: c.category === "handoff",
+        language: c.category === "hinglish" ? ("hinglish_or_en" as const) : ("en" as const),
+        format: c.format ?? "either",
+      },
+      // the LLM judge scores tone and helpfulness; input rejections are fixed strings, nothing to judge
+      judge: c.category !== "input_validation",
       judge_rubric: c.rubric ?? null,
     })),
   };

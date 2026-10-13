@@ -412,17 +412,29 @@ export const EvalCategory = z.enum([
   "tool_use", "groundedness", "claim_safety", "handoff", "return_insight_relevance",
   "offer_cap_abuse", "prompt_injection", "hinglish", "card_vs_text", "off_topic", "no_chatgpt_mention", "input_validation",
 ]);
+/**
+ * One eval case. `page` is a product handle, "home" or "bag". `pincode`, `expect.tools_ordered`, `expect.format`
+ * and `judge_rubric` are kept from the original cases so converting the format doesn't change what they test.
+ */
 export const EvalCaseSchema = z.object({
   id: z.string(),
   category: EvalCategory,
-  setup: z.object({ ad_group: AdGroupSlug, tier: z.number().int().min(0).max(3), pincode: Pincode.nullable(), demo_time: IsoDateTime, page_sku: Handle }),
+  page: z.union([Handle, z.literal("home"), z.literal("bag")]),
+  ad_group: AdGroupSlug.nullable(),
+  logged_in: z.boolean(),
+  pincode: Pincode.nullable(),
   // attachment: a non-text part sent with the message (for the text-only input check)
   messages: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string(), attachment: z.object({ media_type: z.string(), filename: z.string() }).optional() })).min(1),
-  expected_tools: z.array(z.string()),
-  tools_ordered: z.boolean(),
-  must_include: z.array(z.string()),
-  must_not_include: z.array(z.string()),
-  expected_format: z.enum(["card", "text", "either"]),
+  expect: z.object({
+    tools: z.array(z.string()),
+    tools_ordered: z.boolean(),
+    must_include: z.array(z.string()),
+    must_not_include: z.array(z.string()),
+    care_line: z.boolean(),
+    language: z.enum(["en", "hinglish_or_en"]),
+    format: z.enum(["card", "text", "either"]),
+  }),
+  judge: z.boolean(),
   judge_rubric: z.string().nullable(),
 });
 export const EvalCasesSchema = z.object({ version: z.string(), cases: z.array(EvalCaseSchema) });

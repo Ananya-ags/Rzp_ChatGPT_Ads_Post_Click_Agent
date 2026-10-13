@@ -128,7 +128,7 @@ chats.messages.forEach((m) => {
   if (s.converted !== m.converted) err(`chat ${m.id}: converted flag disagrees with session`);
 });
 demo.steps.forEach((s) => { agRef(s.ad_group, `demo ${s.id}`); pin(s.pincode, `demo ${s.id}`); s.cached_response?.cards.forEach((c) => c.skus.forEach((x) => sku(x, `demo ${s.id} card`))); });
-evals.cases.forEach((c) => { agRef(c.setup.ad_group, `eval ${c.id}`); pin(c.setup.pincode, `eval ${c.id}`); sku(c.setup.page_sku, `eval ${c.id}`); });
+evals.cases.forEach((c) => { if (c.ad_group) agRef(c.ad_group, `eval ${c.id}`); pin(c.pincode, `eval ${c.id}`); if (c.page !== "home" && c.page !== "bag") sku(c.page, `eval ${c.id}`); });
 check(new Set(evals.cases.map((c) => c.id)).size === evals.cases.length, "eval ids unique");
 
 /* ───────── catalogue facts ───────── */
