@@ -181,8 +181,8 @@ Open **[rzp-build-cosmos.vercel.app](https://rzp-build-cosmos.vercel.app/)** in 
 Requires Node.js 20+.
 
 ```bash
-git clone https://github.com/Ananya-ags/Rzp_build_cosmos.git
-cd Rzp_build_cosmos
+git clone https://github.com/Ananya-ags/Rzp_ChatGPT_Ads_Post_Click_Agent.git
+cd Rzp_ChatGPT_Ads_Post_Click_Agent
 npm install
 cp .env.example .env.local   # add the keys you have; all optional for a local preview
 npm run data                 # seed → AI pipelines → demo cache → validate data
