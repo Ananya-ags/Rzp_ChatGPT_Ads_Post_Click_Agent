@@ -791,3 +791,34 @@ Limits: physical iPhone/Safari keyboard behaviour is not verified; mobile keyboa
 - **v2 re-run with the judge, including the new abuse category:** like-for-like 39/52 → 52/52 (75% → 100%), +18 new cases all passing, gate passing.
   - The judge model (Gemini 3.1 Pro) hit its daily quota of 250 requests on the last 8 cases. The runner now records a judge error as "not judged" (rules decide) instead of a fail. Those 8 entries in v2.json were converted to that format, and all pass their rule checks.
   - `npm run evals:rejudge -- --from v2 --write --ids …` fills them in once the quota resets; the report lists them and the command.
+
+## 13 Oct 2026: Checkout, Option B (simulated Magic Checkout-style steps + real Razorpay Standard Checkout)
+- **Why Option B:** Standard Checkout in Test Mode is self-serve and real, but it can't look up saved addresses from a phone number, offer COD, show RTO nudges or our offers UI. Magic Checkout can, but needs activation. So our own four steps show the Magic Checkout features (labelled "Checkout steps simulated to show Magic Checkout features · payment uses Razorpay Test Mode"), and the payment itself is real Razorpay Test Mode.
+- **What's real:**
+  - **Orders API** (`/api/checkout/order`, server-side `fetch` with Basic auth): amount in paise computed on the server from the `cosmos_bag` cookie (SKU + qty only; the client never sends an amount, and a fake `amount` in the body is ignored), plus a receipt ID.
+  - **Notes for attribution:** `ad_group_id` (Engage ID), `ad_group`, `campaign_id`, `oppref` (stored from the ad URL in a session cookie by the proxy), `session_id`, `arm`, `line_items` in Magic Checkout's format (chunked to Razorpay's 256-character note limit) and `line_items_total`.
+  - **Checkout.js** (Standard Checkout): opened with order_id, prefill (name, +91 phone, email) and the Cosmos theme colour; `config.display` puts UPI first.
+  - **HMAC-SHA256 verification** (`/api/checkout/verify`) of `order_id|payment_id` with the key secret, compared in constant time; only a valid signature shows the confirmation. Rejections are logged server-side by order ID only.
+  - **No server memory between the two calls:** the order route returns a signed order record (`src/lib/orderToken.ts`), which verify checks before trusting, so it works across serverless instances.
+- **What's simulated (labelled):** phone recognition and the saved address (the demo number 9999999999, OTP 123456, logs in with the same cookie as /login), RTO (pincode risk from logistics.json, raised by the shopper's own history; it drives a prepaid nudge, COD is never blocked and the reason is never shown), the offers UI (getOffer, caps in code, a simulated bank offer, the wallet toggle, coupon "WELCOME10"), COD (+₹49, online offers removed), and trust badges.
+- **Modes:**
+  - `PAYMENTS_MODE=test|mock`; mock is automatic when keys are missing.
+  - If Checkout.js can't load, the order route creates a mock order and the shopper sees a labelled "Simulated payment" sheet with a note.
+  - `MAGIC_CHECKOUT_ENABLED=false`: for a merchant with Magic Checkout activated, the same server-created order would carry `line_items` / `line_items_total` as order fields, and the payment step would open Magic Checkout instead of our simulated steps plus Standard Checkout (contact, address, offers, COD and RTO then come from Razorpay).
+- **Confirmation** (`/order/[id]`):
+  - Shows the Razorpay payment ID (or COD-…), arrival date, items, what you saved, payment method, a care tip per item, the care line, and SMS updates (no WhatsApp).
+  - The bag is cleared; the order is saved in sessionStorage plus a small cookie index.
+  - An order event goes on the `cosmos-console` BroadcastChannel and into sessionStorage for the AI console: attribution, arm, return probability per item (the ad group's rate from returns.json, else the SKU's), predicted kept revenue = paid − predicted refunds − predicted RTO, and payment method.
+- **No Cosmos AI** in checkout or on the confirmation page (they don't mount AskCosmos). The bag's "Proceed to pay" and the chat's added-to-bag card ("· Checkout") both lead here. Login is never required.
+- **Decisions / findings:**
+  - **EMI:** follows the bag value (over ₹3,000), the same rule as the bag page (which now uses "over", not "at least").
+  - **Gift wrap:** carries from the bag into the checkout total.
+  - **Razorpay's modal rejects the fictional demo number 9999999999 as a mobile,** so for the demo persona its contact screen asks for a number; real numbers prefill correctly (they must carry +91).
+  - **The test account's modal shows Cards, Netbanking and Wallet, not UPI,** so the tests pay with test Netbanking (Razorpay's test bank page).
+- **Tests:**
+  - `npm run test:payments`: 7/7. A valid HMAC is accepted; a flipped digit, another payment or order ID, an empty signature or a tampered order record are rejected.
+  - Tampered signatures through the real route: 400 "We couldn't confirm the payment."
+  - `scripts/tests/checkout-browser.mjs` at 390px: **29/29.** (a) guest → real Test Mode payment → signature verified → confirmation; (b) demo number → wrong OTP → OTP → saved address → wallet → pay; (c) COD with ₹49 and no online offers; (d) prepaid nudge with COD still available; (e) cancelled → "Payment didn't go through. Try UPI?", bag intact; (f) mock mode end to end; EMI only over ₹3,000.
+  - **Iframe:** the Razorpay modal opens and a payment verifies with the shop inside a same-origin iframe, so /demo needs no change for that.
+  - The key secret appears in no server log, the browser bundle or the build output.
+  - Codex's chat-browser test 18/18, 390px flows 27/27, bag UI 7/7, validator and lint clean.

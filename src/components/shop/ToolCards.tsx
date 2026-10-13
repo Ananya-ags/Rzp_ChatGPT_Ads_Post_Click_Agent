@@ -181,6 +181,10 @@ function BagAdded() {
       <Link href={`/cart${q}`} className="font-medium underline underline-offset-2">
         View bag
       </Link>
+      ·
+      <Link href={`/checkout${q}`} className="font-medium underline underline-offset-2">
+        Checkout
+      </Link>
     </p>
   );
 }

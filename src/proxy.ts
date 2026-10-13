@@ -1,13 +1,21 @@
 /**
  * Demo bypass (for recording the video only): opening any page with ?demo=<DEMO_BYPASS_TOKEN> sets a session cookie
  * that skips the chat rate limit. The cookie holds a hash of the token, never the token, and the parameter is always
- * removed from the address bar (redirect) so it can't end up in a shared link. Runs only when ?demo is present.
+ * removed from the address bar (redirect) so it can't end up in a shared link.
+ * Attribution: a sponsored-ad landing (?oppref=…) stores the oppref in a session cookie, so the Razorpay order created
+ * at checkout can carry it in its notes (the attribution hook). Runs only when ?demo or ?oppref is present.
  */
 import { NextResponse, type NextRequest } from "next/server";
 import { DEMO_COOKIE, sha256Hex } from "@/lib/agent/rateLimit";
 
 export async function proxy(request: NextRequest) {
   const url = request.nextUrl.clone();
+  const oppref = url.searchParams.get("oppref");
+  if (oppref && !url.searchParams.has("demo")) {
+    const res = NextResponse.next();
+    if (/^[\w.-]{1,120}$/.test(oppref)) res.cookies.set("cosmos_oppref", oppref, { httpOnly: true, sameSite: "lax", path: "/" }); // session cookie
+    return res;
+  }
   const given = url.searchParams.get("demo");
   url.searchParams.delete("demo");
   const res = NextResponse.redirect(url);
@@ -17,5 +25,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [{ source: "/((?!_next/|api/|favicon).*)", has: [{ type: "query", key: "demo" }] }],
+  matcher: [
+    { source: "/((?!_next/|api/|favicon).*)", has: [{ type: "query", key: "demo" }] },
+    { source: "/((?!_next/|api/|favicon).*)", has: [{ type: "query", key: "oppref" }] },
+  ],
 };

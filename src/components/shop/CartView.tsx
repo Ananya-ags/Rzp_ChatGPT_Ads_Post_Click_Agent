@@ -257,13 +257,13 @@ export default function CartView({ cards, linkQuery, continueHref, trust, user: 
           </>
         )}
 
-        {/* sticky pay bar (checkout not connected yet) */}
+        {/* sticky pay bar → checkout */}
         {!empty && quote && quote.count > 0 && (
           <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-ivory/95 px-4 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 backdrop-blur">
-            <button disabled className="h-12 w-full rounded-full bg-ink text-[14px] font-medium text-ivory opacity-60" title="Razorpay checkout is being connected">
+            <Link href={`/checkout${linkQuery}${giftWrap ? `${linkQuery ? "&" : "?"}gift=1` : ""}`} className="grid h-12 w-full place-items-center rounded-full bg-ink text-[14px] font-medium text-ivory">
               Proceed to pay · {inr(quote.payable_inr)}
-            </button>
-            <p className="mt-1 text-center text-[11px] text-muted">Razorpay checkout coming soon</p>
+            </Link>
+            <p className="mt-1 text-center text-[11px] text-muted">Secure checkout · payment by Razorpay (Test Mode)</p>
           </div>
         )}
 

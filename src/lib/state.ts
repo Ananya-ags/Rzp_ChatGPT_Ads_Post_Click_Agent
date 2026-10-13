@@ -17,6 +17,7 @@ export type DemoState = {
 };
 
 const KEY = "cosmos-demo-state-v1";
+export const BAG_COOKIE = "cosmos_bag";
 let snapshot: DemoState | null = null; // cached for useSyncExternalStore (must be a stable object)
 let memory: DemoState | null = null; // fallback when localStorage is unavailable
 let storageBlocked = false;
@@ -45,6 +46,12 @@ export function writeState(patch: Partial<DemoState> | ((s: DemoState) => Partia
   // otherwise the next page would render from a stale copy until a reload
   snapshot = next;
   if (storageBlocked) memory = next;
+  // the bag also goes to a session cookie (SKU + qty only) so checkout prices it on the server from the catalogue
+  if ("cart" in next) {
+    try {
+      document.cookie = `${BAG_COOKIE}=${encodeURIComponent(JSON.stringify(next.cart.map((l) => [l.sku, l.qty])))}; path=/; samesite=lax`;
+    } catch {}
+  }
   try {
     window.dispatchEvent(new CustomEvent(EVENT, { detail: next }));
   } catch {}

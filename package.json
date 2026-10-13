@@ -21,8 +21,10 @@
     "evals:report": "tsx scripts/evals/report.ts",
     "test:claims": "tsx scripts/tests/claims.test.ts",
     "test:abuse": "tsx scripts/tests/abuse.test.ts",
+    "test:payments": "tsx --conditions=react-server scripts/tests/payments.test.ts",
     "test:chips": "tsx --conditions=react-server scripts/tests/chips.test.ts",
-    "test:chat-browser": "node scripts/tests/chat-browser.mjs"
+    "test:chat-browser": "node scripts/tests/chat-browser.mjs",
+    "test:checkout-browser": "node scripts/tests/checkout-browser.mjs"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.78",

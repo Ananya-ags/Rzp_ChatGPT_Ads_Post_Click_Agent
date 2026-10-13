@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     gift_wrap_price_inr: pol.gift_wrap_inr,
     cod_fee_price_inr: pol.cod_fee_inr,
     arrives_label: arrives ? formatDay(arrives) : null,
-    emi_available: totals.subtotal_inr >= rzp.emiMin,
+    emi_available: totals.subtotal_inr > rzp.emiMin, // bags over ₹3,000
     // the pay-online nudge is only listed for the customer it targets
     available_offers: db.offers.filter((o) => o.id !== "prepaid_nudge" || (user && user.rtoRisk === "high")).map((o) => ({ id: o.id, label: o.label, applied: totals.applied.some((a) => a.id === o.id) || (o.type === "wallet" && totals.wallet.usable_inr > 0) })),
     user: user ? { firstName: user.firstName, phone: user.phoneMasked, email: user.emailMasked, address: user.address, paymentMethods: user.paymentMethods, nudgePrepaid: user.rtoRisk === "high" } : null,
