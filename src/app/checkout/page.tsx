@@ -13,16 +13,14 @@ export default async function Page({ searchParams }: Props) {
   const sp = await searchParams;
   const db = getDb();
   const group = resolveAdGroup({ ad_group: one(sp.ad_group) });
-  const armParam = one(sp.arm)?.toUpperCase();
-  const arm = armParam === "A" || armParam === "B" ? armParam : "C";
   const user = await getUser();
-  const linkQuery = group ? `?ad_group=${group.id}${armParam ? `&arm=${arm}` : ""}` : armParam ? `?arm=${arm}` : "";
+  const linkQuery = group ? `?ad_group=${group.id}` : "";
   return (
     <PhoneFrame label="Shopper view · checkout (steps simulated · payment in Razorpay Test Mode)">
       <CheckoutFlow
         loggedIn={user ? { phone: db.shoppers.tier3_demo.demo_login_phone, prefill: { name: user.firstName, email_masked: user.emailMasked, phone_masked: user.phoneMasked, address: user.address, wallet_inr: user.walletInr } } : null}
         adGroupId={group?.id ?? null}
-        arm={arm}
+        arm="C"
         giftWrap={one(sp.gift) === "1"}
         backHref={`/cart${linkQuery}`}
         badges={{ buyer: "Buyer Protection (simulated)", trusted: "Trusted Business (simulated)" }}

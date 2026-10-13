@@ -239,7 +239,7 @@ export default function CheckoutFlow(p: {
       return setPayNote(o.error ?? "We couldn't start the payment. Please try again.");
     }
     if (o.kind === "razorpay")
-      logStep(`Razorpay order created: ${o.order_id} · ₹${(o.amount / 100).toLocaleString("en-IN")} (amount from the server)`, { detail: `notes: ad_group_id ${o.notes?.ad_group_id} · oppref ${o.notes?.oppref} · arm ${o.notes?.arm} · line_items_total ${o.notes?.line_items_total}`, data: { order_id: o.order_id, amount: o.amount, notes: o.notes } });
+      logStep(`Razorpay order created: ${o.order_id} · ₹${(o.amount / 100).toLocaleString("en-IN")} (amount from the server)`, { detail: `notes: ad_group_id ${o.notes?.ad_group_id} · oppref ${o.notes?.oppref} · line_items_total ${o.notes?.line_items_total}`, data: { order_id: o.order_id, amount: o.amount, notes: o.notes } });
     else if (o.kind === "cod") logStep(`Cash on delivery order ${o.order_id} (no Razorpay call)`, { detail: "+₹49 fee, online offers removed" });
     else logStep(`Simulated order ${o.order_id} (mock mode)`, { status: "fallback", detail: o.fallback === "checkout_js_unavailable" ? "Checkout.js couldn't load" : "No test keys" });
     if (o.kind === "cod") return verify({ token: o.token });

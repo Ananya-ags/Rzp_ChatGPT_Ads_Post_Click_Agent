@@ -71,13 +71,10 @@ try {
   assert.match(await railOf(page).innerText(), /No pieces in this ad's selection/);
   console.log("PASS empty results: explicit no-match message, no unrelated fallback");
 
-  for (const arm of ["A", "B"]) {
-    await page.goto(`${target}&arm=${arm}`, { waitUntil: "networkidle" });
-    assert.equal(await page.getByRole("heading", { name: "Updated from your chat" }).count(), 0);
-    assert.equal(await page.getByRole("button", { name: "Ask Cosmos AI", exact: true }).count(), 0);
-    if (arm === "B") assert.deepEqual(await handles(page), original);
-  }
-  console.log("PASS holdouts: arms A and B ignore chat preferences");
+  // a legacy variant param is ignored: the agent experience (and the chat-updated rail) always applies
+  await page.goto(`${target}&arm=A`, { waitUntil: "networkidle" });
+  assert.equal(await page.getByRole("heading", { name: "Updated from your chat" }).count(), 1);
+  console.log("PASS legacy URL param ignored: chat preferences still apply");
 
   await context.addCookies([{ name: "cosmos_prefs", value: encodeURIComponent(JSON.stringify({ category: "necklace", budget_max_inr: 3000 })), url: BASE }]);
   await page.goto(`${BASE}/p/ciel-hoops-40mm`, { waitUntil: "networkidle" });

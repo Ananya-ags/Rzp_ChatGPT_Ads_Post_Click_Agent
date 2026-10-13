@@ -19,7 +19,7 @@ npm run dev                  # http://localhost:3000
 |---|---|
 | `/` | Start page + demo controls (pause agent, reset) |
 | `/chatgpt` | Mock ChatGPT with sponsored cards (conversation 3 unlocks after the proposal is approved) |
-| `/p/[handle]?ad_group_id=…` | Product page adapted to the ad (arm C: chip, rail, opener, agent). `&arm=A` gives the standard page, `&arm=B` the rail without the agent |
+| `/p/[handle]?ad_group_id=…` | Product page adapted to the ad (chip, rail, opener, agent) |
 | `/api/chat` | Agent (Claude Haiku 5.5 + tools, guardrails, cached fallback) |
 
 ## Data
@@ -38,3 +38,5 @@ Historical v1/v2 results:
 
 Full report, by category, with the fixes and limits: [docs/EVALS.md](docs/EVALS.md).
 <!-- evals:end -->
+
+Measurement in production: a holdout of ChatGPT ad traffic would see the standard page, so the lift in ad-click-to-order conversion is measured directly. The prototype shows the agent experience only.

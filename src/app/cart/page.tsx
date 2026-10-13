@@ -14,8 +14,7 @@ export default async function Page({ searchParams }: Props) {
   const db = getDb();
   const group = resolveAdGroup({ ad_group: one(sp.ad_group) });
   const via = one(sp.via) === "chatgpt" && !!group;
-  const arm = one(sp.arm);
-  const linkQuery = group ? `?ad_group=${group.id}${arm ? `&arm=${arm}` : ""}${via ? "&via=chatgpt" : ""}` : "";
+  const linkQuery = group ? `?ad_group=${group.id}${via ? "&via=chatgpt" : ""}` : "";
   const backConv = group ? db.mock.conversations.find((c) => c.ad_group === group.id)?.id : undefined;
   const cards = Object.fromEntries(db.products.map((p) => [p.handle, toCard(p, db.manifest)]));
   const m = db.razorpay.magic_checkout_simulated;

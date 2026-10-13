@@ -312,7 +312,7 @@ Yes, if we define it honestly:
 
 | Axis | Values |
 |---|---|
-| Session source | **Ad session:** has ad-group context, persists across pages. **Direct session:** no ad context. Enabled in the prototype as the "whole-site tier" so judges can try it anywhere; holdout arm A has it off. |
+| Session source | **Ad session:** has ad-group context, persists across pages. **Direct session:** no ad context. Enabled in the prototype as the "whole-site tier" so judges can try it anywhere. |
 | Identity | anonymous / brand cookie / logged in |
 | Page | homepage / product page / bag |
 
@@ -441,7 +441,6 @@ flowchart TD
   A[Shopper lands] --> B{Session source}
   B -->|ChatGPT ad: ad_group in URL| C[Ad session: context chip, AI rail, ad-echo opener]
   B -->|Direct / organic| D[Direct session: category rail, general opener]
-  B -->|Holdout arm A| Z[Standard page, no agent]
   C --> E{Page}
   D --> E
   E -->|Home| H[Welcome chips]
@@ -623,7 +622,7 @@ Also one auto-handled log line (the out-of-stock removal).
 **Fallback if time runs out:** record the console only for the video, and document it in GitHub (`docs/AGENT.md` with screenshots). Acceptable, but weaker.
 
 **Console sections:**
-1. Session and source: ChatGPT ad → ad group, `oppref`, arm, identity tier
+1. Session and source: ChatGPT ad → ad group, `oppref`, identity tier
 2. Page decisions: rail items with AI / rule / cookie / login / session badges and reasons
 3. Agent trace (live): each step as **Trigger → Decision → Tool(args) → Result → Rule/Check → latency**
 4. Guardrails: pass/fail list
@@ -663,7 +662,7 @@ Also one auto-handled log line (the out-of-stock removal).
 1. **Re-run the pipelines with Gemini (P0)**, record producer metadata, and add the vision step.
 2. **Provider switch:** env var name, Vercel env vars, free-tier limits, billing cap, fast path as the quota safety net.
 3. **Approvals must change server-rendered pages:** store approved proposal IDs in a `cosmos_overrides` cookie; the server merges them into the data at request time (badges, verified flags, active ad groups). "Reset demo" clears it. Vercel can't write files at runtime, so files can't be used.
-4. **Ad-session flag:** a `cosmos_session` cookie set on landing (ad group, `oppref`, arm), so context follows the shopper to the homepage and other products. The chat history lives in sessionStorage.
+4. **Ad-session flag:** a `cosmos_session` cookie set on landing (ad group, `oppref`), so context follows the shopper to the homepage and other products. The chat history lives in sessionStorage.
 5. **Homepage:** a light shell (hero, 4 category tiles linking to products, agent). Collection pages and search stay out.
 6. **Data fixes:**
    - ~~Elle exclusion~~ (superseded: one metal per earring, steel-earrings ad)

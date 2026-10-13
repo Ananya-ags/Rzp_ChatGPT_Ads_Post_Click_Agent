@@ -14,7 +14,7 @@ Indian D2C brands (demo: a fictional anti-tarnish demi-fine jewellery brand) run
 5. Clusters what shoppers asked into proposals the merchant approves (new ad group, feed attribute, remove from rail, pause context), which flow back to Engage's campaign agent.
 6. Measures everything as **kept revenue** = paid revenue − refunds − RTO (predicted until the return window closes).
 
-**Main metric:** kept revenue per ChatGPT click, agent page vs standard page (holdout). Guardrails: return/RTO rate, page load time, answer accuracy, handoff rate.
+**Main metric:** ad-click-to-order conversion for ChatGPT ad traffic; side metric: kept revenue (paid − refunds − RTO). Measurement in production: a holdout of ChatGPT ad traffic would see the standard page, so the lift in ad-click-to-order conversion is measured directly. The prototype shows the agent experience only. Guardrails: return/RTO rate, page load time, answer accuracy, handoff rate.
 
 ## 2. Track 2 questions the prototype must make visible
 | Brief asks | Our answer (and where it shows) |
@@ -22,10 +22,10 @@ Indian D2C brands (demo: a fictional anti-tarnish demi-fine jewellery brand) run
 | Signal | Ad-group context, what shoppers ask, constraints they fail, why they return items (AI console, merchant console) |
 | Why AI, not a rule | 5 AI decisions below |
 | Action | Rail ranking, alternatives, return prevention, proposals |
-| Merchant control | Brand rules, offer caps, approve/reject proposals, pause switch, holdout, coverage |
+| Merchant control | Brand rules, offer caps, approve/reject proposals, pause switch, coverage |
 | Learning | Kept revenue per context feeds ranking and proposals; approve → new ad → new rail |
 | Trust and failure | Verified claims only, "I don't know" + handoff, code-computed numbers, AI disclosed, consent for personalisation, evals |
-| Metric | Kept revenue per click vs holdout |
+| Metric | Ad-click-to-order conversion; kept revenue as the side metric |
 
 ## 3. The five AI decisions (the "AI-native" case; all must be visible)
 1. **Catalogue understanding** (offline): reads messy product text and product images, extracts attributes with source phrase, `verified: false`.
@@ -62,11 +62,11 @@ Tool results render as UI in chat (product cards with "Add", delivery badges, co
 1. **`/demo`** (desktop, for the video): left = phone frame running the mobile site; right = AI console. They communicate via BroadcastChannel/postMessage.
 2. **Mock ChatGPT** (in the phone frame): conversations with sponsored cards for two ad groups pointing at the same hero SKU; a third conversation (sensitive ears) shows the stainless steel earrings ad only after its proposal is approved.
 3. **Product page `/p/[handle]?ad_group=…`**: context chip, hero SKU with price and "Arrives by", rail with reasons, sticky bar ("Ask about this" pill + Add). Chat in a `vaul` bottom sheet: pill → half → full (full when keyboard opens). In full screen, pin a slim product strip and cart count.
-4. **Control page**: same product with no agent and no curation (arm A).
+4. **Same product, different ads**: the same product page landed from two ads, each with its own rail and opener.
 5. **AI console** (right pane): source and ad group, context hints, personalisation tier, rail reasons and brand rules applied, live tool trace (tool, key args, one-line result, latency), guardrail checks (claim check, offer cap, banned phrases), tokens and cost per chat, page load time. Show structured traces, not raw model reasoning.
 6. **Checkout**: cart → optional Login With Razorpay (mock OTP 123456) → Razorpay Test Mode checkout prefilled → success. Simulated badges: Buyer Protection, Trusted Business, EMI above ₹3,000; prepay nudge for high-RTO pincode.
 7. **Merchant console `/merchant`**: an inbox of decisions, not a dashboard.
-   - Summary strip: kept revenue per click vs standard page, return/RTO rate, proposals waiting.
+   - Summary strip: ad-click-to-order conversion with the funnel, kept revenue, proposals waiting, agent status.
    - Proposals with expandable evidence; **Approve on the new-ad-group proposal is real** (adds the new ad to mock ChatGPT).
    - Kept revenue by ad group (computed from synthetic orders; label "Simulated"; recent rows "using predicted returns").
    - What shoppers asked (intent clusters).
@@ -114,7 +114,7 @@ Method: rule checks first; LLM judge with rubric for subjective cases; hand-chec
 1. Data (Part B of the brief) + validate-data script; product images.
 2. Offline pipelines → `/data/generated`.
 3. Mock ChatGPT entry (two ads, same SKU).
-4. Product page + rail + tiers + control page.
+4. Product page + rail + tiers.
 5. Agent with tools, cards, bottom sheet, guardrails.
 6. AI console + `/demo` split view.
 7. Checkout (Test Mode + simulated login).

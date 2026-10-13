@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import PhoneFrame from "@/components/PhoneFrame";
 import ProductPage, { type ProductPageProps } from "@/components/shop/ProductPage";
-import { getDb, resolveAdGroup } from "@/lib/data";
+import { getDb, getDbFor, resolveAdGroup } from "@/lib/data";
+import { APPROVED_COOKIE, readApprovedCookie } from "@/lib/overrides";
 import { estimateDelivery, formatDay } from "@/lib/delivery";
 import { toCard } from "@/lib/view";
 import { getUser, personaliseRail } from "@/lib/user";
@@ -31,7 +32,9 @@ export async function generateMetadata({ params }: Props) {
 export default async function Page({ params, searchParams }: Props) {
   const { handle } = await params;
   const sp = await searchParams;
-  const db = getDb();
+  const cookieStore = await cookies();
+  // merchant approvals (e.g. the "waterproof" attribute) change the facts and badges shown, never the model's say-so
+  const db = getDbFor(readApprovedCookie(cookieStore.get(APPROVED_COOKIE)?.value));
   const product = db.products.find((p) => p.handle === handle);
   if (!product) notFound();
 
@@ -40,8 +43,8 @@ export default async function Page({ params, searchParams }: Props) {
   // Opened from a sponsored card (utm_source/oppref) → render inside the in-app browser chrome; product links keep it.
   const viaChatgpt = !!group && (one(sp.utm_source) === "chatgpt" || !!one(sp.oppref) || one(sp.via) === "chatgpt");
   const backConv = group ? db.mock.conversations.find((c) => c.ad_group === group.id)?.id : undefined;
-  const armParam = one(sp.arm)?.toUpperCase();
-  const arm: "A" | "B" | "C" = armParam === "A" || armParam === "B" || armParam === "C" ? armParam : "C";
+  // Every visitor gets the agent experience. The holdout logic downstream stays in place but is unreachable.
+  const arm = "C" as "A" | "B" | "C";
   const j = product.metafields.jewellery;
   const cards = Object.fromEntries(db.products.map((p) => [p.handle, toCard(p, db.manifest)]));
 
@@ -86,7 +89,7 @@ export default async function Page({ params, searchParams }: Props) {
     group && user
       ? personaliseRail(railBase.map((r) => r.sku), group.candidate_skus, group.hero_sku, user, db.rules.rail_size).map((sku) => ({ sku, reason: "", pinned: railBase.find((r) => r.sku === sku)?.pinned ?? false }))
       : railBase;
-  const preferences = arm === "C" ? readPreferencesCookie((await cookies()).get(PREFS_COOKIE)?.value) : {};
+  const preferences = arm === "C" ? readPreferencesCookie(cookieStore.get(PREFS_COOKIE)?.value) : {};
   const railUpdated = Object.values(preferences).some((value) => value !== undefined && value !== "");
   const railRaw = railUpdated
     ? applyRailPreferences(db, personalisedRail, {
@@ -102,7 +105,7 @@ export default async function Page({ params, searchParams }: Props) {
         size: group ? db.rules.rail_size : 4,
       })
     : personalisedRail;
-  const linkQuery = group ? `?ad_group=${group.id}${armParam ? `&arm=${arm}` : ""}${viaChatgpt ? "&via=chatgpt" : ""}` : armParam ? `?arm=${arm}` : "";
+  const linkQuery = group ? `?ad_group=${group.id}${viaChatgpt ? "&via=chatgpt" : ""}` : "";
   const opener = group ? db.openers.openers[group.id] : null;
   const more = db.products
     .filter((p) => p.handle !== handle && p.metafields.jewellery.category === j.category && !p.metafields.jewellery.excluded)
@@ -139,9 +142,6 @@ export default async function Page({ params, searchParams }: Props) {
   // AI console (/demo): this page's decisions with where each came from. Emitted only when the console listens.
   const consoleEvents: PageEvent[] = [];
   const ev = (e: Omit<PageEvent, "journey_step">) => consoleEvents.push({ journey_step: "page", ...e });
-  if (arm !== "C") {
-    ev({ kind: "agent_off", title: `Agent off on this arm (${arm}), standard page shown`, detail: arm === "A" ? "Control arm A: no ad context, no curated rail, no Cosmos AI" : "Arm B: curated page without Cosmos AI", source: "rule", status: "info", data: { arm } });
-  }
   if (arm !== "A" && props.context) {
     if (railUpdated) ev({ kind: "rail_rule", title: "Recommendations updated from chat", detail: `${railRaw.length} match(es); ${group ? "ad candidate pool" : "catalogue"} and brand rules respected`, source: "session", status: "ok", data: { preferences } });
     const railSource = group ? db.rails.producer : null;
@@ -187,9 +187,9 @@ export default async function Page({ params, searchParams }: Props) {
   return (
     <PhoneFrame
       chrome={viaChatgpt ? { kind: "webview", backHref: `/chatgpt${backConv ? `?c=${backConv}` : ""}`, domain: "cosmos.example" } : undefined}
-      label={`Shopper view · arm ${arm}${group ? ` · ad group: ${group.name}` : arm === "A" ? " · standard page" : " · direct visit (no ad)"}${one(sp.oppref) ? ` · oppref ${one(sp.oppref)}` : ""}`}>
+      label={`Shopper view${group ? ` · ad group: ${group.name}` : " · direct visit (no ad)"}${one(sp.oppref) ? ` · oppref ${one(sp.oppref)}` : ""}`}>
       <ProductPage key={handle} {...props} />
-      <ConsoleEmit id={`${handle}|${group?.id ?? ""}|${arm}|${user ? 1 : 0}|${JSON.stringify(preferences)}`} page={`Product: ${product.title}`} events={consoleEvents} agentPausable={arm === "C"} />
+      <ConsoleEmit id={`${handle}|${group?.id ?? ""}|${arm}|${user ? 1 : 0}|${JSON.stringify(preferences)}`} page={`Product: ${product.title}`} events={consoleEvents} agentPausable={arm === "C"} adGroupId={group?.id ?? null} />
     </PhoneFrame>
   );
 }

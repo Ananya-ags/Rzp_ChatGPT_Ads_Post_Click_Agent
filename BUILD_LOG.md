@@ -20,13 +20,13 @@ Running log of which AI tool did what, key prompts, rejected AI output and decis
 3. **Waterproof claims.** Ciel 40/30/20 and Aria 28 have verified `water_resistant: true`; the hero of the waterproof ad must be honestly waterproof. The 18 prose-only SKUs are other products.
 4. **Offer caps.** 10% / ₹300 caps the combined promotional discount per order. The loyalty wallet is stored value and not capped.
 5. **Order count.** The orders count is ~200, not ~400. ~400 orders from ~6,000 sessions implies 6.7% conversion, while ₹61 kept per click at a ~₹2.5k order value implies ~3%. The per-click targets are shown on screen, so they win. `validate-data` warns about this.
-6. **Holdout split.** ChatGPT-ads traffic is A 20% / B 40% / C 40%. Other channels are arm A.
+6. **Measurement in production:** a holdout of ChatGPT ad traffic would see the standard page, so the lift in ad-click-to-order conversion is measured directly. The prototype shows the agent experience only.
 7. **Delivery dates.** Calendar days (couriers run Sundays): 18 Oct 2026 is a Sunday and the planted 30mm date requires it. Dussehra (~20 Oct) is deliberately left out of `holidays[]`.
 8. **"Most keepers chose the 30mm".** This needed data the brief didn't have. Added `returns.json → by_use_context` (office kept: 30mm 85 vs 40mm 48 → 64%).
 9. **Hand-authored data.** It is authored as compact TypeScript in `scripts/seed/` and expanded by `npm run seed` into the `/data` JSON. This is deterministic, and fields like `price_band` can't drift from the price.
 10. **Answer key.** `evals/planted_facts.json` holds the planted sets, chat themes and return-reason labels. `validate-data` uses it; pipelines and the agent never read it.
 11. **Tuning the generator.**
-    - **Return allocation.** Return outcomes are allocated per arm, not per ad group, because arm A has only ~11 orders and one return moves the rate ~9pp.
+    - **Return allocation.** Return outcomes are allocated per traffic slice rather than per ad group, because small slices have ~11 orders and one return moves the rate ~9pp.
     - **Calibration.** Open-window predicted probabilities are scaled by at most ×0.6–1.6 to land the 14% / 9% targets.
 12. **Pipelines without an API key.** No `ANTHROPIC_API_KEY` was available, so every pipeline has a rule-based fallback. Each output's `producer.mode` says `"heuristic"` or `"llm"`. Re-run `npm run pipelines` with a key for the AI version.
 13. **Rail ranking.** Ranking uses gross sales in context, not kept revenue. That's why the layered set lands on the office rail and the "remove from rail" proposal catches it, which is the learning loop. One complementary non-earring slot per rail.
@@ -50,7 +50,6 @@ Running log of which AI tool did what, key prompts, rejected AI output and decis
 - `next build` and `eslint` are clean.
 - Headless-Chrome checks:
   - Waterproof vs wedding pages show different chip, rail and opener for the same SKU.
-  - Control page (`arm=A`) has no chip, rail or agent.
   - Chat chip "Will these work for office?" streams the cached answer, fit-check card and alternatives.
   - "give me 50% off" is capped. The injection attempt is flagged by the input guardrail.
 
@@ -77,7 +76,7 @@ Running log of which AI tool did what, key prompts, rejected AI output and decis
 - **Decision:** URL handles and variant SKU codes (e.g. `ciel-hoops-40mm`) were kept as stable internal IDs. Images, planted facts, ad groups and evals all key on them.
 
 **Clickable SKUs.**
-- Every product card (rail, "More", recently viewed, chat cards) and every product mention in chat cards (delivery, fit-check) links to `/p/<handle>`, carrying the ad context (`?ad_group=…&arm=…`).
+- Every product card (rail, "More", recently viewed, chat cards) and every product mention in chat cards (delivery, fit-check) links to `/p/<handle>`, carrying the ad context (`?ad_group=…`).
 - The product page resets scroll and gallery position on navigation.
 - Non-hero pages show a neutral assistant opener, since the ad-group opener describes the hero.
 - Logo follow-up (user: too small in the desktop frame, too large on the mobile start page): trimmed the supplied PNG's empty black padding to a slim black border so the lettering fills the badge. Sized at 32px tall in the product header and 40px (48px on desktop) on the start page.
@@ -138,7 +137,7 @@ Running log of which AI tool did what, key prompts, rejected AI output and decis
 
 ## 12 Oct 2026 · In-app browser look for ad clicks (user request)
 - **What shows.** Product pages opened from a sponsored card get a fixed white top area above the Cosmos site, on real phones and inside the desktop frame: a phone status bar (10:00 demo clock, signal, Wi-Fi, battery) and an in-app browser bar (✕ back to the same mock ChatGPT conversation, lock + `cosmos.example`, "Sponsored link", ⋯ menu). The site scrolls underneath (`PhoneFrame` `chrome` prop; `src/components/PhoneChrome.tsx`).
-- **When it shows.** Only when `utm_source=chatgpt` or an `oppref` is present. Product links on that page carry `&via=chatgpt`, so the shopper stays "inside the app". Direct visits (start page "Try it yourself", control page) keep the normal full-screen site.
+- **When it shows.** Only when `utm_source=chatgpt` or an `oppref` is present. Product links on that page carry `&via=chatgpt`, so the shopper stays "inside the app". Direct visits keep the normal full-screen site.
 - **Mock ChatGPT screen.** It got the same status bar, so the hop from chat to site looks continuous.
 - **Copy rule.** The browser bar never names the ad platform (rule 4).
 
@@ -217,14 +216,14 @@ Running log of which AI tool did what, key prompts, rejected AI output and decis
   - The ☰ panel lists "Shop all" plus the 4 categories with counts, and closes on any route change.
   - The logo goes to `/shop`; the bag icon is unchanged. "Continue shopping" in the bag goes to `/shop` when there's no ad group.
 - **Grid card:** the front photo, name, price (with the compare-at price struck through) and a "✓ Water-resistant" badge, shown only when `water_resistant === true` (a verified, brand-entered field).
-- **Product pages without an ad group** (`/p/[handle]`, no params) now get the agent: arm C by default instead of the old arm A.
+- **Product pages without an ad group** (`/p/[handle]`, no params) now get the agent by default.
   - It's one page and one component (`ProductPage`) for both cases. The only differences are:
     - no ad context chip
     - the opener "Questions about the [product]? Ask about size, materials, delivery or returns."
     - product-generic chips (delivery, offers, gift wrap, other products)
     - a "You may also like" rail computed in code (`searchCatalog` `similar_to`, same category, not personalised)
   - Same tools and guardrails: the chat sends `adGroupId: null`, and the system prompt already said "Ad context: none (direct visit)".
-  - The ad flow, control arm A (`&arm=A`) and the same-SKU-two-ads pages are unchanged. `?arm=A` without an ad group still gives the standard page.
+  - The ad flow and the same-SKU-two-ads pages are unchanged.
 - **Chat from home or category pages:**
   - A floating "Ask Cosmos AI" button opens the same vaul sheet with no page product (`context.sku: null`). The system prompt then says "no product open; use search_catalog".
   - Welcome chips: "Find a gift", "Waterproof pieces", "Under ₹2,000", "Delivery & returns". The offline fallback answers them with the real `search_catalog` and with store policy and logistics data, so they work without an API key.
@@ -241,7 +240,7 @@ Running log of which AI tool did what, key prompts, rejected AI output and decis
     - Ask Cosmos AI → delivery ("arrives Wed, 21 Oct", from check_delivery) → other products (cards)
     - Add → header bag 0 → 1 → bag page → logo → `/shop`
     - home chat "Waterproof pieces" → cards
-    - ad pages (waterproof and wedding) and arm A unchanged
+    - ad pages (waterproof and wedding) unchanged
     - no horizontal scroll; no "ChatGPT" in shopper text
 - **Add to bag from the grid** (user request): every card on `/shop` and `/c/[category]` has an "Add to bag" button below the name and price.
   - It reuses `CartButton`, so it turns into the − qty + stepper once added, respects stock and the 15-per-order cap, and shows "Out of stock" when sold out.
@@ -736,7 +735,7 @@ Order followed: checker → test wording → agent. AI tool: Claude Code wrote t
   - limited-mode and busy notes shown inline and calm; errors as a calm note, never a red box;
   - text-only input (500 characters, counter from 420) with the placeholder "Ask about size, delivery, gifting…"; the disclosure line is always visible;
   - 44px tap targets, focus rings, aria labels, reduced motion respected, the input kept above the iOS keyboard.
-- **Entry points** (`AskCosmos`): the product page keeps its sticky-bar pill. Home, category and bag get a floating gold-star button, labelled at first and star-only after scrolling (on the bag it sits above the pay bar). Hidden when the agent is paused and on arm A; never in checkout.
+- **Entry points** (`AskCosmos`): the product page keeps its sticky-bar pill. Home, category and bag get a floating gold-star button, labelled at first and star-only after scrolling (on the bag it sits above the pay bar). Hidden when the agent is paused; never in checkout.
 - **Product opener:** the hero product of an ad uses `openers.json` (the AI line where its guard passed, else the curated line; the pipeline stores whichever it used). Other products get the curated product line.
 - **Bugs found while testing, all fixed:**
   - With history carried across products, the model checked delivery for an earlier product (40mm) on the 30mm page. Fix: the prompt says "it / these" means the product on screen, and code swaps in the page product for delivery and fit checks unless the latest message names the other piece.
@@ -760,13 +759,13 @@ The old height toggle did not configure real Vaul snap points. The repaired shee
 
 Restoration now runs after hydration, and saving is disabled until restoration completes. Corrupt saved messages are rejected. One root useChat instance remains; messages/dividers persist across navigation and refresh, with memory fallback when storage is denied. Navigation and New chat abort and drain pending requests; canceled data parts cannot update the bag or preferences. Page registration only closes/cancels on an actual context change. Dividers update to the latest viewed product when no intervening message exists; saved dividers are pruned with their messages.
 
-Ad/control context follows explicit shop links, including logo, category menu, grid cards and bag. A plain direct URL does not inherit an old campaign or arm A. Home/category grids remain static. Existing AI/curated openers, safe chip configuration, fast paths and guardrails remain unchanged. Chips are rules, not AI, so the guided path is fast, testable and can never suggest unsafe prompts.
+Ad context follows explicit shop links, including logo, category menu, grid cards and bag. A plain direct URL does not inherit an old campaign. Home/category grids remain static. Existing AI/curated openers, safe chip configuration, fast paths and guardrails remain unchanged. Chips are rules, not AI, so the guided path is fast, testable and can never suggest unsafe prompts.
 
 Verification on the production build:
 - `npm run build`, `npm run lint` and TypeScript: pass.
 - `npm run validate-data`: 79 passed, zero errors; the existing orders-count warning remains.
 - `npm run test:claims`: 29 passed. `npm run test:chips`: 105/105, no model calls or failed guards.
-- New repeatable browser regression suite: 18/18 with the live key and 18/18 without keys; console/page error checks passed. Tested 1280×1000 desktop framing and 390×844 mobile viewport, launcher/home/category/product/bag, waterproof/wedding guided ads, approved steel ad, office fit alternative, 30mm 21 Oct → Aria 2.8cm 16 Oct rescue and Add, history/refresh/back-forward, current SKU context, direct/ad separation, arm A/pause, Escape/focus, drag snaps, 500-character input, card scrolling, delayed reply cancellation, corrupt storage and a same-origin 390px iframe with both storage APIs denied. The iframe harness is temporary browser interception, not a new product route.
+- New repeatable browser regression suite: 18/18 with the live key and 18/18 without keys; console/page error checks passed. Tested 1280×1000 desktop framing and 390×844 mobile viewport, launcher/home/category/product/bag, waterproof/wedding guided ads, approved steel ad, office fit alternative, 30mm 21 Oct → Aria 2.8cm 16 Oct rescue and Add, history/refresh/back-forward, current SKU context, direct/ad separation, pause, Escape/focus, drag snaps, 500-character input, card scrolling, delayed reply cancellation, corrupt storage and a same-origin 390px iframe with both storage APIs denied. The iframe harness is temporary browser interception, not a new product route.
 - Run against production with `npm run test:chat-browser -- http://localhost:3700 .cache/chat-browser/live` (uses installed Chrome; CHROME_PATH can select another Chrome executable). For offline testing, launch a separate production instance with both provider keys set to empty environment values. The suite sends two free-text messages; live runs can incur existing capped API costs. Screenshots/results are in `docs/screenshots/chat-repair/`.
 - The six planted facts remain intact: 9/9 office size insight and 64% choosing 3cm, 30mm/Aria delivery dates, sensitive-ears demand 28 with eight steel earrings, waterproof ×18, layered-set office exclusion rule and wedding pause. Catalogue/generated files were not edited.
 
@@ -796,7 +795,7 @@ Limits: physical iPhone/Safari keyboard behaviour is not verified; mobile keyboa
 - **Why Option B:** Standard Checkout in Test Mode is self-serve and real, but it can't look up saved addresses from a phone number, offer COD, show RTO nudges or our offers UI. Magic Checkout can, but needs activation. So our own four steps show the Magic Checkout features (labelled "Checkout steps simulated to show Magic Checkout features · payment uses Razorpay Test Mode"), and the payment itself is real Razorpay Test Mode.
 - **What's real:**
   - **Orders API** (`/api/checkout/order`, server-side `fetch` with Basic auth): amount in paise computed on the server from the `cosmos_bag` cookie (SKU + qty only; the client never sends an amount, and a fake `amount` in the body is ignored), plus a receipt ID.
-  - **Notes for attribution:** `ad_group_id` (Engage ID), `ad_group`, `campaign_id`, `oppref` (stored from the ad URL in a session cookie by the proxy), `session_id`, `arm`, `line_items` in Magic Checkout's format (chunked to Razorpay's 256-character note limit) and `line_items_total`.
+  - **Notes for attribution:** `ad_group_id` (Engage ID), `ad_group`, `campaign_id`, `oppref` (stored from the ad URL in a session cookie by the proxy), `session_id`, `line_items` in Magic Checkout's format (chunked to Razorpay's 256-character note limit) and `line_items_total`.
   - **Checkout.js** (Standard Checkout): opened with order_id, prefill (name, +91 phone, email) and the Cosmos theme colour; `config.display` puts UPI first.
   - **HMAC-SHA256 verification** (`/api/checkout/verify`) of `order_id|payment_id` with the key secret, compared in constant time; only a valid signature shows the confirmation. Rejections are logged server-side by order ID only.
   - **No server memory between the two calls:** the order route returns a signed order record (`src/lib/orderToken.ts`), which verify checks before trusting, so it works across serverless instances.
@@ -808,7 +807,7 @@ Limits: physical iPhone/Safari keyboard behaviour is not verified; mobile keyboa
 - **Confirmation** (`/order/[id]`):
   - Shows the Razorpay payment ID (or COD-…), arrival date, items, what you saved, payment method, a care tip per item, the care line, and SMS updates (no WhatsApp).
   - The bag is cleared; the order is saved in sessionStorage plus a small cookie index.
-  - An order event goes on the `cosmos-console` BroadcastChannel and into sessionStorage for the AI console: attribution, arm, return probability per item (the ad group's rate from returns.json, else the SKU's), predicted kept revenue = paid − predicted refunds − predicted RTO, and payment method.
+  - An order event goes on the `cosmos-console` BroadcastChannel and into sessionStorage for the AI console: attribution, return probability per item (the ad group's rate from returns.json, else the SKU's), predicted kept revenue = paid − predicted refunds − predicted RTO, and payment method.
 - **No Cosmos AI** in checkout or on the confirmation page (they don't mount AskCosmos). The bag's "Proceed to pay" and the chat's added-to-bag card ("· Checkout") both lead here. Login is never required.
 - **Decisions / findings:**
   - **EMI:** follows the bag value (over ₹3,000), the same rule as the bag page (which now uses "over", not "at least").
@@ -835,7 +834,7 @@ Limits: physical iPhone/Safari keyboard behaviour is not verified; mobile keyboa
 - **BroadcastChannel, only when listening:**
   - The site emits on `BroadcastChannel("cosmos-console")` only while a console has pinged in the last 4 seconds (it pings every second and answers the site's ping at once). Events from the first 2 seconds of a page load wait in memory, then are dropped if no console answered.
   - Verified: a passive listener without the handshake saw only the site's ping, 0 events, and nothing was stored.
-  - **Sources:** a site-wide bridge in the root layout (arrival, session, page views, bag and login changes); the product page (rail decisions with reasons, brand rules, login personalisation, opener source, arm A/B); two one-line hooks in ChatProvider (message, route, tools, guardrails, usage); checkout steps; and the order outcome.
+  - **Sources:** a site-wide bridge in the root layout (arrival, session, page views, bag and login changes); the product page (rail decisions with reasons, brand rules, login personalisation, opener source); two one-line hooks in ChatProvider (message, route, tools, guardrails, usage); checkout steps; and the order outcome.
 - **Desktop only:** below 1024px or on touch devices, /demo shows "The under-the-hood view is designed for desktop. Open the shop instead →". The console never renders on shop pages or on mobile.
 - **Decisions I made:**
   - **Colours:** Razorpay navy #072654 and blue #3395FF, taken from Razorpay's public logo and defined once as tokens. No logo, wordmark or dashboard layout.
@@ -847,7 +846,7 @@ Limits: physical iPhone/Safari keyboard behaviour is not verified; mobile keyboa
   - **Merchant events** come from the stand-in approve in the console header. The steel rail was built offline by the pipeline, so "Rail built" reports that rail and doesn't rebuild it live.
   - **Reloads:** a hard reload inside the frame logs the arrival again, since the first-arrival flag lives in memory.
 - **Tests:**
-  - `npm run test:console-browser` at 1440px: 21/21. Covers the mobile gate, nothing logged on mock ChatGPT, and journeys 1–7 (office ad → return insight → add 3cm → real Test Mode payment inside the /demo iframe → order outcome; the 30mm delivery rescue; direct visit with the fast path; a claim-safe answer plus the simulated slip; arm A; logged-in personalisation with wallet and RTO; merchant approve → steel ad → its page).
+  - `npm run test:console-browser` at 1440px: 21/21. Covers the mobile gate, nothing logged on mock ChatGPT, and journeys 1–7 (office ad → return insight → add 3cm → real Test Mode payment inside the /demo iframe → order outcome; the 30mm delivery rescue; direct visit with the fast path; a claim-safe answer plus the simulated slip; logged-in personalisation with wallet and RTO; merchant approve → steel ad → its page).
   - Regression: Codex chat-browser 18/18, 390px flows 27/27, bag UI 7/7, checkout browser 29/29, payments 7/7, chips 105/105, abuse 27, claims 29, validator and lint clean.
   - Evals: 70/70 with the gate green (rule checks only, `--no-judge`, because the judge model's daily quota was used up).
   - Screenshots are in docs/screenshots/console/.
@@ -892,8 +891,8 @@ Limits: physical iPhone/Safari keyboard behaviour is not verified; mobile keyboa
 - **User decision:** stay within the ad's candidate pool and show an explicit no-match message instead of broadening to unrelated products.
 - **Implementation:** a shared typed preference schema validates the agent tool, browser event and server cookie reader. On a changed `data-preferences` event, the browser saves the session cookie and refreshes the current Server Component payload with `router.refresh()`. The product page recomputes the rail and labels it "Updated from your chat"; conversation, open sheet and bag state remain intact.
 - **Selection:** budget, occasion, category and deadline are enforced in code. Style is a soft ordering signal. Ad visits use only the ad's candidate pool; direct visits can use the catalogue and the requested category. Merchant exclusions, margin floor, availability, current-product exclusion and logged-in ownership/size preferences are retained. Pins keep their slots only when they still meet the constraints.
-- **No-match and controls:** an empty updated rail no longer falls back to the unfiltered "More" list. Arms A and B ignore chat preferences. Reset demo clears the cookie. The AI console records the refreshed rail as a session-driven decision.
-- **Verification:** 12 deterministic rail checks, 14 discovery checks, 105 chip cases, TypeScript and ESLint pass. Live Microsoft Edge browser checks cover mobile chat-to-rail updates, preserved chat/bag state, reload persistence, empty results, unchanged A/B arms, direct-visit category changes, demo reset, and the desktop `/demo` iframe plus live console.
+- **No-match and controls:** an empty updated rail no longer falls back to the unfiltered "More" list. Reset demo clears the cookie. The AI console records the refreshed rail as a session-driven decision.
+- **Verification:** 12 deterministic rail checks, 14 discovery checks, 105 chip cases, TypeScript and ESLint pass. Live Microsoft Edge browser checks cover mobile chat-to-rail updates, preserved chat/bag state, reload persistence, empty results, direct-visit category changes, demo reset, and the desktop `/demo` iframe plus live console.
 - **Test correction:** the open modal correctly hides the underlying page from accessibility role queries. The browser test inspects the actual rail DOM while the chat is open, rather than mistaking that accessibility behaviour for a failed refresh.
 - **Scope:** no new database, extra LLM call for rail updates, or generated-data edits. Existing ownership handling outside the updated product rail is unchanged.
 

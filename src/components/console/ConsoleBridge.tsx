@@ -2,7 +2,7 @@
 /**
  * Site-wide emitter for the AI console (/demo). Renders nothing. It logs nothing on the start page, the mock
  * ChatGPT screen or /demo itself; from the first Cosmos page it logs the arrival (ad or direct), the session
- * (arm, personalisation tier, approximate city, device), every page view, and bag and login changes.
+ * (personalisation tier, approximate city, device), every page view, and bag and login changes.
  * Every emit is a no-op unless the console is listening (src/lib/console/emit.ts).
  */
 import { usePathname } from "next/navigation";
@@ -55,18 +55,17 @@ export default function ConsoleBridge(p: Props) {
           data: { campaign_id: group.campaign_id, ad_group_id: group.ad_group_id, ad_id: group.ad_id, oppref: q.get("oppref") ?? "(none in URL)", ad_group: group.id, context_hints: group.context_hints },
         });
       else emit({ journey_step: "arrival", kind: "arrival", title: "Direct visit (no ad context)", source: "session", status: "info" });
-      const arm = (q.get("arm") ?? "C").toUpperCase();
       const loggedIn = /(?:^|;\s*)cosmos_user=ananya/.test(document.cookie) || state.loggedIn;
       const tier = loggedIn ? 3 : state.returningVisitor ? 2 : 0;
       const coarse = window.matchMedia("(pointer: coarse)").matches;
       emit({
         journey_step: "session",
         kind: "session",
-        title: `Arm ${arm} · tier ${tier} (${["anonymous", "session", "brand cookie", "logged in"][tier]})`,
+        title: `Agent on · tier ${tier} (${["anonymous", "session", "brand cookie", "logged in"][tier]})`,
         detail: `${loggedIn ? "Saved address city" : "Pune (approx., from IP)"} · ${coarse ? "mobile device" : "desktop (phone-frame preview)"}`,
         source: loggedIn ? "login" : "session",
         status: "info",
-        data: { arm, tier, city: loggedIn ? "Pune (saved address)" : "Pune (approx.)", device: coarse ? "mobile" : "desktop preview", ad_group: group?.id ?? null, oppref: q.get("oppref") },
+        data: { tier, city: loggedIn ? "Pune (saved address)" : "Pune (approx.)", device: coarse ? "mobile" : "desktop preview", ad_group: group?.id ?? null, oppref: q.get("oppref") },
       });
     }
     setConsolePage(label);

@@ -29,8 +29,8 @@ type Props = {
 };
 
 export default function StorePage(p: Props) {
-  const { adGroupId, arm } = useCosmosChat();
-  const query = adGroupId ? `?ad_group=${adGroupId}&arm=${arm}` : arm === "A" || arm === "B" ? `?arm=${arm}` : "";
+  const { adGroupId } = useCosmosChat();
+  const query = adGroupId ? `?ad_group=${adGroupId}` : "";
   useEffect(() => {
     document.getElementById("phone-scroll")?.scrollTo({ top: 0 });
     window.scrollTo({ top: 0 });

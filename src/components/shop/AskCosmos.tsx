@@ -5,8 +5,9 @@
  * - Home, category pages and the bag: a floating gold-star button, bottom-right above the safe area, labelled
  *   "Ask Cosmos AI" on first view and collapsing to the star once the shopper scrolls.
  * - Product page: no floating button; its sticky bar has the "Ask Cosmos AI" pill (it calls openWith()).
- * - Hidden when the store has paused the agent, and on control arm A. Never rendered in checkout.
+ * - Hidden when the store has paused the agent (site-wide or for this ad group). Never rendered in checkout.
  */
+import { pausedAdGroups } from "@/lib/overrides";
 import { useEffect, useState } from "react";
 import { usePhoneSurface } from "../PhoneSurface";
 import ChatSheet from "./ChatSheet";
@@ -20,19 +21,19 @@ type Props = {
   lift?: boolean; // the bag's sticky pay bar: sit above it
 };
 
-/** The ad and arm in this page's URL (read in the browser, so static pages stay static). */
+/** The ad in this page's URL (read in the browser, so static pages stay static). */
 function fromUrl() {
   try {
     const q = new URLSearchParams(window.location.search);
-    const arm = q.get("arm")?.toUpperCase();
-    return { adGroupId: q.get("ad_group") || null, arm: arm === "A" || arm === "B" || arm === "C" ? arm : null } as const;
+    // every visitor gets the agent: the URL never selects a holdout variant
+    return { adGroupId: q.get("ad_group") || null, arm: null } as const;
   } catch {
     return { adGroupId: null, arm: null } as const;
   }
 }
 
 export default function AskCosmos({ page, fab, lift = false }: Props) {
-  const { register, setOpen, arm, ready } = useCosmosChat();
+  const { register, setOpen, arm, ready, adGroupId } = useCosmosChat();
   const [state] = useDemoState();
   const { scroller } = usePhoneSurface();
   const [collapsed, setCollapsed] = useState(false);
@@ -59,7 +60,8 @@ export default function AskCosmos({ page, fab, lift = false }: Props) {
     };
   }, [fab, scroller]);
 
-  if (!ready || state.agentPaused || arm === "A" || arm === "B") return null;
+  // paused site-wide, or paused by the merchant for this ad group
+  if (!ready || state.agentPaused || (adGroupId && pausedAdGroups(state.approvedProposals).includes(adGroupId)) || arm === "A" || arm === "B") return null;
 
   return (
     <>

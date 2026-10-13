@@ -1,5 +1,6 @@
 import { convertToModelMessages, createUIMessageStream, createUIMessageStreamResponse, isStepCount, streamText, toUIMessageStream, type UIMessage, type UIMessageStreamWriter } from "ai";
-import { getDb, resolveAdGroup } from "@/lib/data";
+import { getDb, resolveAdGroup, runWithApprovals } from "@/lib/data";
+import { approvedFromCookieHeader } from "@/lib/overrides";
 import { buildTools, systemPrompt, type ChatContext } from "@/lib/agent/agent";
 import { AGENT, estimateCostUsd, llmSettings, pickFallbackLlm, pickLlm, type Llm } from "@/lib/ai/model";
 import { addSpend, overDailyBudget, spendToday } from "@/lib/ai/spend";
@@ -42,7 +43,12 @@ const writeText = (writer: Writer, id: string, text: string) => {
  * daily cap) → main model → fallback model → quick answer with a note. Every reply streams data-guard and
  * data-usage parts (including today's estimated spend) for the AI console.
  */
-export async function POST(req: Request) {
+/** Merchant approvals (cookie) apply to every catalogue read in this request, e.g. an approved "waterproof" attribute. */
+export function POST(req: Request) {
+  return runWithApprovals(approvedFromCookieHeader(req.headers.get("cookie")), () => handle(req));
+}
+
+async function handle(req: Request) {
   const { messages, context: clientCtx }: Body = await req.json();
   const db = getDb();
   // who the shopper is comes from the login cookie on the server, never from the client's claim

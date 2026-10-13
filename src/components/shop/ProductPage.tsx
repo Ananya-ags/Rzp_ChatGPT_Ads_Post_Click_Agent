@@ -1,4 +1,5 @@
 "use client";
+import { pausedAdGroups } from "@/lib/overrides";
 import { useEffect, useState } from "react";
 import ProductImage from "./ProductImage";
 import AskCosmos from "./AskCosmos";
@@ -24,7 +25,7 @@ export type ProductPageProps = {
   user: null | { firstName: string; nudgePrepaid: boolean; pincode: string };
   loginHref: string;
   // agent context: from an ad group (chip + ad opener + curated rail), or a direct visit (adGroupId/chip null,
-  // product-generic opener, "You may also like" rail). Null on the standard page (arm A).
+  // product-generic opener, "You may also like" rail). Null when there is no page context.
   // chips come from chips.ts (rules), the same set on the page card and in the chat sheet
   context: null | { adGroupId: string | null; chip: string | null; opener: string; railTitle: string; pending: boolean };
   rail: { card: CardVM; reason: string; pinned: boolean }[];
@@ -44,7 +45,9 @@ export default function ProductPage(p: ProductPageProps) {
     window.scrollTo({ top: 0 });
   }, []);
   const [slide, setSlide] = useState(0);
-  const agentOn = p.arm === "C" && !!p.context && !state.agentPaused;
+  // paused site-wide, or for this ad group, by the merchant (console approvals live in demo state)
+  const paused = state.agentPaused || (!!p.context?.adGroupId && pausedAdGroups(state.approvedProposals).includes(p.context.adGroupId));
+  const agentOn = p.arm === "C" && !!p.context && !paused;
   const ask = (q?: string) => openWith(q);
   const chips = p.context ? starterChips({ kind: "product", adGroupId: p.context.adGroupId, loggedIn: !!p.user || state.loggedIn, product: { handle: p.hero.handle, title: p.hero.title, waterResistant: p.hero.waterResistant } }).map((c) => c.text) : [];
 
@@ -102,7 +105,7 @@ export default function ProductPage(p: ProductPageProps) {
         {p.arrives.madeToOrder && <p className="mt-0.5 text-[12px] text-muted">Made to order · dispatches in {p.arrives.dispatchDays} days</p>}
       </section>
 
-      {/* curated rail (arms B, C) or uncurated list (arm A) */}
+      {/* curated rail, or the same-category list when there is no rail */}
       {p.arm !== "A" && (p.rail.length > 0 || p.railUpdated) ? (
         <section className="mt-6" aria-label="Product recommendations">
           <h2 className="px-4 font-display text-[18px]">{p.railUpdated ? "Updated from your chat" : p.context?.railTitle ?? "Picked for you"}</h2>
@@ -129,9 +132,9 @@ export default function ProductPage(p: ProductPageProps) {
       )}
 
       {/* agent opener */}
-      {p.arm === "C" && p.context && state.agentPaused && (
+      {p.arm === "C" && p.context && paused && (
         <p className="mx-4 mt-6 rounded-2xl border border-dashed border-line px-4 py-3 text-[12.5px] text-muted">
-          Cosmos AI is paused by the store right now (demo control on the start page).
+          Cosmos AI is paused by the store right now (merchant console).
         </p>
       )}
       {agentOn && p.context && (

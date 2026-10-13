@@ -28,7 +28,6 @@ export async function POST(req: Request) {
   if (q.method === "cod" && !q.cod.eligible) return Response.json({ ok: false, error: q.cod.note }, { status: 400 });
 
   const group = adGroupSlug ? db.adGroups.find((g) => g.id === adGroupSlug)! : null;
-  const arm = ["A", "B", "C"].includes(String(body.arm)) ? String(body.arm) : "C";
   const oppref = cookie(req, "cosmos_oppref");
   const session = cookie(req, "cosmos_vid") ?? `s_${randomBytes(6).toString("hex")}`;
   const receipt = `csm_${Date.now().toString(36)}_${randomBytes(3).toString("hex")}`;
@@ -44,7 +43,6 @@ export async function POST(req: Request) {
     campaign_id: group?.campaign_id ?? "none",
     oppref: oppref ?? "none",
     session_id: session,
-    arm,
     line_items_total: String(li.line_items_total),
     receipt,
   };
@@ -61,7 +59,7 @@ export async function POST(req: Request) {
     city: q.city,
     pincode: q.pincode,
     contact: { name: clip(body.contact?.name ?? user?.firstName ?? "", 60), phone_last4: clip(body.contact?.phone, 20).replace(/\D/g, "").slice(-4) },
-    attribution: { ad_group_id: notes.ad_group_id, ad_group: notes.ad_group, campaign_id: notes.campaign_id, oppref: oppref, arm, session_id: session },
+    attribution: { ad_group_id: notes.ad_group_id, ad_group: notes.ad_group, campaign_id: notes.campaign_id, oppref: oppref, session_id: session },
     prediction,
     created_at: db.now.toISOString(),
   };

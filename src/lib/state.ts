@@ -5,6 +5,7 @@
  */
 import { useSyncExternalStore } from "react";
 import { MAX_PER_SKU } from "./view";
+import { APPROVED_COOKIE } from "./overrides";
 
 export type CartLine = { sku: string; qty: number };
 export type DemoState = {
@@ -84,6 +85,10 @@ export function writeState(patch: Partial<DemoState> | ((s: DemoState) => Partia
       document.cookie = `${BAG_COOKIE}=${encodeURIComponent(JSON.stringify(next.cart.map((l) => [l.sku, l.qty])))}; path=/; samesite=lax`;
     } catch {}
   }
+  // merchant approvals go to a cookie too, so product pages and the chat route apply them on the server
+  try {
+    document.cookie = `${APPROVED_COOKIE}=${encodeURIComponent(next.approvedProposals.join(","))}; path=/; samesite=lax`;
+  } catch {}
   try {
     window.dispatchEvent(new CustomEvent(EVENT, { detail: next }));
   } catch {}

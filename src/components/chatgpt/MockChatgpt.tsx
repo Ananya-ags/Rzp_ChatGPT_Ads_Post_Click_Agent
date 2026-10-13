@@ -68,7 +68,7 @@ export default function MockChatgpt({ conversations, initial }: { conversations:
           </Link>
         ) : (
           <p className="rounded-xl border border-dashed border-black/15 px-3 py-3 text-center text-[12px] text-black/45">
-            No sponsored result yet. It appears after the merchant approves the proposal (start page → Demo controls).
+            No sponsored result yet. It appears after the merchant approves the proposal in the merchant console.
           </p>
         )}
       </main>

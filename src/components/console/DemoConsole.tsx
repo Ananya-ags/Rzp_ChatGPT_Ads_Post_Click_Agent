@@ -160,7 +160,7 @@ function Console({ merchant, evalsUrl }: { merchant: Merchant[]; evalsUrl: strin
       source: arrival ? (arrival.title.startsWith("Arrived from ChatGPT") ? "ChatGPT ad" : arrival.title.startsWith("Direct") ? "Direct visit" : "Ad context link") : "—",
       adGroup: (arrival?.data?.ad_group as string) ?? (arrival ? "none" : "—"),
       oppref: (arrival?.data?.oppref as string) ?? notes?.oppref ?? "—",
-      arm: (sess?.data?.arm as string) ?? "—",
+      agent: !sess ? "—" : [...events].reverse().some((e) => e.kind === "agent_off" && e.page === page) ? "Paused" : "On",
       tier: loggedIn ? "3 · logged in" : sess ? `${sess.data?.tier} · ${["anonymous", "session", "brand cookie", "logged in"][Number(sess.data?.tier) || 0]}` : "—",
       page: page ?? "—",
     };
@@ -228,7 +228,7 @@ function Console({ merchant, evalsUrl }: { merchant: Merchant[]; evalsUrl: strin
             ["Source", session.source],
             ["Ad group", session.adGroup],
             ["oppref", session.oppref],
-            ["Arm", session.arm],
+            ["Agent", session.agent],
             ["Tier", session.tier],
             ["Viewing", session.page],
           ].map(([k, v]) => (

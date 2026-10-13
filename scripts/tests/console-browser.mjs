@@ -138,12 +138,12 @@ try {
     await p.getByRole('tab', { name: 'All' }).click();
   }
 
-  // (5) arm A → agent off
+  // (5) a legacy variant param in the URL is ignored: every visitor gets the agent
   {
     f = await restart();
     await f.goto(`${BASE}/p/ciel-hoops-40mm?ad_group=waterproof-everyday-under-5k&arm=A`);
-    check('(5) arm A: "Agent off on this arm, standard page shown"', await waitConsole(/Agent off on this arm \(A\), standard page shown/));
-    await shot('5-arm-a');
+    check('(5) legacy URL param ignored: session shows "Agent on"', await waitConsole(/Agent on · tier/));
+    check('(5) no "agent off" event', !/Agent off/.test(await p.locator('body').innerText()));
   }
 
   // (6) logged-in demo shopper → personalised rail → wallet at checkout
