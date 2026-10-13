@@ -695,3 +695,13 @@ Order followed: checker → test wording → agent. AI tool: Claude Code wrote t
 - `evals/results/summary.json` holds v1 vs v2 by category plus 3 fixed examples (hing-01, ground-01, handoff-03), each with the before reply, the after reply and what changed.
 - **Planted facts re-checked:** all 6 hold (pipeline outputs unchanged this round). The 30mm delivery rescue holds with and without a key.
 - **Spend this round (estimated):** two full v2 runs ~$0.48, the judge re-check $0.03, live probes and suites ~$0.15, so **~$0.66**. Running total **~$1.30 (~₹110) of the ₹300 budget**.
+
+## 13 Oct 2026: Backend fixes before the chat front end
+- **Unknown policy → exact care line, in code.** If code routes a question to `lookup_policy` and the knowledge base has no section for it, the route answers with the verbatim care line and makes no model call (mode `care_line`, $0). That matches quick-answer mode. In v2, Flash-Lite had paraphrased it as "I am not aware of any loyalty programme".
+  - Affects pol-02 (loyalty), guess-01 (reward points) and guess-02 (subscription); KB-covered questions still go to the model.
+  - Checked: groundedness + handoff evals 22/22 (no judge, $0.02).
+  - The saved v2.json predates this fix.
+- **Like-for-like view** in `evals/results/summary.json` (`like_for_like`, the headline for /evals): the 52 v1 cases scored in both runs, 39/52 → 52/52.
+  - **Unchanged definitions (strict like-for-like):** 33/35 → 35/35.
+  - **Reworded:** 6/17 → 17/17, with the changed fields listed per case. Some were made stricter, e.g. handoff-03/04 now require the exact line.
+  - **New in v2:** 13/13, no v1 score.

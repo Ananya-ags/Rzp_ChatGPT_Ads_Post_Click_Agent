@@ -82,14 +82,14 @@ export async function POST(req: Request) {
         },
       }),
     });
-  type OfflineReason = "fast_path" | "safety_handoff" | "no_api_key" | "llm_unavailable" | "rate_limited" | "daily_cap";
+  type OfflineReason = "fast_path" | "safety_handoff" | "care_line" | "no_api_key" | "llm_unavailable" | "rate_limited" | "daily_cap";
   const offline = (writer: Writer, reason: OfflineReason, attempts: unknown[] = [], intent: QuickIntent = null) => {
     const o = offlineWriter(userText, page?.handle ?? null, context, intent);
     const busy = reason === "rate_limited" || reason === "daily_cap";
     if (!busy || o.answered) o.write(writer); // busy with nothing quick to say: just the friendly note
     if (busy) writeText(writer, "note", BUSY_NOTE);
-    else if (reason !== "fast_path" && reason !== "safety_handoff") writeText(writer, "note", LIMITED_NOTE);
-    const code = reason === "fast_path" || reason === "safety_handoff";
+    const code = reason === "fast_path" || reason === "safety_handoff" || reason === "care_line";
+    if (!busy && !code) writeText(writer, "note", LIMITED_NOTE);
     writer.write({ type: "data-usage", data: { model: code ? (reason === "fast_path" ? "fast-path" : "code") : "cached", tokens_in: 0, tokens_out: 0, cost_usd: 0, latency_ms: Date.now() - started, first_output_ms: Date.now() - started, tools: o.trace, fallback: reason, attempts, mode: code ? reason : "limited", ...spendToday() } });
   };
 
@@ -125,6 +125,16 @@ export async function POST(req: Request) {
       writer.write(inputGuard);
       writer.write({ type: "data-guard", data: { stage: "input", name: "safety handoff", pass: true, detail: `${safetyKind}: answered in code, no model call` } });
       offline(writer, "safety_handoff", [], "handoff");
+      writer.write({ type: "finish" });
+    });
+
+  // a policy question the knowledge base doesn't cover: the exact care line, in code (no model paraphrase or guess)
+  if (routed === "lookup_policy" && !core.lookupPolicy(db, userText).found)
+    return respond((writer) => {
+      writer.write({ type: "start" });
+      writer.write(inputGuard);
+      writer.write({ type: "data-guard", data: { stage: "input", name: "unknown policy", pass: true, detail: "no knowledge-base section: care line in code, no model call" } });
+      offline(writer, "care_line", [], "lookup_policy");
       writer.write({ type: "finish" });
     });
 
