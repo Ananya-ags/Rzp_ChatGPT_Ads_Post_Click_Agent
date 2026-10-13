@@ -10,6 +10,9 @@ import { estimateDelivery, zoneFor } from "../src/lib/delivery";
 import { slice, byArm, byAdGroup } from "../src/lib/metrics";
 import { WATERPROOF_PROSE } from "./seed/catalogue";
 import { DEMO_NOW_ISO } from "../src/config/demo";
+import { allChipTexts, fastKey } from "../src/lib/agent/chips";
+import { forcedTool, OFFER } from "../src/lib/agent/intents";
+import { REGULATED, regulatedClaims } from "../src/lib/agent/guardrails";
 
 const ROOT = join(__dirname, "..");
 const errors: string[] = [];
@@ -264,6 +267,36 @@ for (const s of demo.steps) {
       if (!traceText.includes(m) && !traceText.includes(m.replace(/[₹,]/g, ""))) err(`demo ${s.id}: "${m}" not grounded in its tool trace`);
     }
   }
+}
+
+/* ───────── chat chips (src/lib/agent/chips.ts): rules, never unsafe ───────── */
+{
+  const evalAbuse = new Set(evals.cases.filter((c) => ["prompt_injection", "offer_cap_abuse"].includes(c.category)).flatMap((c) => c.messages.map((m) => m.content.toLowerCase())));
+  const chipProducts = products.filter((p) => !p.metafields.jewellery.excluded).map((p) => ({ handle: p.handle, title: p.title, waterResistant: p.metafields.jewellery.water_resistant === true }));
+  const rows = allChipTexts(chipProducts);
+  const bad: string[] = [];
+  const WATER = /\b(shower|swim|water|waterproof|gym|sweat)/i;
+  for (const r of rows) {
+    const t = r.text;
+    // (a) banned or regulated wording, a discount demand, an injection or an eval abuse line
+    if (rules.banned_phrases.some((b) => t.toLowerCase().includes(b.toLowerCase()))) bad.push(`${r.where}: "${t}" uses a banned phrase`);
+    // a regulated word in a statement chip is allowed only when its template returns verified items only
+    // ("Waterproof everyday pieces" → search_catalog with water_resistant: true)
+    const verifiedOnly = fastKey(t) === "waterproof_pieces";
+    if (REGULATED.some((g) => new RegExp(g.re.source, "i").test(t)) && regulatedClaims(t, "{}", null).length && !/\?$/.test(t) && !verifiedOnly) bad.push(`${r.where}: "${t}" states a regulated claim`);
+    if (/\d+\s?%|% ?off|discount|coupon|(?<!-)\bfree\b|ignore|system prompt|pretend|chatgpt/i.test(t) || evalAbuse.has(t.toLowerCase())) bad.push(`${r.where}: "${t}" is a discount demand, injection or test line`);
+    if (OFFER.test(t) && !/^(any offers\?|can i pay cash on delivery\?)$/i.test(t)) bad.push(`${r.where}: "${t}" asks for a deal beyond "Any offers?"`);
+    // (b) water questions only on a verified water-resistant product (and never on a non-product page)
+    if (WATER.test(t) && r.chip && (r.where.startsWith("product") ? r.product?.waterResistant !== true : !/pieces$/i.test(t))) bad.push(`${r.where}: "${t}" asks about water on a product that isn't verified water-resistant`);
+    // (c) answerable: a fast-path template, or a judgement chip whose first tool code forces
+    const answered = fastKey(t) !== null || (r.chip?.via === "model" && forcedTool(t, true) === r.chip.tool);
+    if (!answered) bad.push(`${r.where}: "${t}" isn't answered by the fast path or a forced tool`);
+    if (r.chip?.via === "fast" && fastKey(t) === null) bad.push(`${r.where}: "${t}" is marked fast but has no fast-path key`);
+  }
+  const uniq = [...new Set(bad)];
+  check(uniq.length === 0, `chips: ${new Set(rows.map((r) => r.text)).size} distinct chip texts across ${rows.length} placements are safe and answerable`, `chips:\n    ${uniq.slice(0, 12).join("\n    ")}`);
+  // wedding ad: never a water chip on any product
+  check(!rows.some((r) => r.where.includes("wedding-guest-gift") && WATER.test(r.text)), "chips: no water chips on the wedding ad");
 }
 
 /* ───────── images ───────── */

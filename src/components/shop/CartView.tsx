@@ -7,6 +7,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import SiteHeader from "./SiteHeader";
+import AskCosmos from "./AskCosmos";
 import CartButton from "./CartButton";
 import ProductImage from "./ProductImage";
 import { ProductLinkProvider } from "./productLink";
@@ -265,6 +266,9 @@ export default function CartView({ cards, linkQuery, continueHref, trust, user: 
             <p className="mt-1 text-center text-[11px] text-muted">Razorpay checkout coming soon</p>
           </div>
         )}
+
+        {/* Cosmos AI on the bag: floating star above the pay bar (never in checkout itself) */}
+        <AskCosmos fab lift={!empty && !!quote && quote.count > 0} page={{ kind: "bag", sku: null, title: null, pincode: null, loggedIn: !!ssrUser, opener: "", linkQuery }} />
       </div>
     </ProductLinkProvider>
   );

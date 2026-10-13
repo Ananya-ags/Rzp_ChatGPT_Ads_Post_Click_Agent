@@ -1,15 +1,15 @@
 "use client";
 /**
  * Store home and category pages. Static by design: every visitor sees the same catalogue in the same order
- * (no ad-group, cookie, login or AI reordering). Cosmos AI is offered only as a floating button that opens the chat.
+ * (no ad-group, cookie, login or AI reordering). Cosmos AI is offered as a floating star button (AskCosmos) that opens
+ * the session's conversation, with chips for this page from chips.ts.
  */
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import SiteHeader from "./SiteHeader";
-import ChatSheet from "./ChatSheet";
+import AskCosmos from "./AskCosmos";
 import ProductGrid from "./ProductGrid";
-import { CosmosStarBadge } from "../brand/CosmosStar";
-import { useDemoState } from "@/lib/state";
+import { browseOpener } from "@/lib/agent/chips";
 import type { CardVM } from "@/lib/view";
 
 export type StoreSection = { slug: string; label: string; cards: CardVM[] };
@@ -26,17 +26,11 @@ type Props = {
   path: string; // this page, so login returns here
 };
 
-/** Welcome chips for a chat opened away from a product (all answered by tools, no personalisation). */
-const STORE_CHIPS = ["Find a gift", "Waterproof pieces", "Under ₹2,000", "Delivery & returns"];
-
 export default function StorePage(p: Props) {
-  const [state] = useDemoState();
-  const [open, setOpen] = useState(false);
   useEffect(() => {
     document.getElementById("phone-scroll")?.scrollTo({ top: 0 });
     window.scrollTo({ top: 0 });
   }, []);
-  const agentOn = !state.agentPaused;
 
   return (
     <div className="relative pb-24">
@@ -86,27 +80,19 @@ export default function StorePage(p: Props) {
 
       <p className="mx-4 mt-8 text-[11px] text-muted">{p.simulatedNote}</p>
 
-      {agentOn && (
-        <>
-          <button
-            onClick={() => setOpen(true)}
-            className="ai-cta fixed bottom-[max(env(safe-area-inset-bottom),16px)] right-4 z-30 flex h-12 items-center gap-2 overflow-hidden rounded-full pl-3.5 pr-4 text-[14px] font-semibold text-[#3a2a10] active:scale-[0.98]"
-          >
-            <CosmosStarBadge /> Ask Cosmos AI
-          </button>
-          <ChatSheet
-            open={open}
-            onOpenChange={setOpen}
-            pending={null}
-            clearPending={() => {}}
-            context={{ sku: null, adGroupId: null, pincode: null, tier: 1 }}
-            hero={null}
-            cards={p.cards}
-            chips={STORE_CHIPS}
-            opener="Hi! I can find pieces by occasion, budget or delivery date. What are you shopping for?"
-          />
-        </>
-      )}
+      <AskCosmos
+        fab
+        page={{
+          kind: p.activeSlug ? "category" : "home",
+          sku: null,
+          title: p.activeSlug ? p.title : null,
+          pincode: null,
+          loggedIn: false,
+          // the opener follows the session's ad (set on the ad's product page); see browseOpener
+          opener: browseOpener(p.activeSlug ? "category" : "home", null),
+          linkQuery: "",
+        }}
+      />
     </div>
   );
 }

@@ -1,202 +1,335 @@
 "use client";
 /**
- * Agent chat in a vaul bottom sheet: pill (closed) → half → full. Full when the keyboard opens; in full,
- * a slim product strip and the cart count stay pinned. Heights are driven by our own state rather than vaul
- * snapPoints so the sheet behaves the same inside the desktop phone frame.
- * Opened from a product page it carries that product (`hero`); from the store home or a category page, none.
+ * The Cosmos AI sheet (vaul): half (58%) → full (94%); full when the input is focused. Inside the desktop phone
+ * frame it portals into the frame, so it never overflows it. The conversation comes from ChatProvider (one per
+ * session); this component only renders it for the current page.
+ *
+ * - Header: star + "Cosmos AI", what the shopper is looking at, "New chat", close.
+ * - Full height pins a slim strip: the product (thumbnail, name, price, Add) or the bag (count, total).
+ * - Shopper messages are right-aligned bubbles; Cosmos AI is left-aligned with a star avatar and no bubble.
+ *   While waiting: three dots and a pulsing star; text streams, then the tool cards appear under it.
+ * - Chips: starters from chips.ts for this page, then 2–3 follow-ups chosen in code from the last tool.
+ * - Text input only (no attachments), 500 characters, with a counter near the limit; disclosure always visible.
  */
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
 import { Drawer } from "vaul";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useLinkQuery } from "./productLink";
+import type { UIMessage } from "ai";
 import { ToolCard } from "./ToolCards";
 import ProductImage from "./ProductImage";
-import { inr, type CardVM } from "@/lib/view";
-import { readState, useDemoState, writeState, type CartLine } from "@/lib/state";
+import CartButton from "./CartButton";
+import { ProductLinkProvider } from "./productLink";
+import { useCosmosChat } from "./chat/ChatProvider";
+import { inr } from "@/lib/view";
+import { useDemoState } from "@/lib/state";
+import { browseOpener, followUpChips, starterChips, type ChipContext, type LastTool } from "@/lib/agent/chips";
+import { norm } from "@/lib/agent/intents";
 import CosmosStar from "../brand/CosmosStar";
 
-type Props = {
-  open: boolean;
-  onOpenChange: (o: boolean) => void;
-  pending: string | null; // chip text to send when opened
-  clearPending: () => void;
-  context: { sku: string | null; adGroupId: string | null; pincode: string | null; tier: number };
-  hero: CardVM | null;
-  cards: Record<string, CardVM>;
-  chips: string[];
-  opener: string | null;
+const MAX_CHARS = 500;
+const COUNTER_FROM = 420;
+/** Friendly status while a tool runs (never the tool's name). */
+const TOOL_STATUS: Record<string, string> = {
+  check_delivery: "Checking delivery dates",
+  search_catalog: "Finding pieces",
+  get_offer: "Checking offers",
+  get_return_insight: "Checking what other buyers found",
+  lookup_policy: "Checking store policy",
+  get_product_facts: "Checking product details",
+  add_to_bag: "Adding to your bag",
 };
+/** Notes the server adds in quick-answer mode: shown as a calm inline note, never as an error. */
+const NOTE = /^(Limited mode:|Lots of questions!)/;
 
-export default function ChatSheet({ open, onOpenChange, pending, clearPending, context, hero, cards, chips, opener }: Props) {
+type ToolPart = { type: string; state?: string; output?: unknown; toolName?: string };
+const toolName = (p: ToolPart) => (p.type === "dynamic-tool" ? p.toolName ?? "" : p.type.startsWith("tool-") ? p.type.slice(5) : "");
+const textOf = (m: UIMessage) => m.parts.map((p) => (p.type === "text" ? p.text : "")).join(" ").trim();
+
+export default function ChatSheet() {
+  const chat = useCosmosChat();
+  const { page, open, setOpen, messages, status, send, newChat, dividers, pageStart, cards, adGroupId, toast } = chat;
+  const [state] = useDemoState();
   const [full, setFull] = useState(false);
   const [input, setInput] = useState("");
-  const [state] = useDemoState();
+  const [kb, setKb] = useState(0); // on-screen keyboard height (iOS), so the input stays above it
   // inside the desktop phone frame, portal the sheet into the frame; on phones, into <body>
   const [container] = useState<HTMLElement | null>(() =>
     typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches ? document.getElementById("phone") : null,
   );
-  const endRef = useRef<HTMLDivElement>(null);
-  const [transport] = useState(() => new DefaultChatTransport({ api: "/api/chat" }));
-  const [toast, setToast] = useState<string | null>(null);
-  // data parts from the agent: a new bag (header count updates at once, plus a toast) and saved preferences
-  const { messages, sendMessage, status } = useChat({
-    transport,
-    onData: (part) => {
-      if (part.type === "data-cart") {
-        const d = part.data as { cart: CartLine[]; added: { title: string; qty: number } };
-        writeState({ cart: d.cart });
-        setToast(`Added ${d.added.qty} × ${d.added.title} to your bag`);
-        setTimeout(() => setToast(null), 2600);
-      }
-      if (part.type === "data-preferences") {
-        try {
-          document.cookie = `cosmos_prefs=${encodeURIComponent(JSON.stringify((part.data as { preferences: unknown }).preferences))}; path=/; samesite=lax`; // session cookie
-        } catch {}
-      }
-    },
-  });
-  const busy = status === "submitted" || status === "streaming";
-  // keep the typing indicator up until the reply's first words arrive (tool cards may come first)
-  const lastMsg = messages[messages.length - 1];
-  const replying = lastMsg?.role === "assistant" && lastMsg.parts.some((x) => x.type === "text" && x.text.trim());
-  // read at send time so the bag and login flag are current (they live in the browser)
-  const fullContext = useCallback(() => {
-    const st = readState();
-    return { ...context, tier: st.loggedIn ? 3 : context.tier, cart: st.cart, loginOffered: st.loginOffered, path: `${location.pathname}${location.search}` };
-  }, [context]);
-  const linkQuery = useLinkQuery();
-  const ask = (text: string) => sendMessage({ text }, { body: { context: fullContext() } });
+  const listRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (open && pending) {
-      sendMessage({ text: pending }, { body: { context: fullContext() } });
-      clearPending();
-    }
-  }, [open, pending, sendMessage, clearPending, fullContext]);
+  const busy = status === "submitted" || status === "streaming";
+  const last = messages.at(-1);
+  const replying = last?.role === "assistant" && last.parts.some((x) => x.type === "text" && x.text.trim());
+  const running = last?.role === "assistant" ? (last.parts as ToolPart[]).filter((p) => toolName(p) && p.state !== "output-available").map(toolName).at(-1) : undefined;
+
+  const hero = page?.kind === "product" && page.sku ? cards[page.sku] ?? null : null;
+  const subtitle = !page ? "" : hero ? `You're viewing: ${hero.title}` : page.kind === "bag" ? "Your bag" : page.kind === "category" ? `Browsing ${page.title?.toLowerCase() ?? "the store"}` : "Browsing the store";
+
+  // chips: rules in code (chips.ts), never the model
+  const chipCtx: ChipContext = { kind: page?.kind ?? "home", adGroupId, loggedIn: state.loggedIn || !!page?.loggedIn, product: hero ? { handle: hero.handle, title: hero.title, waterResistant: hero.waterResistant } : null };
+  const used = new Set(messages.filter((m) => m.role === "user").map((m) => norm(textOf(m))));
+  const answeredHere = messages.length - 1 >= pageStart; // the last answer came on this page
+  const lastTools: LastTool[] = last?.role === "assistant" && answeredHere ? (last.parts as ToolPart[]).filter((p) => toolName(p) && p.state === "output-available").map((p) => ({ tool: toolName(p), output: (p.output ?? null) as Record<string, unknown> | null })) : [];
+  const followUps = !busy && lastTools.length ? followUpChips(lastTools, chipCtx, used) : [];
+  const starters = starterChips(chipCtx).map((c) => c.text).filter((t) => !used.has(norm(t)));
+  // follow-ups first; fewer than 3 → topped up with this page's unused starters (still rules, never the model)
+  const chips = followUps.length ? [...followUps, ...starters.filter((t) => !followUps.includes(t))].slice(0, 3) : starters;
+
+  const cartCount = state.cart.reduce((s, l) => s + l.qty, 0);
+  const cartTotal = state.cart.reduce((s, l) => s + (cards[l.sku]?.price ?? 0) * l.qty, 0);
+  const linkQuery = page?.linkQuery || (adGroupId ? `?ad_group=${adGroupId}` : "");
 
   // keep the latest question + its answer in view (the answer sits above its cards)
   const lastUserId = [...messages].reverse().find((m) => m.role === "user")?.id;
   useEffect(() => {
-    if (lastUserId) document.getElementById(`msg-${lastUserId}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
-    else endRef.current?.scrollIntoView({ block: "end" });
-  }, [lastUserId, status]);
+    if (!open) return;
+    // scroll only the message list (scrollIntoView would also scroll the sheet and push the header out of view)
+    const t = setTimeout(() => {
+      const list = listRef.current;
+      if (!list) return;
+      const el = lastUserId ? document.getElementById(`msg-${lastUserId}`) : null;
+      const top = el ? el.getBoundingClientRect().top - list.getBoundingClientRect().top + list.scrollTop - 8 : list.scrollHeight;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      list.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+    }, 60);
+    return () => clearTimeout(t);
+  }, [lastUserId, status, open]);
 
-  const send = (text: string) => {
+  // iOS: keep the input above the on-screen keyboard
+  useEffect(() => {
+    const vv = typeof window !== "undefined" ? window.visualViewport : null;
+    if (!vv || container) return; // the desktop frame has no keyboard
+    const onResize = () => {
+      const h = Math.round(window.innerHeight - vv.height - vv.offsetTop);
+      setKb(h > 120 ? h : 0); // only a real on-screen keyboard, not browser chrome resizing
+    };
+    vv.addEventListener("resize", onResize);
+    vv.addEventListener("scroll", onResize);
+    return () => {
+      vv.removeEventListener("resize", onResize);
+      vv.removeEventListener("scroll", onResize);
+    };
+  }, [container]);
+
+  const submit = (text: string) => {
     if (!text.trim() || busy) return;
-    ask(text);
+    send(text.slice(0, MAX_CHARS));
     setInput("");
   };
-  const cartCount = state.cart.reduce((s, l) => s + l.qty, 0);
+  // product pages bring their own opener (the ad's line on the hero); elsewhere it echoes the session's ad
+  const opener = !page ? null : page.kind === "product" ? page.opener : browseOpener(page.kind, adGroupId);
 
   return (
-    <>
-    {toast && (
-      <div role="status" aria-live="polite" className="fixed inset-x-4 bottom-24 z-[70] mx-auto flex max-w-[358px] items-center justify-between gap-3 rounded-full bg-ink px-4 py-2.5 text-[12.5px] text-ivory shadow-lg">
-        <span className="truncate">✓ {toast}</span>
-        <Link href={`/cart${linkQuery}`} className="shrink-0 font-medium text-[#e8c983] underline underline-offset-2">View bag</Link>
-      </div>
-    )}
-    <Drawer.Root open={open} onOpenChange={(o) => { onOpenChange(o); if (!o) setFull(false); }} container={container} repositionInputs={false}>
-      <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 z-40 bg-ink/25" />
-        <Drawer.Content
-          aria-describedby={undefined}
-          className={`fixed inset-x-0 bottom-0 z-50 flex flex-col rounded-t-[22px] bg-ivory shadow-[0_-10px_40px_-10px_rgba(31,26,23,0.35)] outline-none transition-[height] duration-300 ${full ? "h-[94%]" : "h-[58%]"}`}
-        >
-          <button onClick={() => setFull((f) => !f)} className="mx-auto mt-2 h-1.5 w-10 shrink-0 rounded-full bg-line" aria-label={full ? "Collapse" : "Expand"} />
-          <div className="flex items-center justify-between px-4 pb-2 pt-2">
-            <div>
-              <Drawer.Title className="flex items-center gap-1.5 font-display text-[17px]">
-                <CosmosStar className="size-[18px]" /> Ask Cosmos AI
-              </Drawer.Title>
-              <p className="text-[11px] text-muted">AI assistant · answers from verified product facts</p>
-            </div>
-            <div className="flex items-center gap-2 text-[12px]">
-              <span className="whitespace-nowrap rounded-full bg-sand px-2.5 py-1">Bag {cartCount}</span>
-              <Drawer.Close className="grid size-7 place-items-center rounded-full bg-sand text-[13px]" aria-label="Close">✕</Drawer.Close>
-            </div>
-          </div>
-          {full && hero && (
-            <div className="mx-4 mb-2 flex items-center gap-2 rounded-xl border border-line bg-white p-1.5 pr-3">
-              <div className="size-9 overflow-hidden rounded-lg">
-                <ProductImage card={hero} />
-              </div>
-              <p className="flex-1 truncate text-[12.5px]">{hero.title}</p>
-              <p className="text-[12.5px] font-medium">{inr(hero.price)}</p>
-            </div>
-          )}
+    <ProductLinkProvider value={linkQuery}>
+      {toast && (
+        <div role="status" aria-live="polite" className="fixed inset-x-4 bottom-24 z-[70] mx-auto flex max-w-[358px] items-center justify-between gap-3 rounded-full bg-ink px-4 py-2.5 text-[12.5px] text-ivory shadow-lg">
+          <span className="truncate">✓ {toast}</span>
+          <Link href={`/cart${linkQuery}`} className="shrink-0 font-medium text-[#e8c983] underline underline-offset-2">
+            View bag
+          </Link>
+        </div>
+      )}
+      <Drawer.Root open={open} onOpenChange={(o) => { setOpen(o); if (!o) setFull(false); }} container={container} repositionInputs={false}>
+        <Drawer.Portal>
+          <Drawer.Overlay className="fixed inset-0 z-40 bg-ink/25" />
+          <Drawer.Content
+            aria-describedby={undefined}
+            style={kb ? { paddingBottom: kb } : undefined}
+            className={`fixed inset-x-0 bottom-0 z-50 flex max-w-full flex-col overflow-hidden rounded-t-[22px] bg-ivory shadow-[0_-10px_40px_-10px_rgba(31,26,23,0.35)] outline-none transition-[height] duration-300 motion-reduce:transition-none ${full ? "h-[94%]" : "h-[58%]"}`}
+          >
+            <button onClick={() => setFull((f) => !f)} className="mx-auto flex h-5 w-16 shrink-0 items-center justify-center" aria-label={full ? "Collapse chat" : "Expand chat"}>
+              <span className="h-1.5 w-10 rounded-full bg-line" />
+            </button>
 
-          <div className="flex-1 space-y-3 overflow-y-auto px-4 pb-3 no-scrollbar" data-vaul-no-drag>
-            {opener && messages.length === 0 && <Bubble role="assistant">{opener}</Bubble>}
-            {messages.map((m) => (
-              <div key={m.id} id={`msg-${m.id}`} className="scroll-mt-2 space-y-2">
-                {/* answer first, then the cards its tools produced */}
-                {[...m.parts.filter((x) => x.type === "text"), ...m.parts.filter((x) => x.type !== "text")].map((part, i) => {
-                  if (part.type === "text") return part.text.trim() ? <Bubble key={i} role={m.role}>{part.text}</Bubble> : null;
-                  if (part.type.startsWith("tool-")) {
-                    const p = part as unknown as { state: string; output?: unknown; toolCallId: string };
-                    if (p.state !== "output-available") return <p key={i} className="text-[11px] text-muted">Checking…</p>;
-                    return <ToolCard key={i} name={part.type.slice(5)} output={p.output} cards={cards} />;
-                  }
-                  return null;
-                })}
+            {/* header */}
+            <div className="flex items-center gap-2 px-4 pb-2">
+              <div className="min-w-0 flex-1">
+                <Drawer.Title className="flex items-center gap-1.5 font-display text-[17px] leading-tight">
+                  <CosmosStar className="size-[18px]" /> Cosmos AI
+                </Drawer.Title>
+                <p className="truncate text-[11.5px] text-muted">{subtitle}</p>
               </div>
-            ))}
-            {busy && !replying && <p className="text-[12px] text-muted" aria-live="polite">Thinking…</p>}
-            {status === "error" && <p className="text-[12px] text-danger">Something went wrong. Try a suggested question.</p>}
-            <div ref={endRef} />
-          </div>
+              {messages.length > 0 && (
+                <button onClick={newChat} className="h-11 shrink-0 rounded-full px-3 text-[12.5px] text-ink underline decoration-line underline-offset-2 focus-visible:outline-2 focus-visible:outline-gold">
+                  New chat
+                </button>
+              )}
+              <Drawer.Close className="grid size-11 shrink-0 place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-gold" aria-label="Close chat">
+                <span className="grid size-8 place-items-center rounded-full bg-sand text-[13px]">✕</span>
+              </Drawer.Close>
+            </div>
 
-          <div className="border-t border-line bg-ivory px-3 pb-[max(env(safe-area-inset-bottom),12px)] pt-2">
-            {chips.length > 0 && (
-              <div className="-mx-3 mb-2 flex gap-2 overflow-x-auto px-3 no-scrollbar">
-                {chips.filter((c) => !messages.some((m) => m.role === "user" && m.parts.some((x) => x.type === "text" && x.text === c))).map((c) => (
-                  <button key={c} onClick={() => send(c)} className="shrink-0 rounded-full border border-line bg-white px-3 py-1.5 text-[12px]">
-                    {c}
-                  </button>
-                ))}
+            {/* full height: pinned product or bag strip */}
+            {full && hero && (
+              <div className="mx-4 mb-2 flex min-w-0 items-center gap-2.5 rounded-xl border border-line bg-white p-1.5 pr-2">
+                <div className="size-10 shrink-0 overflow-hidden rounded-lg">
+                  <ProductImage card={hero} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[12.5px]">{hero.title}</p>
+                  <p className="text-[12.5px] font-medium">{inr(hero.price)}</p>
+                </div>
+                <CartButton sku={hero.handle} max={hero.maxQty} limitReason={hero.limitReason} size="md" />
               </div>
             )}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                send(input);
-              }}
-              className="flex items-center gap-2"
-            >
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onFocus={() => setFull(true)}
-                // text only: no attachments; pasting or dropping a file/image does nothing
-                onPaste={(e) => {
-                  if (e.clipboardData.files.length) e.preventDefault();
+            {full && page?.kind === "bag" && (
+              <div className="mx-4 mb-2 flex items-center justify-between rounded-xl border border-line bg-white px-3 py-2.5 text-[12.5px]">
+                <span>
+                  Bag · {cartCount} {cartCount === 1 ? "item" : "items"}
+                </span>
+                <span className="font-medium">{inr(cartTotal)}</span>
+              </div>
+            )}
+
+            {/* conversation */}
+            <div ref={listRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto overflow-x-hidden px-4 pb-3 pt-1 no-scrollbar" data-vaul-no-drag aria-live="polite">
+              {opener && messages.length === 0 && (
+                <AiRow role="opener">
+                  <p className="text-[14.5px] leading-relaxed">{opener}</p>
+                </AiRow>
+              )}
+              {messages.map((m, mi) => {
+                const isLast = mi === messages.length - 1;
+                const divider = dividers.find((d) => d.afterId === m.id);
+                const body =
+                  m.role === "user" ? (
+                    <div id={`msg-${m.id}`} data-role="user" className="ml-auto w-fit max-w-[82%] scroll-mt-2 break-words rounded-2xl rounded-br-md bg-ink px-3.5 py-2 text-[14px] text-ivory">
+                      {textOf(m)}
+                    </div>
+                  ) : (
+                    <AssistantMessage message={m} showCards={!(isLast && busy)} />
+                  );
+                return (
+                  <div key={m.id} className="space-y-4">
+                    {body}
+                    {divider && <DividerRow label={divider.label} />}
+                  </div>
+                );
+              })}
+              {busy && !replying && (
+                <AiRow waiting>
+                  <div className="flex items-center gap-2 py-1.5 text-muted" aria-label="Cosmos AI is typing">
+                    <span className="flex items-center gap-1 text-ink">
+                      <span className="typing-dot" />
+                      <span className="typing-dot" />
+                      <span className="typing-dot" />
+                    </span>
+                    {running && TOOL_STATUS[running] && <span className="text-[12px]">{TOOL_STATUS[running]}…</span>}
+                  </div>
+                </AiRow>
+              )}
+              {status === "error" && (
+                <p className="rounded-xl bg-sand/70 px-3 py-2 text-[12.5px] text-muted">I couldn&apos;t finish that one. Try again, or pick a suggestion below.</p>
+              )}
+            </div>
+
+            {/* chips + input + disclosure */}
+            <div className="border-t border-line bg-ivory px-3 pb-[max(env(safe-area-inset-bottom),10px)] pt-2">
+              {chips.length > 0 && !busy && (
+                <div className="mb-2 flex min-w-0 gap-2 overflow-x-auto no-scrollbar" role="group" aria-label="Suggested questions">
+                  {chips.map((c) => (
+                    <button key={c} onClick={() => submit(c)} className="h-10 shrink-0 rounded-full border border-line bg-white px-3.5 text-[12.5px] active:bg-sand focus-visible:outline-2 focus-visible:outline-gold">
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  submit(input);
                 }}
-                onDrop={(e) => e.preventDefault()}
-                type="text"
-                inputMode="text"
-                autoComplete="off"
-                placeholder={hero ? "Ask about size, delivery, care…" : "Ask about gifts, budget, delivery…"}
-                className="h-11 flex-1 rounded-full border border-line bg-white px-4 text-[14px] outline-none focus:border-gold"
-              />
-              <button disabled={busy || !input.trim()} className="grid size-11 place-items-center rounded-full bg-ink text-ivory disabled:opacity-40" aria-label="Send">
-                ↑
-              </button>
-            </form>
-          </div>
-        </Drawer.Content>
-      </Drawer.Portal>
-    </Drawer.Root>
-    </>
+                className="flex items-center gap-2"
+              >
+                <label htmlFor="cosmos-chat-input" className="sr-only">
+                  Message Cosmos AI
+                </label>
+                <input
+                  id="cosmos-chat-input"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value.slice(0, MAX_CHARS))}
+                  onFocus={() => setFull(true)}
+                  // text only: no attachments; pasting or dropping a file or image does nothing
+                  onPaste={(e) => {
+                    if (e.clipboardData.files.length) e.preventDefault();
+                  }}
+                  onDrop={(e) => e.preventDefault()}
+                  maxLength={MAX_CHARS}
+                  type="text"
+                  inputMode="text"
+                  enterKeyHint="send"
+                  autoComplete="off"
+                  placeholder="Ask about size, delivery, gifting…"
+                  className="h-11 min-w-0 flex-1 rounded-full border border-line bg-white px-4 text-[16px] outline-none placeholder:text-[14px] focus:border-gold md:text-[14px]"
+                />
+                <button disabled={busy || !input.trim()} className="grid size-11 shrink-0 place-items-center rounded-full bg-ink text-ivory disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-gold" aria-label="Send">
+                  ↑
+                </button>
+              </form>
+              <div className="mt-1.5 flex items-center justify-between gap-2 px-1 text-[10.5px] text-muted">
+                <p>AI assistant · answers from Cosmos product info · can make mistakes</p>
+                {input.length >= COUNTER_FROM && (
+                  <p className={`shrink-0 tabular-nums ${input.length >= MAX_CHARS ? "text-ink" : ""}`} aria-live="polite">
+                    {input.length}/{MAX_CHARS}
+                  </p>
+                )}
+              </div>
+            </div>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+    </ProductLinkProvider>
   );
 }
 
-function Bubble({ role, children }: { role: string; children: React.ReactNode }) {
-  return role === "user" ? (
-    <div className="ml-auto w-fit max-w-[82%] rounded-2xl rounded-br-md bg-ink px-3.5 py-2 text-[14px] text-ivory">{children}</div>
-  ) : (
-    <div className="w-fit max-w-[92%] rounded-2xl rounded-bl-md bg-white px-3.5 py-2 text-[14px] leading-relaxed shadow-[0_1px_0_rgba(0,0,0,0.04)]">{children}</div>
+/** Cosmos AI's side: a small star avatar, no bubble. */
+function AiRow({ children, waiting = false, role = "ai" }: { children: React.ReactNode; waiting?: boolean; role?: "ai" | "opener" }) {
+  return (
+    <div className="flex min-w-0 gap-2.5" data-role={waiting ? "typing" : role}>
+      <span aria-hidden className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-[#fdf6e7] ring-1 ring-gold/30">
+        <span className={waiting ? "star-pulse inline-grid" : "inline-grid"}>
+          <CosmosStar className="size-4" shimmer={false} />
+        </span>
+      </span>
+      <div className="min-w-0 flex-1 space-y-2.5">{children}</div>
+    </div>
   );
 }
+
+function AssistantMessage({ message, showCards }: { message: UIMessage; showCards: boolean }) {
+  const { cards } = useCosmosChat();
+  const parts = message.parts as (ToolPart & { text?: string })[];
+  const texts = parts.filter((p) => p.type === "text" && p.text?.trim());
+  const tools = parts.filter((p) => toolName(p) && p.state === "output-available");
+  const answer = texts.filter((p) => !NOTE.test(p.text!.trim()));
+  const notes = texts.filter((p) => NOTE.test(p.text!.trim()));
+  if (!answer.length && !tools.length && !notes.length) return null;
+  return (
+    <AiRow>
+      {answer.map((p, i) => (
+        <p key={i} className="whitespace-pre-wrap break-words text-[14.5px] leading-relaxed">
+          {p.text!.trim()}
+        </p>
+      ))}
+      {/* the answer first; its cards once the text has finished streaming */}
+      {showCards && tools.map((p, i) => <ToolCard key={i} name={toolName(p)} output={p.output} cards={cards} />)}
+      {notes.map((p, i) => (
+        <p key={`n${i}`} className="flex items-center gap-1.5 text-[11.5px] text-muted">
+          <span aria-hidden>ⓘ</span> {p.text!.trim()}
+        </p>
+      ))}
+    </AiRow>
+  );
+}
+
+function DividerRow({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-2 text-[11px] text-muted" role="separator" data-role="divider">
+      <span className="h-px flex-1 bg-line" />
+      <span className="max-w-[75%] truncate">{label}</span>
+      <span className="h-px flex-1 bg-line" />
+    </div>
+  );
+}
+

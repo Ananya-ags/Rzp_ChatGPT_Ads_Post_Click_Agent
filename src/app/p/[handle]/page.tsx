@@ -10,13 +10,6 @@ import { searchCatalog } from "@/lib/tools/core";
 type Props = { params: Promise<{ handle: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> };
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
-/** Fourth prompt tile on every agent page; answered with similar pieces (search_catalog). */
-const SHOW_OTHERS = "Show me other products";
-/** Guided-demo chips that belong to the waterproof → office return-prevention story; hidden on other ads. */
-const OFFICE_STORY_CHIPS = new Set(["Will these work for office?", "Ye office mein pehen sakte hain?", "Need it in Pune by 18 Oct"]);
-/** Product-generic chips for a direct visit (no ad group): lookups the agent answers from tools and store policy. */
-const DIRECT_CHIPS = ["When will it be delivered?", "Any offers?", "Is gift wrap available?", SHOW_OTHERS];
-
 const RAIL_TITLE: Record<string, string> = {
   "waterproof-everyday-under-5k": "Picked for waterproof everyday",
   "wedding-guest-gift": "Picked for the wedding",
@@ -106,11 +99,13 @@ export default async function Page({ params, searchParams }: Props) {
     arrives: { label: formatDay(est.arrives_on), where: user ? `${area}, ${user.address.city} ${user.address.pincode}` : `${est.city} (approx.)`, madeToOrder: j.made_to_order, dispatchDays: j.dispatch_days },
     user: user ? { firstName: user.firstName, nudgePrepaid: user.rtoRisk === "high", pincode: user.address.pincode } : null,
     loginHref: `/login?next=${encodeURIComponent(`/p/${handle}${linkQuery}`)}`,
+    // ad visit: the hero gets the ad's opener from openers.json (the AI line where its guard passed, otherwise the
+    // curated line; the pipeline stores whichever was used); other products get the curated product line
     context:
       group && opener
-        ? { adGroupId: group.id, chip: opener.chip, opener: user ? `Welcome back. Any questions about the ${product.title}?` : `Any questions about the ${product.title}?`, sheetOpener: null, chips: [...opener.suggested_chips, SHOW_OTHERS], sheetChips: [...new Set([...opener.suggested_chips, SHOW_OTHERS, ...db.demo.try_it_chips.map((c) => c.text).filter((t) => group.id === "waterproof-everyday-under-5k" || !OFFICE_STORY_CHIPS.has(t))])], railTitle: user ? "Picked for you" : RAIL_TITLE[group.id] ?? "Picked for you", pending: group.status !== "active" }
+        ? { adGroupId: group.id, chip: opener.chip, opener: handle === group.hero_sku ? opener.opener : `${user ? "Welcome back. " : ""}Any questions about the ${product.title}? Ask about size, materials, delivery or gifting.`, railTitle: user ? "Picked for you" : RAIL_TITLE[group.id] ?? "Picked for you", pending: group.status !== "active" }
         : !group
-          ? { adGroupId: null, chip: null, opener: `${user ? "Welcome back. " : ""}Questions about the ${product.title}? Ask about size, materials, delivery or returns.`, sheetOpener: `Questions about the ${product.title}? Ask about size, materials, delivery or returns.`, chips: DIRECT_CHIPS, sheetChips: DIRECT_CHIPS, railTitle: "You may also like", pending: false }
+          ? { adGroupId: null, chip: null, opener: `${user ? "Welcome back. " : ""}Questions about the ${product.title}? Ask about size, materials, delivery or returns.`, railTitle: "You may also like", pending: false }
           : null,
     rail: railRaw.map((r) => ({ card: cards[r.sku], reason: r.reason, pinned: r.pinned })),
     more,

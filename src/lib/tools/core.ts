@@ -99,6 +99,7 @@ export type SearchFilters = {
   deliver_to_pincode?: string;
   deliver_by?: string; // YYYY-MM-DD
   exclude?: string[];
+  base_metal?: string; // code-only filter (chips such as "Stainless steel earrings"); not offered to the model
   limit?: number;
 };
 
@@ -113,6 +114,7 @@ export function searchCatalog(db: Db, query: string, f: SearchFilters = {}) {
       const j = p.metafields.jewellery;
       if (f.category && j.category !== f.category) return false;
       if (f.subtype && j.subtype !== f.subtype) return false;
+      if (f.base_metal && j.base_metal !== f.base_metal) return false;
       if (f.max_price_inr && price(p) > f.max_price_inr) return false;
       if (f.occasion && !j.occasions.includes(f.occasion as never)) return false;
       if (f.water_resistant !== undefined && j.water_resistant !== f.water_resistant) return false; // verified only

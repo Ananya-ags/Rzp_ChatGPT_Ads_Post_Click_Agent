@@ -24,6 +24,7 @@ export type CardVM = {
   maxQty: number; // orderable units: made-to-order ignores stock; capped at MAX_PER_SKU
   limitReason: "stock" | "order"; // what stops the shopper at maxQty: stock running out, or the per-order cap
   badge: string | null; // grid badge, only from a verified (brand-entered) field
+  waterResistant: boolean; // verified water_resistant === true (chips: water questions only when true)
 };
 
 export function toCard(p: Product, manifest: Manifest): CardVM {
@@ -50,6 +51,7 @@ export function toCard(p: Product, manifest: Manifest): CardVM {
     maxQty: j.made_to_order ? MAX_PER_SKU : Math.min(stock, MAX_PER_SKU),
     limitReason: !j.made_to_order && stock < MAX_PER_SKU ? "stock" : "order",
     badge: j.water_resistant === true ? "Water-resistant" : null,
+    waterResistant: j.water_resistant === true,
   };
 }
 

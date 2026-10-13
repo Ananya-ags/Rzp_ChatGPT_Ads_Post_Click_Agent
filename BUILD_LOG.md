@@ -705,3 +705,46 @@ Order followed: checker → test wording → agent. AI tool: Claude Code wrote t
   - **Unchanged definitions (strict like-for-like):** 33/35 → 35/35.
   - **Reworded:** 6/17 → 17/17, with the changed fields listed per case. Some were made stricter, e.g. handoff-03/04 now require the exact line.
   - **New in v2:** 13/13, no v1 score.
+
+## 13 Oct 2026: The "Ask Cosmos AI" chat experience (home, category, product, bag)
+- **Chips are rules, not AI.** Every starter and follow-up chip comes from one config, `src/lib/agent/chips.ts`, keyed by page type × ad group × logged-in state. Follow-ups are chosen from the last tool result. No model picks a chip, so the guided path is fast and testable, and it can never suggest an unsafe prompt. Discount demands, injections and test lines ("give me 50% off", "ignore your rules") exist only in the eval cases.
+  - Sets per ad group as agreed:
+    - The waterproof ad keeps "Will these work for office?".
+    - The wedding date chip is computed from the demo clock ("Will it arrive by Sat, 17 Oct?").
+    - "Show matching pieces" is used everywhere.
+    - Water chips appear only on verified water-resistant products.
+    - Logged in: "What goes with what I own?" leads.
+  - **Almost every chip is answered on the fast path** (a tool computes, a template words it, no model call). The new templates cover size, materials, shower, tarnish, daily size, smaller, matching, compare sizes, owned, the home discovery chips, the bag delivery/offers/COD/gift-wrap chips, "Show more", "Under ₹2,000", "Show faster options" and "Add the <piece> to bag". The last few read the previous search or delivery check from the chat history. Only the judgement chip "Will these work for office?" streams from the model, through the forced return-insight route.
+  - Follow-ups only count for an answer given on the current page. Fewer than 3 are topped up with the page's unused starters.
+- **Validator** (`npm run validate-data`): fails if any configured chip
+  - (a) contains banned or regulated wording, a discount demand, an injection or an eval abuse line;
+  - (b) asks about water on a product that isn't verified water-resistant (or appears on the wedding ad);
+  - (c) isn't answered by a fast-path key or a code-forced tool.
+  - It checks every configured chip, not only the 4 shown. Result: 65 chip texts across ~1,400 placements.
+  - A negative test (adding "give me 50% off" and a shower chip to the wedding set) failed as expected.
+  - `npm run test:chips` sends every fast chip through the real handler in its own context: 105/105 answered on the fast path, no failed guards.
+- **One conversation per session:**
+  - `ChatProvider` in the root layout holds a single `useChat` (stable id) that survives client-side navigation.
+  - Messages, dividers and the session's ad context are kept in sessionStorage, read lazily on first render so a refresh keeps the chat. All storage calls are in try/catch with an in-memory fallback, so it works inside the /demo iframe and never touches `window.top`.
+  - Moving to another product adds "Now viewing: <product>", and the next message carries the new page context.
+  - A product page follows its own URL's ad context; home, category and bag follow the session's ad.
+  - "New chat" clears everything.
+- **Sheet** (`ChatSheet`, reworked in place, inside the phone frame):
+  - half 58% → full 94%, full on input focus; pinned product strip (thumb, name, price, Add) or bag strip (count, total) in full height;
+  - shopper bubbles right; Cosmos AI left with a star avatar and no bubble; three typing dots with a pulsing star and a friendly status ("Checking delivery dates…", never a tool name);
+  - cards after the text; care-line card with a mailto link and "We'll get back to you within 24 hours";
+  - limited-mode and busy notes shown inline and calm; errors as a calm note, never a red box;
+  - text-only input (500 characters, counter from 420) with the placeholder "Ask about size, delivery, gifting…"; the disclosure line is always visible;
+  - 44px tap targets, focus rings, aria labels, reduced motion respected, the input kept above the iOS keyboard.
+- **Entry points** (`AskCosmos`): the product page keeps its sticky-bar pill. Home, category and bag get a floating gold-star button, labelled at first and star-only after scrolling (on the bag it sits above the pay bar). Hidden when the agent is paused and on arm A; never in checkout.
+- **Product opener:** the hero product of an ad uses `openers.json` (the AI line where its guard passed, else the curated line; the pipeline stores whichever it used). Other products get the curated product line.
+- **Bugs found while testing, all fixed:**
+  - With history carried across products, the model checked delivery for an earlier product (40mm) on the 30mm page. Fix: the prompt says "it / these" means the product on screen, and code swaps in the page product for delivery and fit checks unless the latest message names the other piece.
+  - `scrollIntoView` scrolled the sheet itself and hid the header; the list now scrolls on its own.
+  - The old product-page sheet appended the demo "try it" chips (incl. "give me 50% off" and a shower chip on the wedding ad); removed.
+  - Fast-path delivery and offer replies no longer start with the shopper's first name.
+  - Eval checker: `offer_matches_tool` now also allows amounts printed in an offer's own label ("over ₹1,999").
+- **Tests:**
+  - 390px flows (`flows.mjs`), with and without a key: 27/27, covering home → gift chip → card → product (history + divider) → delivery → follow-ups → bag; the wedding ad (no water chips); the steel ad → nickel → care card; and 30mm → "need it in Pune by 18 Oct" → Everyday Tube Hoops card → Add → bag count.
+  - Click-through 42/42 and loop 17/17 (tests updated for the new chip copy); bag UI 7/7.
+  - Evals without the judge: 65/65 after the checker fix.

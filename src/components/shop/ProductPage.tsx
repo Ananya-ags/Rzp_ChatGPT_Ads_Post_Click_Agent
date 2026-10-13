@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import ProductImage from "./ProductImage";
-import ChatSheet from "./ChatSheet";
+import AskCosmos from "./AskCosmos";
+import { useCosmosChat } from "./chat/ChatProvider";
+import { starterChips } from "@/lib/agent/chips";
 import { MiniProduct } from "./ToolCards";
 import { ProductLinkProvider } from "./productLink";
 import { useDemoState } from "@/lib/state";
@@ -23,7 +25,8 @@ export type ProductPageProps = {
   loginHref: string;
   // agent context: from an ad group (chip + ad opener + curated rail), or a direct visit (adGroupId/chip null,
   // product-generic opener, "You may also like" rail). Null on the standard page (arm A).
-  context: null | { adGroupId: string | null; chip: string | null; opener: string; sheetOpener: string | null; chips: string[]; sheetChips: string[]; railTitle: string; pending: boolean };
+  // chips come from chips.ts (rules), the same set on the page card and in the chat sheet
+  context: null | { adGroupId: string | null; chip: string | null; opener: string; railTitle: string; pending: boolean };
   rail: { card: CardVM; reason: string; pinned: boolean }[];
   more: CardVM[]; // uncurated list for the standard page
   cards: Record<string, CardVM>;
@@ -33,19 +36,16 @@ export type ProductPageProps = {
 
 export default function ProductPage(p: ProductPageProps) {
   const [state] = useDemoState();
-  const [open, setOpen] = useState(false);
+  const { openWith } = useCosmosChat();
   // new product (rail / chat link): start at the top, inside the desktop phone frame too
   useEffect(() => {
     document.getElementById("phone-scroll")?.scrollTo({ top: 0 });
     window.scrollTo({ top: 0 });
   }, []);
-  const [pending, setPending] = useState<string | null>(null);
   const [slide, setSlide] = useState(0);
   const agentOn = p.arm === "C" && !!p.context && !state.agentPaused;
-  const ask = (q?: string) => {
-    if (q) setPending(q);
-    setOpen(true);
-  };
+  const ask = (q?: string) => openWith(q);
+  const chips = p.context ? starterChips({ kind: "product", adGroupId: p.context.adGroupId, loggedIn: !!p.user || state.loggedIn, product: { handle: p.hero.handle, title: p.hero.title, waterResistant: p.hero.waterResistant } }).map((c) => c.text) : [];
 
   return (
     <ProductLinkProvider value={p.linkQuery}>
@@ -146,11 +146,11 @@ export default function ProductPage(p: ProductPageProps) {
             </p>
           )}
           <div className="mt-3 flex flex-wrap gap-2">
-            {p.context.chips.map((c) => (
+            {chips.map((c) => (
               <button
                 key={c}
                 onClick={() => ask(c)}
-                className="rounded-full border border-gold/45 bg-white/85 px-3 py-1.5 text-[12.5px] text-ink shadow-[0_1px_0_rgba(140,101,36,0.08)] hover:border-gold active:bg-[#f6ecd6]"
+                className="min-h-11 rounded-full border border-gold/45 bg-white/85 px-3.5 py-1.5 text-[12.5px] text-ink shadow-[0_1px_0_rgba(140,101,36,0.08)] hover:border-gold active:bg-[#f6ecd6]"
               >
                 {c}
               </button>
@@ -201,7 +201,7 @@ export default function ProductPage(p: ProductPageProps) {
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-ivory/95 px-4 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 backdrop-blur">
         <div className="flex gap-2.5">
           {agentOn && (
-            <button onClick={() => ask()} className="ai-cta relative flex h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full text-[14px] font-semibold text-[#3a2a10] active:scale-[0.98]">
+            <button onClick={() => ask()} aria-label="Ask Cosmos AI" className="ai-cta relative flex h-12 flex-1 items-center justify-center gap-2 overflow-hidden rounded-full text-[14px] font-semibold text-[#3a2a10] active:scale-[0.98]">
               <CosmosStarBadge /> Ask Cosmos AI
             </button>
           )}
@@ -210,16 +210,19 @@ export default function ProductPage(p: ProductPageProps) {
       </div>
 
       {agentOn && p.context && (
-        <ChatSheet
-          open={open}
-          onOpenChange={setOpen}
-          pending={pending}
-          clearPending={() => setPending(null)}
-          context={{ sku: p.hero.handle, adGroupId: p.context.adGroupId, pincode: p.user?.pincode ?? null, tier: p.user ? 3 : 1 }}
-          hero={p.hero}
-          cards={p.cards}
-          chips={p.context.sheetChips}
-          opener={p.user?.nudgePrepaid ? `Welcome back, ${p.user.firstName}. Tip: pay online at checkout and you get an extra 5% off your order.` : p.context.sheetOpener}
+        <AskCosmos
+          fab={false}
+          page={{
+            kind: "product",
+            sku: p.hero.handle,
+            title: p.hero.title,
+            adGroupId: p.context.adGroupId,
+            arm: p.arm,
+            pincode: p.user?.pincode ?? null,
+            loggedIn: !!p.user,
+            opener: p.user?.nudgePrepaid ? `Welcome back, ${p.user.firstName}. Tip: pay online at checkout and you get an extra 5% off your order.` : p.context.opener,
+            linkQuery: p.linkQuery,
+          }}
         />
       )}
     </div>

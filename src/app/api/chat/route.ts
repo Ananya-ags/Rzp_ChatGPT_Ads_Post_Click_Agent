@@ -3,8 +3,9 @@ import { getDb, resolveAdGroup } from "@/lib/data";
 import { buildTools, systemPrompt, type ChatContext } from "@/lib/agent/agent";
 import { AGENT, estimateCostUsd, llmSettings, pickFallbackLlm, pickLlm, type Llm } from "@/lib/ai/model";
 import { addSpend, overDailyBudget, spendToday } from "@/lib/ai/spend";
+import { dayLabel, fastKey, nextFridayIso, type FastKey } from "@/lib/agent/chips";
 import { inputCheck, opensWithYes, outputChecks, policyAssertion, policyCovers, redact } from "@/lib/agent/guardrails";
-import { MAX_MESSAGE_CHARS, PREFS, TEXT_ONLY_REPLY, TOO_LONG_REPLY, forcedTool, handoffKind, isFastPath, isHinglish, norm, parseDeadline, parsePrefs, parseQty, typedPincode } from "@/lib/agent/intents";
+import { MAX_MESSAGE_CHARS, PREFS, TEXT_ONLY_REPLY, TOO_LONG_REPLY, forcedTool, handoffKind, isHinglish, norm, parseDeadline, parsePrefs, parseQty, typedPincode } from "@/lib/agent/intents";
 import { allowMessage, hasDemoBypass, visitorKey, VISITOR_COOKIE } from "@/lib/agent/rateLimit";
 import * as core from "@/lib/tools/core";
 import { userFromRequest } from "@/lib/user";
@@ -64,6 +65,7 @@ export async function POST(req: Request) {
   // a pincode the shopper typed (any turn) counts as theirs; Hinglish in → Hinglish out
   context.typedPincode = typedPincode(messages.filter((m) => m.role === "user").map((m) => m.parts.map((p) => (p.type === "text" ? p.text : "")).join(" ")));
   context.hinglish = isHinglish(userText);
+  Object.assign(context, lastTools(messages));
   const input = inputCheck(userText);
   const started = Date.now();
   const inputGuard = { type: "data-guard" as const, data: { stage: "input", name: "injection patterns", pass: !input.injection, detail: input.injection ? input.patterns.join(", ") : "none", text: redact(userText) } };
@@ -106,7 +108,7 @@ export async function POST(req: Request) {
     });
 
   // fast path: exact suggested-chip text answered from tools + templates, zero LLM calls
-  if (isFastPath(userText) && offlineWriter(userText, page?.handle ?? null, context).matched)
+  if (fastKey(userText) && offlineWriter(userText, page?.handle ?? null, context).matched)
     return respond((writer) => {
       writer.write({ type: "start" });
       writer.write(inputGuard);
@@ -518,6 +520,206 @@ const STORE_CHIPS: Record<string, (db: ReturnType<typeof getDb>) => { text: stri
   },
 };
 
+/** Fast keys answered by the older templates below, matched on their canonical chip text. */
+const LEGACY_TEXT: Partial<Record<FastKey, string>> = {
+  delivery: "when will it be delivered",
+  offers: "any offers",
+  similar: "show me other products",
+  metal: "what metal is this",
+  nickel: "is it nickel free",
+  wedding_fit: "suitable for wedding gift",
+  gift_wrap: "is gift wrap available",
+  find_gift: "find a gift",
+  waterproof_pieces: "waterproof pieces",
+  under_2000: "under 2000",
+  delivery_returns: "delivery  returns",
+};
+
+/** The last search and delivery check in the chat history (follow-up chips refine them). */
+function lastTools(messages: UIMessage[]): Pick<ChatContext, "lastSearch" | "lastDelivery"> {
+  let lastSearch: ChatContext["lastSearch"] = null, lastDelivery: ChatContext["lastDelivery"] = null;
+  for (const m of [...messages].reverse()) {
+    if (m.role !== "assistant") continue;
+    for (const part of [...m.parts].reverse() as { type: string; toolName?: string; input?: Record<string, unknown>; output?: Record<string, unknown> }[]) {
+      const name = part.type === "dynamic-tool" ? part.toolName : part.type.startsWith("tool-") ? part.type.slice(5) : null;
+      if (!lastSearch && name === "search_catalog" && part.input) lastSearch = { args: part.input, skus: ((part.output?.results as { sku: string }[] | undefined) ?? []).map((r) => r.sku) };
+      if (!lastDelivery && name === "check_delivery" && part.input?.sku && part.input?.pincode) lastDelivery = { sku: String(part.input.sku), pincode: String(part.input.pincode), deadline: (part.input.deadline as string | undefined) ?? null };
+    }
+    if (lastSearch && lastDelivery) break;
+  }
+  return { lastSearch, lastDelivery };
+}
+
+type Step = { cached_response: { text: string; cards: never[]; trace: { tool: string; args: Record<string, unknown> }[] } };
+const COMPLEMENT: Record<string, string> = { earrings: "necklace", necklace: "earrings", ring: "bracelet", bracelet: "ring" };
+
+/**
+ * Fast-path templates for the chat chips (src/lib/agent/chips.ts): a tool computes the facts, a template supplies
+ * the words. Returns null when the key is answered by an older template, or can't be answered here (the model
+ * takes it). Every number comes from a tool result or verified product data.
+ */
+function fastTemplate(key: FastKey, page: ReturnType<typeof core.findProduct>, ctx: ChatContext, userText: string): Step | null {
+  const db = getDb();
+  const pol = db.brand.policies;
+  const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
+  const step = (text: string, trace: Step["cached_response"]["trace"]): Step => ({ cached_response: { text, cards: [], trace } });
+  const search = (args: Record<string, unknown>) => {
+    const { query, ...f } = args as { query?: string } & core.SearchFilters;
+    return core.searchCatalog(db, query ?? "", f).results;
+  };
+  const known = !!(ctx.pincode || ctx.typedPincode);
+  const pin = ctx.pincode ?? ctx.typedPincode ?? "411038";
+  const estimate = known ? "" : " That's an estimate for Pune; share your pincode for an exact date.";
+  const j = page?.metafields.jewellery;
+  const plural = page ? /s$/i.test(page.title) : false;
+  const they = plural ? "They're" : "It's";
+  const sizeOf = (p: NonNullable<typeof page>) => core.getProductFacts(db, p.handle) as Facts;
+  const cart = ctx.cart ?? [];
+
+  switch (key) {
+    // ── product page ──
+    case "size":
+    case "materials": {
+      if (!page) return null;
+      return step(factsText(sizeOf(page)), [{ tool: "get_product_facts", args: { sku: page.handle } }]);
+    }
+    case "shower": {
+      if (!page || !j) return null;
+      const text = j.water_resistant === true
+        ? `Yes. The ${page.title} ${plural ? "are" : "is"} verified water-resistant, so showers and workouts are fine.`
+        : `The brand hasn't confirmed water resistance for the ${page.title}, so it's best to keep ${plural ? "them" : "it"} dry.`;
+      return step(text, [{ tool: "get_product_facts", args: { sku: page.handle } }]);
+    }
+    case "tarnish": {
+      if (!page || !j) return null;
+      const text = j.anti_tarnish_warranty_months
+        ? `${they} anti-tarnish, with a ${j.anti_tarnish_warranty_months}-month anti-tarnish warranty from delivery.`
+        : `The ${page.title} ${plural ? "don't" : "doesn't"} carry an anti-tarnish warranty. ${pol.care_guide}`;
+      return step(text, [{ tool: "get_product_facts", args: { sku: page.handle } }, { tool: "lookup_policy", args: { topic: "warranty.anti_tarnish" } }]);
+    }
+    case "size_daily": {
+      if (!page) return null;
+      const ri = core.getReturnInsight(db, page.handle, "everyday");
+      if ("error" in ri) return null;
+      const text = answerFromTools([{ tool: "get_return_insight", output: ri }], known) ?? "";
+      return step(text, [{ tool: "get_return_insight", args: { sku: page.handle, context: "everyday" } }]);
+    }
+    case "smaller": {
+      if (!page || !j) return null;
+      const size = j.outer_diameter_cm ?? j.drop_length_cm;
+      const args = { query: "", similar_to: page.handle, category: j.category, ...(j.outer_diameter_cm ? { max_outer_diameter_cm: j.outer_diameter_cm - 0.05 } : {}), limit: 3 };
+      const n = size ? search(args).length : 0;
+      const facts = sizeOf(page);
+      return n
+        ? step(`For a subtler look, these are smaller than the ${(facts.size ?? "").replace(/ (across|long)$/, "")}:`, [{ tool: "search_catalog", args }])
+        : step(`The ${page.title} ${plural ? "are" : "is"} ${facts.size ?? "already small"}, already one of our smallest in this style.`, [{ tool: "get_product_facts", args: { sku: page.handle } }]);
+    }
+    case "matching": {
+      if (!page || !j) return null;
+      const args = { query: "", category: COMPLEMENT[j.category] ?? "earrings", occasion: j.occasions[0], limit: 3 };
+      return search(args).length ? step(`Pieces that go with the ${page.title}:`, [{ tool: "search_catalog", args }]) : null;
+    }
+    case "compare_sizes": {
+      if (!page || !j) return null;
+      const args = { query: "", similar_to: page.handle, category: j.category, subtype: j.subtype, limit: 3 };
+      const facts = sizeOf(page);
+      return search(args).length
+        ? step(`The ${page.title} ${plural ? "are" : "is"} ${facts.size ?? "one size"}. Other sizes in this style:`, [{ tool: "search_catalog", args }])
+        : step(`This style comes in one size: ${facts.size ?? "see the product details"}.`, [{ tool: "get_product_facts", args: { sku: page.handle } }]);
+    }
+    case "owned": {
+      const owned = db.products.filter((p) => ctx.ownedTitles?.includes(p.title));
+      if (!ctx.loggedIn || !owned.length) return null; // anonymous: the model offers login (suggest_login)
+      const args = { query: "", similar_to: owned[0].handle, exclude: owned.map((p) => p.handle), limit: 3 };
+      return step(`Pieces that go with your ${owned[0].title}:`, [{ tool: "search_catalog", args }]);
+    }
+    case "arrive_by": {
+      if (!page) return null;
+      const deadline = parseDeadline(userText, db.now);
+      const d = core.checkDelivery(db, page.handle, pin, deadline);
+      if ("error" in d) return null;
+      return step(deliveryText(d, known), [{ tool: "check_delivery", args: { sku: page.handle, pincode: pin, ...(deadline ? { deadline } : {}) } }]);
+    }
+    case "cod": {
+      const cod = core.lookupPolicy(db, "payments.cod");
+      const limit = cod.found ? cod.text.match(/up to (₹\d[\d,]*\d)/)?.[1] : undefined; // from the knowledge base
+      const text = pol.cod_allowed
+        ? `Yes, cash on delivery is available${limit ? ` on orders up to ${limit}` : ""}, for a ${inr(pol.cod_fee_inr)} fee. Online-only offers don't apply to it.`
+        : db.rules.escalation.text;
+      return step(text, [{ tool: "lookup_policy", args: { topic: "payments.cod" } }]);
+    }
+    case "gift_wrap": {
+      if (page) return null; // product page: the older template (gift wrap + returns)
+      return step(`Yes. Gift wrap is ${inr(pol.gift_wrap_inr)} and a handwritten note is free.`, [{ tool: "lookup_policy", args: { topic: "gifting" } }]);
+    }
+    case "offers": {
+      if (page || !cart.length) return page ? null : step("Add a piece to your bag and I'll show the offers that apply.", []);
+      const o = core.getOffer(db, cart, { prepaid: true, logged_in: !!ctx.loggedIn, rto_risk: ctx.rtoRisk });
+      const lines = o.applied.map((a) => `${a.label} (−${inr(a.amount_inr)})`).join("; ");
+      return step(`Pay online and you get: ${lines || "no offers right now"}. You'd pay ${inr(o.total_inr)}.`, [{ tool: "get_offer", args: { cart, prepaid: true } }]);
+    }
+    // ── home and category ──
+    case "gift_under_2000": {
+      const args = { query: "gift", occasion: "gifting", max_price_inr: 2000, limit: 3 };
+      return step(`Gift picks under ₹2,000. Gift wrap is ${inr(pol.gift_wrap_inr)}, with a free note.`, [{ tool: "search_catalog", args }]);
+    }
+    case "office_earrings":
+      return step("Earrings picked for office wear:", [{ tool: "search_catalog", args: { query: "", category: "earrings", occasion: "office", limit: 3 } }]);
+    case "wedding_gifts":
+      return step(`Wedding-guest picks. Gift wrap is ${inr(pol.gift_wrap_inr)}, with a free note.`, [{ tool: "search_catalog", args: { query: "", occasion: "wedding guest", limit: 3 } }]);
+    case "minimal_studs":
+      return step("Minimal studs for work:", [{ tool: "search_catalog", args: { query: "", category: "earrings", subtype: "stud", occasion: "office", limit: 3 } }]);
+    case "steel_earrings":
+      return step("Earrings that are stainless steel all the way through:", [{ tool: "search_catalog", args: { query: "", category: "earrings", base_metal: "stainless steel", limit: 3 } }]);
+    case "need_by_friday": {
+      const by = nextFridayIso();
+      const args = { query: "", deliver_to_pincode: pin, deliver_by: by, limit: 3 };
+      return step(`These arrive by ${dayLabel(new Date(`${by}T00:00:00Z`))}.${estimate}`, [{ tool: "search_catalog", args }]);
+    }
+    // ── bag ──
+    case "order_arrival": {
+      if (!cart.length) return step("Your bag is empty right now. Add a piece and I'll check the date.", []);
+      const ds = cart.map((l) => core.checkDelivery(db, l.sku, pin)).filter((d): d is DeliveryResult => !("error" in d));
+      if (!ds.length) return null;
+      const last = ds.reduce((a, b) => (a.arrives_on >= b.arrives_on ? a : b));
+      const text = `${ds.length > 1 ? "Everything in your bag arrives" : `The ${last.title} arrive${/s$/i.test(last.title) ? "" : "s"}`} by ${last.arrives_label} in ${last.city}.${estimate}`;
+      return step(text, [{ tool: "check_delivery", args: { sku: last.sku, pincode: pin } }]);
+    }
+    // ── follow-ups ──
+    case "under_2000": {
+      const base = ctx.lastSearch?.args ?? (page ? { query: "", similar_to: page.handle, limit: 3 } : null);
+      if (!base) return null; // home with no earlier search: the older template
+      const args = { ...base, max_price_inr: 2000, limit: 3 };
+      return search(args).length ? step("Here are some under ₹2,000:", [{ tool: "search_catalog", args }]) : step("Nothing like that under ₹2,000 right now.", []);
+    }
+    case "show_more": {
+      if (!ctx.lastSearch) return null;
+      const args = { ...ctx.lastSearch.args, exclude: [...((ctx.lastSearch.args.exclude as string[] | undefined) ?? []), ...ctx.lastSearch.skus], limit: 3 };
+      return search(args).length ? step("A few more:", [{ tool: "search_catalog", args }]) : step("That's everything that matches.", []);
+    }
+    case "faster": {
+      const d = ctx.lastDelivery;
+      const p = d ? core.findProduct(db, d.sku) : null;
+      if (!d?.deadline || !p) return null;
+      const args = { query: "", similar_to: p.handle, category: p.metafields.jewellery.category, deliver_to_pincode: d.pincode, deliver_by: d.deadline, limit: 3 };
+      return search(args).length
+        ? step(`These arrive by ${formatDeadline(d.deadline)}:`, [{ tool: "search_catalog", args }])
+        : step(`Nothing similar arrives by ${formatDeadline(d.deadline)}, sorry.`, []);
+    }
+    case "add_named": {
+      const title = userText.replace(/^\s*add the\s+/i, "").replace(/\s+to (my )?bag\??\s*$/i, "").trim().toLowerCase();
+      const p = db.products.find((x) => x.title.toLowerCase() === title);
+      if (!p) return null;
+      const r = core.addToBag(db, cart, p.handle, 1);
+      return step(bagText(r), [{ tool: "add_to_bag", args: { sku: p.handle, qty: 1 } }]);
+    }
+    // answered by the older templates (LEGACY_TEXT)
+    case "delivery": case "similar": case "metal": case "nickel": case "wedding_fit":
+    case "find_gift": case "waterproof_pieces": case "delivery_returns":
+      return null;
+  }
+}
+
 /**
  * Quick answers from tools + templates (fast path, no API key, or every model failed): a templated lookup or the
  * guided-demo answer, with real tool outputs; else a pointer to the care team. `matched` says whether one applied.
@@ -535,49 +737,54 @@ function offlineWriter(userText: string, pageSku: string | null, ctx: ChatContex
   const cached = demoCached && !ctx.pincode && !ctx.typedPincode && demoCached.trace.some((t) => t.tool === "check_delivery") && !/pincode/i.test(demoCached.text) ? { ...demoCached, text: demoCached.text + estimateLine } : demoCached;
   // "Show me other products" (4th prompt tile): similar pieces to the page product, computed by the real tool
   const page = pageSku ? core.findProduct(db, pageSku) : null;
+  // chip wording (chips.ts) → the fast-path key; older templates below match on their canonical text
+  const fk = fastKey(userText);
+  const q = (fk && LEGACY_TEXT[fk]) || norm(userText);
+  const fastStep = fk ? fastTemplate(fk, page, ctx, userText) : null;
   const step =
-    cached ? { cached_response: cached }
-    : !page && STORE_CHIPS[norm(userText)] ? { cached_response: STORE_CHIPS[norm(userText)](db) }
-    : norm(userText) === "show me other products" && page
+    fastStep ? fastStep
+    : cached ? { cached_response: cached }
+    : !page && STORE_CHIPS[q] ? { cached_response: STORE_CHIPS[q](db) }
+    : q === "show me other products" && page
       ? { cached_response: { text: `Here are a few similar pieces.`, cards: [], trace: [{ tool: "search_catalog", args: { query: page.metafields.jewellery.subtype, similar_to: page.handle, limit: 3 } as Record<string, unknown> }] } }
-      : norm(userText) === "when will it be delivered" && page
+      : q === "when will it be delivered" && page
         ? (() => {
             // tier 0: approx city from IP → Pune; the exact date is computed by check_delivery
             const pin = ctx.pincode ?? "411038";
             const d = core.checkDelivery(db, page.handle, pin);
             const nudge = ctx.loggedIn && ctx.rtoRisk === "high" ? " Pay online at checkout and you get an extra 5% off." : "";
             const text = ctx.pincode
-              ? `${ctx.firstName ? `${ctx.firstName}, it` : "It"} arrives ${"error" in d ? "" : d.arrives_label} at your saved address in ${"error" in d ? "" : d.city} if you order before 2pm today.${nudge}`
+              ? `It arrives ${"error" in d ? "" : d.arrives_label} at your saved address in ${"error" in d ? "" : d.city} if you order before 2pm today.${nudge}`
               : `It arrives ${"error" in d ? "" : d.arrives_label} in ${"error" in d ? "" : d.city} if you order before 2pm today. Share your pincode for an exact date.`;
             return "error" in d ? null : { cached_response: { text, cards: [], trace: [{ tool: "check_delivery", args: { sku: page.handle, pincode: pin } as Record<string, unknown> }] } };
           })()
-        : /^(any offers|any offers on this|koi offer hai kya|can i pay cash on delivery|cod available)/.test(norm(userText)) && page
+        : /^(any offers|any offers on this|koi offer hai kya)/.test(q) && page
           ? (() => {
               const o = core.getOffer(db, [{ sku: page.handle, qty: 1 }], { prepaid: true, logged_in: !!ctx.loggedIn, rto_risk: ctx.rtoRisk });
               const lines = o.applied.map((a) => `${a.label} (−₹${a.amount_inr.toLocaleString("en-IN")})`).join("; ");
               const extra = ctx.loggedIn && ctx.rtoRisk === "high" ? " Cash on delivery doesn't get these offers." : "";
-              return { cached_response: { text: `${ctx.firstName ? `${ctx.firstName}, pay` : "Pay"} online and you get: ${lines || "no offers right now"}. ${o.wallet.usable_inr > 0 ? `With your ₹${o.wallet.usable_inr.toLocaleString("en-IN")} wallet, you'd` : "You'd"} pay ₹${o.total_inr.toLocaleString("en-IN")}.${extra}`, cards: [], trace: [{ tool: "get_offer", args: { cart: [{ sku: page.handle, qty: 1 }], prepaid: true } as Record<string, unknown> }] } };
+              return { cached_response: { text: `Pay online and you get: ${lines || "no offers right now"}. ${o.wallet.usable_inr > 0 ? `With your ₹${o.wallet.usable_inr.toLocaleString("en-IN")} wallet, you'd` : "You'd"} pay ₹${o.total_inr.toLocaleString("en-IN")}.${extra}`, cards: [], trace: [{ tool: "get_offer", args: { cart: [{ sku: page.handle, qty: 1 }], prepaid: true } as Record<string, unknown> }] } };
             })()
-        : ["what metal is this", "is it nickelfree", "is it nickel free", "are these nickelfree", "are these nickel free"].includes(norm(userText)) && page
+        : ["what metal is this", "is it nickelfree", "is it nickel free", "are these nickelfree", "are these nickel free"].includes(q) && page
           ? (() => {
               // answered from verified metafields only: the metal, and nickel_free (steel contains some nickel)
               const j = page.metafields.jewellery;
               const metal = { "stainless steel": "stainless steel", "925 silver": "sterling silver", brass: "brass" }[j.base_metal];
               const finish = j.plating === "18k gold plating" ? "18K gold plating" : j.plating === "gold vermeil" ? "gold vermeil" : j.plating ?? "a gold-toned finish";
               const verb = /s$/i.test(page.title) ? "are" : "is";
-              if (norm(userText) === "what metal is this")
+              if (q === "what metal is this")
                 return { cached_response: { text: `${verb === "are" ? "They're" : "It's"} ${metal} all the way through, with ${finish}.`, cards: [], trace: [] } };
               const text = `${core.nickelAnswer(page)} Our care team can help too.`;
               return { cached_response: { text, cards: [], trace: [{ tool: "handoff", args: { reason: "nickel / sensitive-ears question" } as Record<string, unknown> }] } };
             })()
-        : (norm(userText) === "suitable for wedding gift" || norm(userText) === "is gift wrap available") && page
+        : (q === "suitable for wedding gift" || q === "is gift wrap available") && page
           ? (() => {
               // answered from verified occasions + store policy (no numbers invented)
               const j = page.metafields.jewellery;
               const pol = db.brand.policies;
               const fits = j.occasions.includes("wedding guest") || j.occasions.includes("gifting");
               const wrap = `Gift wrap is ₹${pol.gift_wrap_inr} and a note is free. Returns are open for ${pol.return_window_days} days.`;
-              const isGiftWrap = norm(userText) === "is gift wrap available";
+              const isGiftWrap = q === "is gift wrap available";
               const verb = /s$/i.test(page.title) ? "are" : "is";
               const uses = [j.occasions.includes("wedding guest") ? "wedding-guest looks" : null, j.occasions.includes("gifting") ? "gifting" : null].filter(Boolean).join(" and ");
               const text = isGiftWrap

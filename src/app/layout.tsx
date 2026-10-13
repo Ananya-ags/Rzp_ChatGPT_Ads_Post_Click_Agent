@@ -4,6 +4,8 @@ import "./globals.css";
 import { StoreNavProvider } from "@/components/shop/storeNav";
 import { getDb } from "@/lib/data";
 import { categoriesFrom } from "@/lib/catalog";
+import ChatProvider from "@/components/shop/chat/ChatProvider";
+import { toCard } from "@/lib/view";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], axes: ["opsz"] });
@@ -19,7 +21,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-IN" className={`${inter.variable} ${fraunces.variable} h-full`}>
       <body className="min-h-full">
-        <StoreNavProvider categories={categoriesFrom(getDb().products)}>{children}</StoreNavProvider>
+        <StoreNavProvider categories={categoriesFrom(getDb().products)}>
+          {/* one Cosmos AI conversation per session, shared by every shop page */}
+          <ChatProvider cards={Object.fromEntries(getDb().products.map((p) => [p.handle, toCard(p, getDb().manifest)]))}>{children}</ChatProvider>
+        </StoreNavProvider>
       </body>
     </html>
   );

@@ -112,11 +112,11 @@ const pct = (xs: number[], p: number) => (xs.length ? [...xs].sort((a, b) => a -
     // checks against tool results
     const out = (tool: string) => outputs[tools.lastIndexOf(tool)] as Record<string, unknown> | undefined;
     if (c.expect.checks.includes("offer_matches_tool")) {
-      const o = out("get_offer") as { subtotal_inr: number; discount_inr: number; total_inr: number; shipping_inr: number; applied: { amount_inr: number }[]; wallet: { balance_inr: number; usable_inr: number }; cap: { max_flat_inr: number; cap_inr_for_this_cart: number } } | undefined;
+      const o = out("get_offer") as { subtotal_inr: number; discount_inr: number; total_inr: number; shipping_inr: number; applied: { amount_inr: number; label: string }[]; wallet: { balance_inr: number; usable_inr: number }; cap: { max_flat_inr: number; cap_inr_for_this_cart: number } } | undefined;
       if (!o || "error" in o) fails.push("offer check: no get_offer result");
       else {
         // every ₹ amount the reply states must be one get_offer computed (saving, total, cap, wallet, a single offer)
-        const allowed = new Set([o.subtotal_inr, o.discount_inr, o.discount_inr + o.wallet.usable_inr, o.total_inr, o.subtotal_inr - o.discount_inr, o.shipping_inr, o.wallet.balance_inr, o.wallet.usable_inr, o.cap.max_flat_inr, o.cap.cap_inr_for_this_cart, ...o.applied.map((a) => a.amount_inr)]);
+        const allowed = new Set([o.subtotal_inr, o.discount_inr, o.discount_inr + o.wallet.usable_inr, o.total_inr, o.subtotal_inr - o.discount_inr, o.shipping_inr, o.wallet.balance_inr, o.wallet.usable_inr, o.cap.max_flat_inr, o.cap.cap_inr_for_this_cart, ...o.applied.map((a) => a.amount_inr), ...o.applied.flatMap((a) => rupees(a.label))]); // incl. amounts in an offer's own label ("over ₹1,999")
         const wrong = rupees(reply).filter((n) => !allowed.has(n));
         if (wrong.length) fails.push(`offer check: ₹${wrong.join(", ₹")} not in get_offer's result`);
       }
