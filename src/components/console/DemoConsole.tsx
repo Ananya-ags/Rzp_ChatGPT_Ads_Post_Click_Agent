@@ -124,7 +124,7 @@ function Console({ merchant, evalsUrl }: { merchant: Merchant[]; evalsUrl: strin
     try {
       window.sessionStorage.clear();
     } catch {}
-    writeState({ cart: [], approvedProposals: [], loggedIn: false, loginOffered: false, loginDismissed: false, agentPaused: false, returningVisitor: false });
+    writeState({ cart: [], approvedProposals: [], dismissedProposals: [], loggedIn: false, loginOffered: false, loginDismissed: false, agentPaused: false, returningVisitor: false });
     setApproved([]);
     setEvents([]);
     setOpen({});

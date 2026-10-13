@@ -935,3 +935,20 @@ Limits: physical iPhone/Safari keyboard behaviour is not verified; mobile keyboa
 - **User-approved eval criterion:** recommendations/comparisons may contain several useful sentences. The revised judge rubric evaluates relevance and task-appropriate detail rather than failing solely on sentence/word count; irrelevant warnings, repetition, contradictions and distracting follow-ups remain penalized. The case seed and `pref-01` definition agree. New runs record `judge_rubric_version` for auditability.
 - **Rubric check:** rejudged only the saved `pref-01` answer with the new rubric, without `--write` or another agent call; it passed.
 - **Verification:** 58 claim/date/disclosure checks, 11 checkout checks including 11,392 quote combinations, 105 chip cases, TypeScript and ESLint pass. No checkout orders or payments were made.
+## Start page, no arms, merchant console (13 Oct 2026)
+
+Built with Claude Code (Opus 5.5); decisions below are mine unless noted.
+
+- **Start page (/)**: the product name is the hero ("ChatGPT Ads Post-Click Agent"), with the experience cards (/demo, guided demo, store home, merchant console), the same-product-two-ads comparison and the sensitive-ears approve checkbox (the same demo-state approval the console writes). Razorpay-inspired tokens shared with /demo; no logo or wordmark. Cosmos stays inside the shop.
+- **No arms anywhere a viewer looks.** Every page has the agent; the URL can no longer select a variant. The holdout code paths stay in place but are unreachable (refactoring them out risked tested paths). No arm in links, Razorpay notes, the AI console or docs. Measurement in production: a holdout of ChatGPT ad traffic would see the standard page, so the lift in ad-click-to-order conversion is measured directly. The prototype shows the agent experience only.
+- **Merchant console (/merchant)**: Cosmos-themed, standalone (no phone frame or shop header). Summary strip computed in code from `orders_sessions.json`: ad-click-to-order conversion (main), the funnel (clicks → chats → bag → orders, each as a share of clicks because the steps aren't nested), kept revenue (paid − refunds − RTO, predicted returns for open windows), proposals waiting and agent status. Proposals inbox with evidence (shopper messages filtered through the abuse and injection checks), Approve/Dismiss with Undo, and a Done list with one-line results. What shoppers asked, orders from this session (test mode) and controls (site-wide pause, Reset demo with an in-page confirm).
+- **Approvals act in code, never through the model.** Approved ids are mirrored to a `cosmos_approved` cookie; product pages and the chat route build the catalogue variant from `proposals.json`'s apply payloads: waterproof → `water_resistant: true` on the 18 SKUs (badge, facts, and the claim check now allows it); the brand rule removes the Layered Set from Office minimal's candidates and rail; the wedding pause hides Cosmos AI on that ad group's pages; the steel ad unlocks conversation 3 in the mock ChatGPT as before.
+- **Data**: `added_to_bag` added to the seeded sessions (converted sessions always; otherwise a per-session hash draw, 30% with chat, 9% without), independent of the main RNG, so no other seeded number changed (`npm run seed` reproduces the file byte for byte). The wedding-pause proposal now cites that ad group's conversion and kept revenue (pipeline re-run, all 46 LLM calls cache hits, $0).
+- **Water-resistant badge** added to the product page's icon row for verified products, so the approval is visible on the page, not only inside "Product details".
+- **Tests**: `npm run test:merchant-browser` covers flows (a)–(f), the wedding pause and dismiss/undo.
+
+### Next (skipped on purpose)
+- Per-ad-group tables in the merchant console.
+- Attributes to confirm (`attributes_to_confirm.json`) as a review queue.
+- Coverage controls (ChatGPT ads / AI referrals / Meta / Google / whole site).
+- Offer-cap editing (caps stay fixed in code).

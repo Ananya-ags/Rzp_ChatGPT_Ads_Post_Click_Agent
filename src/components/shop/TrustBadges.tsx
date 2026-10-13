@@ -1,5 +1,5 @@
 /** Icon row under the description. Only facts verified for this product are passed in (claims policy). */
-export type Badge = { icon: "shield" | "gold" | "truck"; label: string; sub: string };
+export type Badge = { icon: "shield" | "gold" | "truck" | "water"; label: string; sub: string };
 
 const ICONS: Record<Badge["icon"], React.ReactNode> = {
   // anti-tarnish: shield with a check
@@ -19,6 +19,8 @@ const ICONS: Record<Badge["icon"], React.ReactNode> = {
       <path d="M6 6.5v2M5 7.5h2" />
     </>
   ),
+  // verified water-resistant: a drop
+  water: <path d="M12 3.5c3 3.6 5.5 6.9 5.5 10a5.5 5.5 0 01-11 0c0-3.1 2.5-6.4 5.5-10z" />,
   // free shipping: delivery van
   truck: (
     <>

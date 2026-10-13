@@ -11,6 +11,7 @@ export type CartLine = { sku: string; qty: number };
 export type DemoState = {
   cart: CartLine[];
   approvedProposals: string[];
+  dismissedProposals: string[]; // merchant console: dismissed (undo restores them to the inbox)
   agentPaused: boolean;
   returningVisitor: boolean;
   loggedIn: boolean;
@@ -23,7 +24,7 @@ export const BAG_COOKIE = "cosmos_bag";
 let snapshot: DemoState | null = null; // cached for useSyncExternalStore (must be a stable object)
 let memory: DemoState | null = null; // fallback when localStorage is unavailable
 let storageBlocked = false;
-const DEFAULT: DemoState = { cart: [], approvedProposals: [], agentPaused: false, returningVisitor: false, loggedIn: false, loginOffered: false, loginDismissed: false };
+const DEFAULT: DemoState = { cart: [], approvedProposals: [], dismissedProposals: [], agentPaused: false, returningVisitor: false, loggedIn: false, loginOffered: false, loginDismissed: false };
 const EVENT = "cosmos-demo-state";
 
 export function parseDemoState(raw: string | null): DemoState {
@@ -45,6 +46,7 @@ export function parseDemoState(raw: string | null): DemoState {
     return {
       cart: [...cart].map(([sku, qty]) => ({ sku, qty })),
       approvedProposals: Array.isArray(data.approvedProposals) ? [...new Set(data.approvedProposals.filter((id): id is string => typeof id === "string"))] : [],
+      dismissedProposals: Array.isArray(data.dismissedProposals) ? [...new Set(data.dismissedProposals.filter((id): id is string => typeof id === "string"))] : [],
       agentPaused: data.agentPaused === true,
       returningVisitor: data.returningVisitor === true,
       loggedIn: data.loggedIn === true,

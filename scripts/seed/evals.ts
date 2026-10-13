@@ -134,13 +134,13 @@ export function buildEvals() {
 }
 
 export const DEMO_STEPS = [
-  { id: "d1-problem", surface: "mock_chatgpt", ad_group: W, pincode: null, chip: null, narration: "A shopper asks for waterproof office earrings under ₹5k and sees a sponsored card. Today's page is static (control).", expected_tools: [] },
+  { id: "d1-problem", surface: "mock_chatgpt", ad_group: W, pincode: null, chip: null, narration: "A shopper asks for waterproof office earrings under ₹5k and sees a sponsored card. The landing page adapts to the ad.", expected_tools: [] },
   { id: "d2-ad-waterproof", surface: "product_page", ad_group: W, pincode: null, chip: null, narration: "Tap the waterproof-everyday ad: context chip, curated rail with reasons, opener.", expected_tools: [] },
   { id: "d3-ad-wedding", surface: "product_page", ad_group: WED, pincode: null, chip: null, narration: "Same SKU, wedding-guest ad: different chip, rail (pinned jhumka) and opener.", expected_tools: [] },
   { id: "d4-return-prevention", surface: "chat", ad_group: W, pincode: null, chip: "Will these work for office?", narration: "Return prevention: the 4cm hoops are often returned for looking bigger; most office keepers chose the 3cm (offered in code as the alternative).", expected_tools: ["get_return_insight"] },
   { id: "d5-delivery-rescue", surface: "chat", ad_group: W, pincode: "411038", chip: "Need it in Pune by 18 Oct", narration: "Medium (3cm) hoops miss (21 Oct); Everyday Tube Hoops (2.8cm) arrive 16 Oct.", expected_tools: ["check_delivery"] },
   { id: "d6-checkout", surface: "checkout", ad_group: W, pincode: "411038", chip: null, narration: "Add → Log in (99999 99999, OTP 123456) → Welcome back, Ananya → exact date to saved address, ₹300 wallet → test checkout.", expected_tools: ["get_offer", "create_checkout"] },
-  { id: "d7-merchant", surface: "merchant", ad_group: null, pincode: null, chip: null, narration: "Kept revenue per click vs standard page; approve the '28 shoppers asked about sensitive ears' proposal: launch an all-steel earrings ad (no hypoallergenic claim).", expected_tools: [] },
+  { id: "d7-merchant", surface: "merchant", ad_group: null, pincode: null, chip: null, narration: "Ad-click-to-order conversion and kept revenue; approve the '28 shoppers asked about sensitive ears' proposal: launch an all-steel earrings ad (no hypoallergenic claim).", expected_tools: [] },
   { id: "d8-loop", surface: "mock_chatgpt", ad_group: STEEL, pincode: null, chip: null, narration: "Back in the mock: the sensitive-ears conversation now shows the steel earrings ad; its page shows a rail of stainless steel earrings and answers 'Is it nickel-free?' honestly.", expected_tools: [] },
   { id: "d9-trust", surface: "chat", ad_group: W, pincode: null, chip: "give me 50% off", narration: "Offer cap enforced in code; polite decline.", expected_tools: ["get_offer"] },
   { id: "d10-hinglish", surface: "chat", ad_group: W, pincode: null, chip: "Ye office mein pehen sakte hain?", narration: "Hinglish chip, same insight.", expected_tools: ["get_return_insight"] },

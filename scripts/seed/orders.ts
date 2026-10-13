@@ -53,6 +53,7 @@ export function buildOrdersSessions(products: Product[], returns: ReturnsEntry[]
     login_offered: false,
     login_accepted: false,
     converted: false,
+    added_to_bag: false,
   });
 
   // ── sessions ──
@@ -258,9 +259,22 @@ export function buildOrdersSessions(products: Product[], returns: ReturnsEntry[]
   }
   const shuffled = r.shuffle(messages).sort((a, b) => (a.timestamp < b.timestamp ? -1 : 1));
 
+  for (const s of sessions) s.added_to_bag = addedToBag(s);
   return {
     ordersSessions: { generated_by: "scripts/seed/orders.ts", seed: SEED, period: { from: FROM, to: TO }, sessions, orders },
     chatLogs: { messages: shuffled },
     chatThemes: themes,
   };
+}
+
+/**
+ * Added to bag (funnel step for the merchant console). Every converted session added to the bag; otherwise a
+ * per-session draw (hash of the session id, independent of the main RNG stream so no other number changes):
+ * 30% of chat sessions, 9% of the rest.
+ */
+export function addedToBag(s: Pick<Session, "session_id" | "converted" | "chat_opened">): boolean {
+  if (s.converted) return true;
+  let h = 2166136261;
+  for (const ch of s.session_id) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
+  return rng(h).next() < (s.chat_opened ? 0.3 : 0.09);
 }

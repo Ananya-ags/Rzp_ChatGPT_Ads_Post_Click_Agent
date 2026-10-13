@@ -76,6 +76,7 @@ export default async function Page({ params, searchParams }: Props) {
   const badges: ProductPageProps["badges"] = [
     j.anti_tarnish_warranty_months ? { icon: "shield" as const, label: "Anti-tarnish", sub: `${j.anti_tarnish_warranty_months}-month warranty` } : null,
     j.plating === "18k gold plating" ? { icon: "gold" as const, label: "18K gold plated", sub: `On ${(METAL[j.base_metal] ?? j.base_metal).toLowerCase()}` } : j.plating === "gold vermeil" ? { icon: "gold" as const, label: "Gold vermeil", sub: "On sterling silver" } : null,
+    j.water_resistant === true ? { icon: "water" as const, label: "Water-resistant", sub: "Verified by the brand" } : null,
     { icon: "truck" as const, label: "Free shipping", sub: Number(product.variants[0].price) >= freeShip ? "On this item" : `Over ₹${freeShip.toLocaleString("en-IN")}` },
   ].filter(Boolean) as ProductPageProps["badges"];
 

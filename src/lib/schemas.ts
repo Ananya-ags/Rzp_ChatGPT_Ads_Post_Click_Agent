@@ -337,6 +337,7 @@ export const SessionSchema = z.object({
   login_offered: z.boolean(),
   login_accepted: z.boolean(),
   converted: z.boolean(),
+  added_to_bag: z.boolean(),
 });
 export type Session = z.infer<typeof SessionSchema>;
 export const OrderSchema = z.object({

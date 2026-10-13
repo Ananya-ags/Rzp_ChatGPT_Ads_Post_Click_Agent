@@ -4,7 +4,7 @@
     "mode": "ai",
     "model": "gemini-3.8-flash + gemini-3.5-flash-lite",
     "prompt_version": "proposals-v1",
-    "run_at": "2026-10-13T00:23:45.276Z",
+    "run_at": "2026-10-13T16:42:12.596Z",
     "note": "AI output; attributes are unverified until the brand confirms them."
   },
   "proposals": [
@@ -150,15 +150,15 @@
       "id": "prop-pause-wedding-guest-gift",
       "type": "pause_context",
       "title": "Pause the agent on \"Wedding guest & gifting\" and test a jhumka-first page",
-      "summary": "This context keeps ₹30 per click vs ₹54 across ChatGPT ads. The agent adds little here (₹34 vs ₹29 on the standard page), so spend it where it lifts kept revenue.",
+      "summary": "This ad group converts 1.3% of ad clicks to orders vs 2.6% across ChatGPT ads, and keeps ₹30 per click vs ₹54. Pause the agent here and spend it where it lifts conversion and kept revenue.",
       "evidence": [
+        {
+          "label": "Ad-click-to-order conversion",
+          "value": "1.3% (avg 2.6%)"
+        },
         {
           "label": "Kept revenue / click",
           "value": "₹30 (avg ₹54)"
-        },
-        {
-          "label": "Agent vs standard page",
-          "value": "₹34 vs ₹29"
         },
         {
           "label": "Return + RTO rate",

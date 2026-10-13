@@ -13,7 +13,7 @@ import { useDemoState } from "@/lib/state";
 export type BridgeAdGroup = { id: string; name: string; campaign_id: string; ad_group_id: string; ad_id: string; context_hints: string[] };
 type Props = { adGroups: BridgeAdGroup[]; titles: Record<string, string>; categories: Record<string, string> };
 
-const SILENT = (path: string) => path === "/" || path.startsWith("/demo") || path.startsWith("/chatgpt") || path.startsWith("/api");
+const SILENT = (path: string) => path === "/" || path.startsWith("/demo") || path.startsWith("/merchant") || path.startsWith("/chatgpt") || path.startsWith("/api");
 
 let arrived = false; // once per session (a "Restart session" reloads the frame, which resets it)
 

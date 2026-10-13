@@ -493,15 +493,16 @@ function proposals(enriched: S.Enriched, clusters: S.IntentClusters, returnsCls:
   const avg = slice(os, (s) => s.channel === "chatgpt_ads").keptPerClick;
   const weak = rows.sort((a, b) => a.s.keptPerClick - b.s.keptPerClick)[0];
   if (weak && weak.s.keptPerClick < avg * 0.75) {
-    const c = slice(os, byAdGroup(weak.g.id, "C")), a = slice(os, byAdGroup(weak.g.id, "A"));
+    const all = slice(os, (s) => s.channel === "chatgpt_ads");
+    const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
     list.push({
       id: `prop-pause-${weak.g.id}`,
       type: "pause_context",
       title: `Pause the agent on "${weak.g.name}" and test a jhumka-first page`,
-      summary: `This context keeps ₹${Math.round(weak.s.keptPerClick)} per click vs ₹${Math.round(avg)} across ChatGPT ads. The agent adds little here (₹${Math.round(c.keptPerClick)} vs ₹${Math.round(a.keptPerClick)} on the standard page), so spend it where it lifts kept revenue.`,
+      summary: `This ad group converts ${pct(weak.s.conversion)} of ad clicks to orders vs ${pct(all.conversion)} across ChatGPT ads, and keeps ₹${Math.round(weak.s.keptPerClick)} per click vs ₹${Math.round(avg)}. Pause the agent here and spend it where it lifts conversion and kept revenue.`,
       evidence: [
+        { label: "Ad-click-to-order conversion", value: `${pct(weak.s.conversion)} (avg ${pct(all.conversion)})` },
         { label: "Kept revenue / click", value: `₹${Math.round(weak.s.keptPerClick)} (avg ₹${Math.round(avg)})` },
-        { label: "Agent vs standard page", value: `₹${Math.round(c.keptPerClick)} vs ₹${Math.round(a.keptPerClick)}` },
         { label: "Return + RTO rate", value: `${Math.round(weak.s.returnRtoRate * 100)}%` },
       ],
       examples: [],
