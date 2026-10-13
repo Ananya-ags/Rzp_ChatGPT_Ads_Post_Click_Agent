@@ -13,6 +13,19 @@ Built for the **ISB × Razorpay AI PM Build Challenge** (AI PM track, *Recover &
 
 > **Prototype note.** Cosmos is a fictional anti-tarnish jewellery brand. All shoppers, orders, returns, ad metrics and Razorpay signals are simulated; payments run in Razorpay Test Mode. Product photos were generated with ChatGPT.
 
+## Contents
+
+1. [The problem](#the-problem)
+2. [What we built](#what-we-built)
+3. [Agentic AI architecture](#agentic-ai-architecture)
+4. [Evals](#evals)
+5. [How it fits into Razorpay Engage](#how-it-fits-into-razorpay-engage)
+6. [Guided tour of the prototype](#guided-tour-of-the-prototype)
+7. [Tech stack](#tech-stack)
+8. [Run it locally](#run-it-locally)
+9. [Repository map](#repository-map)
+10. [Limits and what's next](#limits-and-whats-next)
+
 ---
 
 ## The problem
